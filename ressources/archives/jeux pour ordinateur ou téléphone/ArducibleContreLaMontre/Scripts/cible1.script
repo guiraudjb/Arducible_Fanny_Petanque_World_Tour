@@ -1,0 +1,56 @@
+function init(self)
+	msg.post(".", "acquire_input_focus")
+end
+
+function on_input(self, action_id, action)
+	if ActiveKeyboard1 == true then --TEST 1
+		if action_id == hash("hit1") then --TEST 2
+			go.set("#sprite", "tint",  vmath.vector4(1, 1, 1, 1)) --RESTAURER LA COULEUR DE LA CIBLE AVANT DE JOUER L'ANIMATION
+			ActiveKeyboard2 = false
+			ActiveKeyboard3 = false
+			if action.released then --TEST 3
+				ActiveKeyboard1 = false
+				if cibleEnCour==1 then --SINON SI TEST 4
+					sound.play("HitSound#HitSound3")
+					score=score+1
+					timeLeft=timeLeft+5
+					oldCible=cibleEnCour
+					
+					while cibleEnCour == oldCible 
+					do
+						cibleEnCour = math.random(1,3)
+					end
+					ActiveKeyboard1=true
+					ActiveKeyboard2=true
+					ActiveKeyboard3=true
+				else --SINON TEST 4
+						sound.play("HitSound#HitSound2")
+						score=score-1
+						timeLeft=timeLeft-2
+				end -- FIN TEST 4
+			sprite.play_flipbook("#sprite", "explosion", function()
+			sprite.play_flipbook("#sprite", "boule")
+			ActiveKeyboard1 = true
+			ActiveKeyboard2 = true 
+			ActiveKeyboard3 = true 
+			end) --FERMETURE DE L'APPEL SPRITE PLAY FLIPBOOK
+			end -- FIN TEST 3
+	end		--FIN TEST 2
+	end		--FIN TEST 1
+end --FIN FONCTION
+
+function update(self, dt)
+	if ActiveKeyboard == true then
+		if cibleEnCour==1 then
+			go.set("#sprite", "tint",  vmath.vector4(0, 1, 0, 1)) --TINTER EN VERT TRANSPARENT LA CIBLE
+		else
+			go.set("#sprite", "tint",  vmath.vector4(1, 1, 1, 1)) -- TEINTE NORMALE
+		end
+	end
+end
+
+function fixed_update(self, dt)
+end
+
+function on_message(self, message_id, message, sender)
+end

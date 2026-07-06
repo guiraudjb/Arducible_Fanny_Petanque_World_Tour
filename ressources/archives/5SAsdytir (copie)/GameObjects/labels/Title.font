@@ -1,0 +1,4 @@
+font: "/assets/fonts/DragonForcE.ttf"
+material: "/builtins/fonts/font.material"
+size: 256
+characters: " !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"

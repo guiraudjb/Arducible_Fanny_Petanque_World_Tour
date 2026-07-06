@@ -1,0 +1,73 @@
+name: "level"
+instances {
+  id: "Background"
+  prototype: "/main/Background.go"
+}
+instances {
+  id: "engine"
+  prototype: "/main/engine.go"
+}
+instances {
+  id: "HitSound"
+  prototype: "/GameObjects/HitSound.go"
+}
+instances {
+  id: "Cible1"
+  prototype: "/main/Cible1.go"
+  position {
+    x: 350.0
+    y: 300.0
+    z: 1.0
+  }
+  scale3 {
+    x: 0.6
+    y: 0.6
+  }
+}
+instances {
+  id: "Cible2"
+  prototype: "/main/Cible2.go"
+  position {
+    x: 960.0
+    y: 300.0
+    z: 1.0
+  }
+  scale3 {
+    x: 0.6
+    y: 0.6
+  }
+}
+instances {
+  id: "Cible3"
+  prototype: "/main/Cible3.go"
+  position {
+    x: 1570.0
+    y: 300.0
+    z: 1.0
+  }
+  scale3 {
+    x: 0.6
+    y: 0.6
+  }
+}
+instances {
+  id: "ScoreLabel"
+  prototype: "/GameObjects/labels/ScoreLabel.go"
+  position {
+    x: 960.0
+    y: 896.0
+  }
+}
+instances {
+  id: "TimeLeftLabel"
+  prototype: "/GameObjects/labels/TimeLeftLabel.go"
+  position {
+    x: 100.0
+    y: 1030.0
+  }
+}
+instances {
+  id: "VoiceSound"
+  prototype: "/GameObjects/VoiceSound.go"
+}
+scale_along_z: 0

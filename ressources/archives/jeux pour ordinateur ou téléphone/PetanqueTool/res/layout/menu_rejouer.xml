@@ -1,0 +1,78 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/replayLayout"
+    android:background="@drawable/fini"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ActivityPetanque"
+     >
+
+		<RelativeLayout
+		    android:id="@+id/menu_rejouer"
+		    android:layout_width="300dp"
+		    android:layout_height="300dp"
+		    android:layout_alignParentBottom="true"
+		    android:layout_alignParentLeft="true"
+		    android:layout_alignParentRight="true"
+		    android:orientation="vertical"
+		    android:paddingBottom="10dp"
+		    android:paddingLeft="10dp"
+		    android:paddingRight="10dp"
+		    android:paddingTop="10dp" >
+
+		    <LinearLayout
+		        android:id="@+id/linearLayout1"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_gravity="center_horizontal"
+		        android:layout_marginTop="12dp"
+		        android:gravity="center_horizontal"
+		        android:orientation="horizontal" >
+
+		        <Button
+		            android:id="@+id/rejouer"
+		            android:layout_width="155dp"
+		            android:layout_height="65dp"
+		            android:layout_alignBaseline="@+id/quitter"
+		            android:layout_alignBottom="@+id/quitter"
+		            android:layout_toRightOf="@+id/quitter"
+		            android:text="@string/replay"
+		            android:textSize="25sp" />
+
+		        <Button
+		            android:id="@+id/quitter"
+		            android:layout_width="155dp"
+		            android:layout_height="65dp"
+		            android:layout_alignParentLeft="true"
+		            android:layout_centerVertical="true"
+		            android:text="@string/quitter"
+		            android:textSize="25sp" />
+		    </LinearLayout>
+			<ScrollView
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:fillViewport="true"
+			    android:layout_below="@+id/linearLayout1"
+			    android:layout_marginTop="5dp">
+			    <TableLayout
+			        android:id="@+id/tabres"
+			        android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:layout_alignParentRight="true"
+			         >
+			    </TableLayout>
+			 </ScrollView>
+		</RelativeLayout>
+
+		<TextView
+		    android:id="@+id/textView1"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentTop="true"
+		    android:layout_centerHorizontal="true"
+		    android:layout_marginTop="26dp"
+		    android:text="@string/result"
+		    android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+</RelativeLayout>

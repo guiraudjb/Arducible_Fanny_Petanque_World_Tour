@@ -1,0 +1,4 @@
+tile_set: "/assets/GameSprites.atlas"
+default_animation: "1000x800"
+material: "/builtins/materials/sprite.material"
+blend_mode: BLEND_MODE_ALPHA

@@ -1,0 +1,229 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:orientation="vertical"
+    tools:context=".ActivityPetanque" >
+
+    <RelativeLayout
+        android:id="@+id/fondLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/coup1"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btn_oui"
+                android:layout_width="wrap_content"
+                android:layout_height="54dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:text="@string/oui" />
+
+            <Button
+                android:id="@+id/btn_non"
+                android:layout_width="wrap_content"
+                android:layout_height="54dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:text="@string/non" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/toucher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/linearLayout1"
+            android:layout_centerHorizontal="true"
+            android:text="@string/toucher"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/black_color" />
+
+        <TextView
+            android:id="@+id/NUMBTOURJ"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignBaseline="@+id/NUMBTOURJtext"
+            android:layout_alignBottom="@+id/NUMBTOURJtext"
+            android:layout_toRightOf="@+id/NUMBTOURJtext"
+            android:text="@string/un"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black_color" />
+
+        
+
+        <ImageView
+            android:id="@+id/fleche"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/fleche" />
+
+        <TextView
+            android:id="@+id/NBTOURJ"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_alignLeft="@+id/NUMBTOURJ"
+            android:text="@string/un"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black_color" />
+
+        <TextView
+            android:id="@+id/NUMBTOURJtext"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_below="@+id/NBTOURJtext"
+            android:layout_centerHorizontal="true"
+            android:text="@string/nbtour"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black_color" />
+
+        <TextView
+            android:id="@+id/NBTOURJtext"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignBaseline="@+id/NBTOURJ"
+            android:layout_alignBottom="@+id/NBTOURJ"
+            android:layout_alignLeft="@+id/NUMBTOURJtext"
+            android:text="@string/numjoueur"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black_color" />
+
+        <TextView
+            android:id="@+id/NBCIBLEtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/NUMBTOURJtext"
+            android:layout_below="@+id/NUMBTOURJ"
+            android:text="@string/nbcible"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black_color" />
+
+        <TextView
+            android:id="@+id/NBCIBLEJ"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_alignBottom="@+id/NBCIBLEtext"
+            android:layout_toRightOf="@+id/NBCIBLEtext"
+            android:text="@string/un"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black_color" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/linearLayoutNbJ"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/scoreText"
+                android:layout_width="70dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="6dp"
+                android:gravity="center"
+                android:text="@string/score"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+            	android:textColor="@color/black_color" />
+
+            <Button
+                android:id="@+id/scoreJ1"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="6dp"
+                android:gravity="center"
+                android:text="@string/un" />
+
+            <Button
+                android:id="@+id/scoreJ2"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="6dp"
+                android:gravity="center"
+                android:text="@string/un" />
+
+            <Button
+                android:id="@+id/scoreJ3"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="6dp"
+                android:gravity="center"
+                android:text="@string/un" />
+
+            <Button
+                android:id="@+id/scoreJ4"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="6dp"
+                android:gravity="center"
+                android:text="@string/un" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutNbJ"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/toucher"
+            android:layout_marginBottom="56dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" >
+            
+            <TextView
+                android:id="@+id/scoreText2"
+                android:layout_width="70dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="6dp"
+                android:gravity="center"
+                android:visibility="invisible"
+                android:text="@string/score"
+                 />
+
+            <Button
+                android:id="@+id/scoreJ5"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="6dp"
+                android:gravity="center"
+                android:text="@string/un" />
+
+            <Button
+                android:id="@+id/scoreJ6"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="6dp"
+                android:gravity="center"
+                android:text="@string/un" />
+
+            <Button
+                android:id="@+id/scoreJ7"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="6dp"
+                android:gravity="center"
+                android:text="@string/un" />
+
+            <Button
+                android:id="@+id/scoreJ8"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="6dp"
+                android:gravity="center"
+                android:text="@string/un" />
+        </LinearLayout>
+
+    </RelativeLayout>
+    
+</LinearLayout>

@@ -1,0 +1,91 @@
+function init(self)
+	animationPlaying=false
+	--variable rotation bonus
+	angleBonus = 0
+end
+function final(self)
+end
+
+function update(self, dt)
+	--print ("status du bonus"..bonusHitted)
+	if bonusHitted == 0 then
+		if ActiveBonusPos == 1 then
+			--go.set_position(vmath.vector3(450,400,0))
+			playanimation(ActiveBonusValue)
+			rollingBonus(ActiveBonusPos)
+		elseif ActiveBonusPos == 2 then
+			--go.set_position(vmath.vector3(1060,400,0))
+			playanimation(ActiveBonusValue)
+			rollingBonus(ActiveBonusPos)
+		elseif ActiveBonusPos == 3 then
+			--go.set_position(vmath.vector3(1670,400,0))
+			playanimation(ActiveBonusValue)
+			rollingBonus(ActiveBonusPos)
+		else 
+			if animationPlaying==true then
+				go.set_position(vmath.vector3(0,0,0))
+				sprite.play_flipbook("#sprite", "blank")
+				animationPlaying = false
+			end
+
+		end
+	else
+		sprite.play_flipbook("#sprite", "blank")
+		animationPlaying = false	
+	end
+end
+
+function playanimation(type)
+	--print(type)
+	--print(ActiveBonusPos)
+	if animationPlaying==false then
+		if type == 1 then
+			sprite.play_flipbook("#sprite", "extending13", function() end)
+		end
+		if type == 2 then
+			sprite.play_flipbook("#sprite", "extending23", function() end)
+		end
+		if type == 3 then
+			sprite.play_flipbook("#sprite", "extending33", function() end)
+		end
+		if type == 4 then
+			sprite.play_flipbook("#sprite", "extending43", function() end)
+		end
+		animationPlaying = true
+	else
+
+	end	
+end
+
+function removebBonus()
+	sprite.play_flipbook("#sprite", "blank")
+	animationPlaying = false
+end
+
+function rollingBonus(ActiveBonusPos)
+
+	local bonuspos = go.get_position()
+	local offsetx=610*(ActiveBonusPos-1)+350
+	local offsety=400
+	local deplacement=3
+	local rayonx=100
+	local rayony=40
+	local zoonBonus
+	local zoominitial = 1.5
+	local zoomvariation = rayony / rayonx
+
+	--augmentation de l'angle
+	angleBonus = angleBonus + deplacement
+	--limitation à 360
+	angleBonus = math.fmod(angleBonus, 360)
+	--print ("angle : ",angleBonus)
+	--calcul des valeurs de position du bonuspos
+	bonuspos.x = math.cos(angleBonus * math.pi / 180 ) * rayonx + offsetx
+	bonuspos.y = math.sin(angleBonus * math.pi / 180 ) * rayony + offsety
+
+	--calcul du zoom
+	zoomBonus = zoominitial + math.sin(angleBonus * math.pi / 180 ) * zoomvariation
+
+	go.set_scale(zoomBonus)
+	go.set_position(bonuspos)
+end

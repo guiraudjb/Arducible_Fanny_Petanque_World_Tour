@@ -1,0 +1,32 @@
+function init(self)
+	self.timeLeft=10
+	sound.play("Ending#sound")
+	level=0
+	label.set_text("EndingMessage#label2", tostring(finalScore))
+	
+	if finalScore <= 5 then
+		label.set_text("EndingMessage#label", "ESSAYE ENCORE")
+		--sprite.play_flipbook("EndingMessage#sprite1", "blank")
+	elseif finalScore >5 and finalScore <=20 then
+		label.set_text("EndingMessage#label", "BRAVO")
+		--sprite.play_flipbook("EndingMessage#sprite1", "rank3")
+	elseif finalScore >20 and finalScore <=40 then
+		label.set_text("EndingMessage#label", "SUPER")
+		--sprite.play_flipbook("EndingMessage#sprite1", "rank2")
+	elseif finalScore >40 then
+		label.set_text("EndingMessage#label", "EXCELLENT")
+		--sprite.play_flipbook("EndingMessage#sprite1", "rank1")
+	end
+	
+end
+
+
+function update(self, dt)
+	--if self.timeLeft > 0 then
+		--self.timeLeft = math.max(self.timeLeft - dt, 0)
+		--label.set_text("readyToGo#label", string.format("%.0f", tostring(self.timeLeft)))
+	--else
+		--msg.post("main:/loader#main", "changeScene", { newScene = "Advertising" })
+	--end
+end
+

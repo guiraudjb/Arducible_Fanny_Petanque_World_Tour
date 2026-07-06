@@ -1,0 +1,14 @@
+function init(self)
+	self.timeLeft=10
+end
+
+function update(self, dt)
+	if self.timeLeft > 0 then
+		self.timeLeft = math.max(self.timeLeft - dt, 0)
+		label.set_text("readyToGo#label", string.format("%.0f", tostring(self.timeLeft)))
+	else
+		level=1
+		msg.post("main:/loader#main", "changeScene", { newScene = "sceneGame" })
+	end
+end
+

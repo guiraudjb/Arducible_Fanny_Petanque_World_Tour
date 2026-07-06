@@ -1,0 +1,28 @@
+function init(self)
+	self.timeLeft=7
+	finalScore=0
+	level=0
+	score=0
+	bonusHitted=0
+	oldLevel=-1
+	posInLevel = 1
+	sound.play("getready#sound")
+	
+end
+
+function update(self, dt)
+	if self.timeLeft > 0 then
+		self.timeLeft = math.max(self.timeLeft - dt, 0)
+		--label.set_text("readyToGo#label", string.format("%.0f", tostring(self.timeLeft)))
+		if math.floor(self.timeLeft) % 2 == 0 then
+			print(math.floor(self.timeLeft))
+			--label.set_text("ready#label", "Get ready !!!")
+			label.set_text("ready#label", string.format("Get ready in  :%.0f", tostring(self.timeLeft)))
+		else
+			label.set_text("ready#label", "")
+		end
+	else
+		level=0
+		msg.post("main:/loader#main", "changeScene", { newScene = "sceneInfo" })
+	end
+end

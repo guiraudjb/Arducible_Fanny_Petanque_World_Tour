@@ -1,0 +1,58 @@
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.firing = false  
+	self.delay = 1
+	self.booldelay = true
+	exist1 = true
+	bouleDelete1 = false
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash("hit1") and action.pressed then
+		if self.booldelay then
+			self.firing = true
+			self.booldelay = false
+		end
+	end
+
+end 
+
+function update(self, dt)
+	exist1 = true
+	if self.delay > 0 then
+		self.delay = math.max(self.delay - dt, 0)
+		
+	else
+		self.booldelay = true
+		self.delay = 1
+	end
+
+
+
+	
+	local p = go.get_position()
+	p.x=364
+	p.y=222
+	go.set_position(p)
+	
+	if bouleDelete1 then
+		go.delete()
+		exist1 = false
+		score = score - 5
+	end
+	
+	if self.firing then
+		self.booldelay = false
+		p.x=364
+		p.y=222
+		local component = "#Laser1"
+		factory.create(component, p)
+		
+	end
+	self.firing = false  
+
+	
+end
+
+
+

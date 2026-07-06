@@ -1,0 +1,19 @@
+local speed = 240
+
+
+function update(self, dt)
+	local p = go.get_position()
+	p.x = p.x + speed * dt
+	if p.x > 2300 then
+		go.delete()
+	end
+	go.set_position(p)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("collision_response") then
+		score = score + 20
+		timeLeft = timeLeft + 20
+		go.delete()
+	end
+end

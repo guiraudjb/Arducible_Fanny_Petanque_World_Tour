@@ -1,0 +1,31 @@
+name: "ending"
+instances {
+  id: "readyToGo"
+  prototype: "/GameObjects/labels/readyToGo.go"
+  position {
+    x: 960.0
+    y: 700.0
+    z: 1.0
+  }
+  scale3 {
+    x: 2.016
+    y: 2.171
+  }
+}
+instances {
+  id: "EndingMessage"
+  prototype: "/GameObjects/labels/EndingMessage.go"
+  position {
+    x: 960.0
+    y: 540.0
+  }
+}
+instances {
+  id: "Background"
+  prototype: "/main/Background.go"
+}
+instances {
+  id: "Ending"
+  prototype: "/GameObjects/Ending.go"
+}
+scale_along_z: 0

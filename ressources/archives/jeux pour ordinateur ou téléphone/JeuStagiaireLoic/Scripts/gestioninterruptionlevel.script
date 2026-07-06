@@ -1,0 +1,78 @@
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	timeLeft=60
+	ActiveKeyboard=true
+	posInLevel =1
+	oldLevel=1
+	level=1
+	
+end
+function on_input(self, action_id, action)
+	if action_id == hash("right") and action.pressed then
+		msg.post("main:/loader#main", "changeScene", { newScene = "sceneInfo" })
+	end
+
+end 
+
+function update(self, dt)
+
+	if exist1 == false and exist2 == false and exist3 == false then
+		finalScore = score
+		score=0
+		level=0
+		exist1 = true
+		exist2 = true
+		exist3 = true
+		bouleDelete1 = false
+		bouleDelete2 = false
+		bouleDelete3 = false
+		msg.post("main:/loader#main", "changeScene", { newScene = "sceneEnding" })
+		
+	end
+	
+	
+	
+		if timeLeft > 0 then
+		timeLeft = math.max(timeLeft - dt, 0)
+		label.set_text("TimeLeftLabel#label", string.format("Time Left : %.1f", tostring(timeLeft)))
+		label.set_text("ScoreLabel#label", string.format("SCORE : %.1f", tostring(score)))
+		--label.set_text("LevelLabel#label", "Level : "..level )
+		--getLevelParameters(level)
+		--cibleEnCour=levelTargets[posInLevel]
+		--ActiveBonusPos = levelTimeExtenderPositions[posInLevel]
+		--ActiveBonusValue = levelTimeExtenderValues[posInLevel]
+
+	else
+		finalScore = score+timeLeft
+		score=0
+		level=0
+		bouleDelete1 = false
+		bouleDelete2 = false
+		bouleDelete3 = false
+		msg.post("main:/loader#main", "changeScene", { newScene = "sceneEnding" })
+		
+	end
+
+	
+	--print("time left: "..self.timeLeft.." Level :"..level.." Position dans le niveau :"..posInLevel)
+end
+
+function getLevelParameters(self)
+	if level == 1 then
+		levelTargets = {0,0,0}
+		levelTimeExtenderValues={0,0,0}
+		levelTimeExtenderPositions={0,0,0}
+	end
+	if level == 2 then
+		levelTargets = {2,3,1}
+		levelTimeExtenderValues={1,0,0}
+		levelTimeExtenderPositions={3,0,0}
+	end
+	if level == 3 then
+		levelTargets = {1,3,2}
+		levelTimeExtenderValues={3,0,0}
+		levelTimeExtenderPositions={2,0,0}
+	end
+end
+
+

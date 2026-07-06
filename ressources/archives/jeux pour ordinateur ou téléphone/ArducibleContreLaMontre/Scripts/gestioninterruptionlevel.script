@@ -1,0 +1,26 @@
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	sound.play("VoiceSound#Go")
+	timeLeft=60
+	ActiveKeyboard=true
+	posInLevel =1
+	oldLevel=1
+	level=1
+	cibleEnCour=3
+end
+
+
+function update(self, dt)
+	if timeLeft > 0 then
+	timeLeft = math.max(timeLeft - dt, 0)
+	label.set_text("TimeLeftLabel#label", string.format("Time Left :%.1f", tostring(timeLeft)))
+	label.set_text("ScoreLabel#label", string.format("SCORE : %.1f", tostring(score)))
+	else
+	finalScore = score+timeLeft
+	score=0
+	level=0
+	msg.post("main:/loader#main", "changeScene", { newScene = "sceneEnding" })
+	end
+end
+
+

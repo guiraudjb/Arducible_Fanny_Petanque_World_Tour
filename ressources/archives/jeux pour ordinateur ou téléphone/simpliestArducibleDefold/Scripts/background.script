@@ -1,0 +1,12 @@
+function init(self)
+	print(level)
+	sprite.play_flipbook("#sprite", tostring(level) )
+end
+
+
+function update(self, dt)
+	if oldLevel < level then
+		oldLevel = level
+		sprite.play_flipbook("#sprite", tostring(level) )
+	end
+end

@@ -1,0 +1,90 @@
+name: "Advertising"
+scale_along_z: 0
+embedded_instances {
+  id: "go"
+  data: "components {\n"
+  "  id: \"Advertising\"\n"
+  "  component: \"/Scripts/Advertising.script\"\n"
+  "}\n"
+  ""
+  position {
+    x: 960.0
+  }
+}
+embedded_instances {
+  id: "titre"
+  data: "embedded_components {\n"
+  "  id: \"label\"\n"
+  "  type: \"label\"\n"
+  "  data: \"size {\\n"
+  "  x: 128.0\\n"
+  "  y: 32.0\\n"
+  "}\\n"
+  "text: \\\"L\\\\\\\'as du tir\\\"\\n"
+  "font: \\\"/GameObjects/labels/Title.font\\\"\\n"
+  "material: \\\"/builtins/fonts/label-df.material\\\"\\n"
+  "\"\n"
+  "  position {\n"
+  "    y: -11.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 960.0
+    y: 810.0
+  }
+}
+embedded_instances {
+  id: "getready"
+  data: "embedded_components {\n"
+  "  id: \"sound\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/assets/Sounds/alarm2.wav\\\"\\n"
+  "\"\n"
+  "}\n"
+  ""
+}
+embedded_instances {
+  id: "Credit"
+  data: "embedded_components {\n"
+  "  id: \"label\"\n"
+  "  type: \"label\"\n"
+  "  data: \"size {\\n"
+  "  x: 128.0\\n"
+  "  y: 32.0\\n"
+  "}\\n"
+  "text: \\\"An Arducible petanque game\\\"\\n"
+  "font: \\\"/GameObjects/labels/SmallArcadeFont.font\\\"\\n"
+  "material: \\\"/builtins/fonts/label-df.material\\\"\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 960.0\n"
+  "    y: 400.0\n"
+  "  }\n"
+  "}\n"
+  ""
+}
+embedded_instances {
+  id: "ready"
+  data: "embedded_components {\n"
+  "  id: \"label\"\n"
+  "  type: \"label\"\n"
+  "  data: \"size {\\n"
+  "  x: 128.0\\n"
+  "  y: 32.0\\n"
+  "}\\n"
+  "color {\\n"
+  "  y: 0.0\\n"
+  "  z: 0.0\\n"
+  "}\\n"
+  "text: \\\"Get ready !!!\\\"\\n"
+  "font: \\\"/GameObjects/labels/ArcadeFont.font\\\"\\n"
+  "material: \\\"/builtins/fonts/label-df.material\\\"\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 960.0\n"
+  "    y: 580.0\n"
+  "  }\n"
+  "}\n"
+  ""
+}

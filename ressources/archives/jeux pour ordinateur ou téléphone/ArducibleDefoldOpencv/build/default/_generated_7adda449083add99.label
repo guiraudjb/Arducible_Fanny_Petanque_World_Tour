@@ -1,0 +1,34 @@
+size {
+  x: 0.0
+  y: 32.0
+  z: 0.0
+  w: 0.0
+}
+color {
+  x: 1.0
+  y: 0.84313726
+  z: 0.0
+  w: 1.0
+}
+outline {
+  x: 0.0
+  y: 0.0
+  z: 0.0
+  w: 1.0
+}
+shadow {
+  x: 0.0
+  y: 0.0
+  z: 0.0
+  w: 1.0
+}
+leading: 1.0
+tracking: 0.0
+pivot: PIVOT_CENTER
+blend_mode: BLEND_MODE_ALPHA
+line_break: false
+text: "ARDUCIBLE\n"
+  "PETANQUE\n"
+  "SHOOTING"
+font: "/GameObjects/labels/ArcadeFont.font"
+material: "/builtins/fonts/label-df.material"

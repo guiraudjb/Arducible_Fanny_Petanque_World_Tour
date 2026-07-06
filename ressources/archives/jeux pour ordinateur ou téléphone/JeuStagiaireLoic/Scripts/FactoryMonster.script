@@ -1,0 +1,70 @@
+
+
+function init(self)
+	
+	min_x = 200
+	max_x = 1800
+
+	CountMonster = 1
+	MonsterExist = false 
+	endlevel = false
+	
+	
+		
+end
+
+function update(self, dt)
+
+	
+	way = way1
+	if CountMonster == 2 then
+		
+		way = way2
+	elseif CountMonster == 3 then
+		way = way3
+	end
+
+	if CountMonster == 4 then
+		
+		CountMonster = 1
+		--endlevel = true 
+	end
+
+	if MonsterExist == false  then
+		local p = go.get_position()
+		
+					
+		p.x = vmath.lerp(math.random(), min_x, max_x)
+		
+
+		if exist1 and exist2 == false and exist3 == false then			
+			p.x = vmath.lerp(math.random(), min_x, 850)
+		end
+
+		if exist1 == false and exist2 and exist3 == false then			
+			p.x = vmath.lerp(math.random(), 500, 1350)
+		end
+
+		if exist1 == false and exist2 == false and exist3 then			
+			p.x = vmath.lerp(math.random(), 1200, max_x)
+		end
+
+
+		
+		if exist1 and exist2  and exist3 == false then			
+			p.x = vmath.lerp(math.random(), min_x, 1350)
+		end
+
+		if exist1 == false and exist2  and exist3  then			
+			p.x = vmath.lerp(math.random(), 500, max_x)
+		end
+
+	
+		
+		p.y=950
+		MonsterExist = true 
+		local component = "#Monster_factory"
+		factory.create(component, p)
+	
+	end
+end

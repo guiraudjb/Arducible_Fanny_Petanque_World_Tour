@@ -1,0 +1,9 @@
+function init(self)
+	exist1 = true
+	exist2 = true
+	exist3 = true
+	bouleDelete1 = false
+	bouleDelete2 = false
+	bouleDelete3 = false
+end
+

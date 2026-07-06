@@ -1,0 +1,49 @@
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	timeLeft=60
+	ActiveKeyboard=true
+	posInLevel =1
+	oldLevel=1
+	level=1
+	
+end
+
+
+function update(self, dt)
+		if timeLeft > 0 then
+		timeLeft = math.max(timeLeft - dt, 0)
+		label.set_text("TimeLeftLabel#label", string.format("Time Left :%.1f", tostring(timeLeft)))
+		label.set_text("ScoreLabel#label", string.format("SCORE : %.1f", tostring(score+timeLeft)))
+		label.set_text("LevelLabel#label", "Level : "..level )
+		getLevelParameters(level)
+		cibleEnCour=levelTargets[posInLevel]
+		ActiveBonusPos = levelTimeExtenderPositions[posInLevel]
+		ActiveBonusValue = levelTimeExtenderValues[posInLevel]
+
+	else
+		finalScore = score+timeLeft
+		score=0
+		level=0
+		msg.post("main:/loader#main", "changeScene", { newScene = "sceneEnding" })
+	end
+end
+
+function getLevelParameters(self)
+	if level == 1 then
+		levelTargets = {3,2,1}
+		levelTimeExtenderValues={1,0,0}
+		levelTimeExtenderPositions={1,0,0}
+	end
+	if level == 2 then
+		levelTargets = {2,3,1}
+		levelTimeExtenderValues={2,0,0}
+		levelTimeExtenderPositions={3,0,0}
+	end
+	if level == 3 then
+		levelTargets = {3,1,2}
+		levelTimeExtenderValues={3,0,0}
+		levelTimeExtenderPositions={2,0,0}
+	end
+end
+
+
