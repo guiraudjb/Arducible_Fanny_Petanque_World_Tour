@@ -1,7 +1,7 @@
 """Fanny Pétanque World Tour - Hardcore.
 
 Reprend le principe exact du jeu de base (main.py) - solo, contre-la-montre,
-tour du monde à travers 111 pays, Fanny en compagne de route - mais pour le
+tour du monde à travers 115 pays, Fanny en compagne de route - mais pour le
 chassis à 7 cibles physiques disposées en étoile de David (le même que
 Round the Clock, cochonet au centre), au lieu des 3 cibles en ligne du jeu
 d'origine.

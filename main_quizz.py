@@ -2,7 +2,7 @@
 
 Version quizz seul : pas de tir, pas de cibles physiques, pas de chrono de
 partie (mais un chrono PAR QUESTION, voir plus bas). À l'insertion d'un
-crédit, le joueur enchaîne directement les 112 quizz (5 questions chacun,
+crédit, le joueur enchaîne directement les 115 quizz (5 questions chacun,
 pétanque + culture générale) de tous les pays du tour, dans l'ordre, en
 répondant avec les touches E/R/T (choix gauche/centre/droite). Le score
 final est le nombre total de bonnes réponses sur l'ensemble du tour.
@@ -13,7 +13,7 @@ Différences avec main.py (dont ce fork est issu) :
   (crédit/freeplay, inchangé), on entre directement dans `gamestate == 3`
   ("quizz") pour le pays 0, puis on enchaîne automatiquement les pays
   suivants après chaque récap (voir `quiz_advance()`), jusqu'au dernier
-  (tier 111), puis écran de fin. Les sprites des 3 cibles (boules) du jeu
+  (tier 114), puis écran de fin. Les sprites des 3 cibles (boules) du jeu
   de base sont réaffichés sous chaque choix de réponse
   (`init_quiz_cibles()`/`draw_quiz_cibles()`), sans étiquette E/R/T -
   purement visuel, sans détection de tir : la bonne réponse s'illumine en
@@ -388,9 +388,13 @@ def draw_credit_display():
 def draw_intro_text():
     draw_text("HIGH SCORE",LARGEUR_ECRAN*10/20,HAUTEUR_ECRAN*1/20,False,True,1,4)
     draw_text(f"{quizz_high_score} / {QUIZ_TOTAL_QUESTIONS}",LARGEUR_ECRAN*10/20,HAUTEUR_ECRAN*3/20,False,True,1,4)
-    draw_text("GAME START",LARGEUR_ECRAN*10/20,HAUTEUR_ECRAN*6/20,False,True,1,5)
-    draw_text("IN",LARGEUR_ECRAN*10/20,HAUTEUR_ECRAN*8/20,False,True,1,5)
-    draw_text(str(time_left),LARGEUR_ECRAN*10/20,HAUTEUR_ECRAN*10/20,False,True,1,5)
+    # Bloc "GAME START IN" + décompte centré verticalement sur l'écran :
+    # "IN" (ligne du milieu) posé au centre exact (10/20), les 3 lignes
+    # gardant le même espacement (2/20) qu'avant - demande utilisateur du
+    # 2026-07-16, alignée sur main_hardcore.py/main.py.
+    draw_text("GAME START",LARGEUR_ECRAN*10/20,HAUTEUR_ECRAN*8/20,False,True,1,5)
+    draw_text("IN",LARGEUR_ECRAN*10/20,HAUTEUR_ECRAN*10/20,False,True,1,5)
+    draw_text(str(time_left),LARGEUR_ECRAN*10/20,HAUTEUR_ECRAN*12/20,False,True,1,5)
     draw_credit_display()
 
 def draw_intro_insertCoin():

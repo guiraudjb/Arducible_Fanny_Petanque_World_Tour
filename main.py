@@ -234,9 +234,13 @@ def draw_credit_display():
 def draw_intro_text():
     draw_text("HIGH SCORE",LARGEUR_ECRAN*10/20,HAUTEUR_ECRAN*1/20,False,True,1,4)
     draw_text(str(high_score),LARGEUR_ECRAN*10/20,HAUTEUR_ECRAN*3/20,False,True,1,4)
-    draw_text("GAME START",LARGEUR_ECRAN*10/20,HAUTEUR_ECRAN*6/20,False,True,1,5)
-    draw_text("IN",LARGEUR_ECRAN*10/20,HAUTEUR_ECRAN*8/20,False,True,1,5)
-    draw_text(str(time_left),LARGEUR_ECRAN*10/20,HAUTEUR_ECRAN*10/20,False,True,1,5)
+    # Bloc "GAME START IN" + décompte centré verticalement sur l'écran :
+    # "IN" (ligne du milieu) posé au centre exact (10/20), les 3 lignes
+    # gardant le même espacement (2/20) qu'avant - demande utilisateur du
+    # 2026-07-16, alignée sur main_hardcore.py.
+    draw_text("GAME START",LARGEUR_ECRAN*10/20,HAUTEUR_ECRAN*8/20,False,True,1,5)
+    draw_text("IN",LARGEUR_ECRAN*10/20,HAUTEUR_ECRAN*10/20,False,True,1,5)
+    draw_text(str(time_left),LARGEUR_ECRAN*10/20,HAUTEUR_ECRAN*12/20,False,True,1,5)
     draw_credit_display()
 
 def draw_intro_insertCoin():
@@ -256,7 +260,7 @@ def draw_mode_select():
     Glow."""
     ecran.blit(title_screen_image, (0, 0))
     name, tiers = WORLD_TOUR_MODES[mode_select_index]
-    draw_text("CHOISIS TON MODE",LARGEUR_ECRAN*10/20,HAUTEUR_ECRAN*4/20,False,True,1,4)
+    draw_text("CHOISIS TON MODE",LARGEUR_ECRAN*10/20,HAUTEUR_ECRAN*2/20,False,True,1,4)
     draw_text(name.upper(),LARGEUR_ECRAN*10/20,HAUTEUR_ECRAN*9/20,True,True,2,5)
     draw_text(f"{len(tiers)} PAYS",LARGEUR_ECRAN*10/20,HAUTEUR_ECRAN*12/20,False,True,1,4)
     for cible in mode_select_cibles:
