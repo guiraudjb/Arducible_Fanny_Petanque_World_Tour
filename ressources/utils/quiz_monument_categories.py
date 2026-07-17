@@ -1,0 +1,83 @@
+# -*- coding: utf-8 -*-
+# Catégorie de chaque monument/spécialité (quiz_monuments_facts.py), pour
+# piocher des distracteurs du MÊME TYPE (ex: un château face à d'autres
+# châteaux, pas face à un casino et un navire) - rend le QCM plus difficile
+# qu'une simple restriction par continent.
+
+CHATEAU = "chateau"            # château, palais, forteresse, citadelle, vieille ville fortifiée
+RELIGIEUX = "religieux"         # temple, mosquée, basilique, cathédrale, monastère, pagode, stupa
+ANTIQUE = "antique"             # ruines antiques, cité antique, pyramides, amphithéâtre romain
+NATURE = "nature"               # montagne, volcan, lac, chute d'eau, désert, fjord, parc national, île
+URBAIN = "urbain"               # statue moderne, tour/gratte-ciel, monument urbain emblématique
+GASTRONOMIE = "gastronomie"     # plat/spécialité culinaire
+ARTISANAT = "artisanat"         # artisanat, ressource naturelle, tradition, objet/produit notable
+
+MONUMENT_CATEGORIES = {
+    0: CHATEAU, 1: GASTRONOMIE, 2: ANTIQUE, 3: RELIGIEUX, 4: CHATEAU, 5: URBAIN,
+    6: RELIGIEUX, 7: URBAIN, 8: NATURE, 9: RELIGIEUX, 10: CHATEAU, 11: ARTISANAT,
+    12: URBAIN, 13: ARTISANAT, 14: URBAIN, 15: NATURE, 16: ANTIQUE, 17: ARTISANAT,
+    18: URBAIN,
+
+    19: CHATEAU, 20: CHATEAU, 21: URBAIN, 22: NATURE, 23: URBAIN, 24: CHATEAU,
+    25: CHATEAU, 26: CHATEAU, 27: CHATEAU, 28: CHATEAU, 29: CHATEAU, 30: CHATEAU,
+    31: CHATEAU, 32: NATURE, 33: ARTISANAT, 34: NATURE, 35: CHATEAU, 36: RELIGIEUX,
+    37: RELIGIEUX,
+
+    38: CHATEAU, 39: CHATEAU, 40: ANTIQUE, 41: CHATEAU, 42: NATURE, 43: NATURE,
+    44: RELIGIEUX, 45: NATURE, 46: ANTIQUE, 47: NATURE, 48: NATURE, 49: ANTIQUE,
+    50: NATURE, 51: RELIGIEUX, 52: NATURE, 53: ANTIQUE, 54: CHATEAU, 55: RELIGIEUX,
+    56: NATURE, 57: NATURE, 58: NATURE, 59: ANTIQUE, 60: NATURE, 61: NATURE,
+    62: ARTISANAT, 63: ANTIQUE, 64: NATURE,
+
+    65: RELIGIEUX, 66: ARTISANAT, 67: RELIGIEUX, 68: RELIGIEUX, 69: CHATEAU,
+    70: GASTRONOMIE, 71: RELIGIEUX, 72: RELIGIEUX, 73: ANTIQUE, 74: NATURE,
+    75: URBAIN, 76: ANTIQUE, 77: RELIGIEUX, 78: URBAIN, 79: URBAIN, 80: RELIGIEUX,
+    81: NATURE, 82: ANTIQUE, 83: NATURE, 84: URBAIN, 85: URBAIN, 86: RELIGIEUX,
+    87: NATURE, 88: NATURE,
+
+    89: NATURE, 90: NATURE, 91: NATURE, 92: ANTIQUE, 93: RELIGIEUX, 94: NATURE,
+    95: ARTISANAT, 96: NATURE, 97: URBAIN, 98: ANTIQUE, 99: CHATEAU, 100: ANTIQUE,
+    101: ANTIQUE, 102: ANTIQUE, 103: CHATEAU, 104: URBAIN, 105: NATURE,
+
+    106: URBAIN, 107: GASTRONOMIE, 108: NATURE, 109: GASTRONOMIE, 110: NATURE,
+    111: RELIGIEUX,
+
+    # Ajoutés le 2026-07-15
+    112: URBAIN, 113: RELIGIEUX, 114: ANTIQUE,
+}
+
+# Catégorie du DEUXIÈME fait par pays (quiz_second_monuments_facts.py),
+# utilisée pour la question qui remplace "sur quel continent ?".
+SECOND_MONUMENT_CATEGORIES = {
+    0: URBAIN, 1: CHATEAU, 2: URBAIN, 4: GASTRONOMIE, 5: URBAIN, 6: ARTISANAT,
+    7: URBAIN, 8: CHATEAU, 9: CHATEAU, 10: ARTISANAT, 11: CHATEAU, 12: RELIGIEUX,
+    13: URBAIN, 14: URBAIN, 15: ANTIQUE, 16: RELIGIEUX, 17: CHATEAU, 18: URBAIN,
+    19: RELIGIEUX, 20: CHATEAU, 21: URBAIN, 22: RELIGIEUX, 23: NATURE, 24: URBAIN,
+    25: ARTISANAT, 26: CHATEAU, 27: URBAIN, 28: RELIGIEUX, 29: ARTISANAT,
+    30: RELIGIEUX, 31: CHATEAU, 32: NATURE, 33: ARTISANAT, 34: NATURE,
+    35: URBAIN, 37: GASTRONOMIE,
+
+    3: RELIGIEUX, 36: NATURE, 65: RELIGIEUX, 66: NATURE, 67: URBAIN,
+    68: RELIGIEUX, 69: ANTIQUE, 70: CHATEAU, 71: CHATEAU, 72: RELIGIEUX,
+    73: URBAIN, 74: CHATEAU, 75: RELIGIEUX, 76: NATURE, 77: ANTIQUE,
+    78: RELIGIEUX, 79: RELIGIEUX, 80: RELIGIEUX, 81: RELIGIEUX, 82: RELIGIEUX,
+    83: NATURE, 84: URBAIN, 85: GASTRONOMIE, 86: ANTIQUE, 87: ARTISANAT,
+    88: URBAIN,
+
+    38: ANTIQUE, 39: URBAIN, 40: RELIGIEUX, 41: NATURE, 42: RELIGIEUX,
+    43: RELIGIEUX, 44: URBAIN, 45: NATURE, 46: ANTIQUE, 47: NATURE, 48: NATURE,
+    49: URBAIN, 50: NATURE, 51: NATURE, 52: NATURE, 53: NATURE, 54: URBAIN,
+    55: NATURE, 56: RELIGIEUX, 57: NATURE, 58: NATURE, 59: NATURE, 60: NATURE,
+    61: NATURE, 62: ARTISANAT, 63: URBAIN, 64: NATURE,
+
+    89: NATURE, 90: ANTIQUE, 91: GASTRONOMIE, 92: NATURE, 93: URBAIN,
+    94: NATURE, 95: URBAIN, 96: ARTISANAT, 97: NATURE, 98: URBAIN, 99: CHATEAU,
+    100: GASTRONOMIE, 101: URBAIN, 102: ANTIQUE, 103: ARTISANAT, 104: URBAIN,
+    105: NATURE,
+
+    106: NATURE, 107: NATURE, 108: URBAIN, 109: RELIGIEUX, 110: ARTISANAT,
+    111: CHATEAU,
+
+    # Ajoutés le 2026-07-15
+    112: NATURE, 113: NATURE, 114: NATURE,
+}
