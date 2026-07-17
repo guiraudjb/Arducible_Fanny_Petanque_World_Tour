@@ -1,0 +1,820 @@
+script: "/main/scripts/IngameMenu.gui_script"
+fonts {
+  name: "EL_VOLCAN_black"
+  font: "/preset/EL_VOLCAN_black.font"
+}
+fonts {
+  name: "medium_el_volcan"
+  font: "/preset/medium_el_volcan.font"
+}
+fonts {
+  name: "bigone"
+  font: "/preset/bigone.font"
+}
+textures {
+  name: "main"
+  texture: "/assets/main.atlas"
+}
+nodes {
+  position {
+    x: 59.0
+    y: 1032.0
+  }
+  scale {
+    x: 0.5
+    y: 0.5
+  }
+  size {
+    x: 190.0
+    y: 139.0
+  }
+  type: TYPE_BOX
+  texture: "main/stoneButton_Released"
+  id: "Exit"
+  layer: "Top"
+  inherit_alpha: true
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "Sortie"
+  font: "EL_VOLCAN_black"
+  id: "exitButton"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "Exit"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 1336.0
+    y: 300.0
+  }
+  type: TYPE_BOX
+  texture: "main/stoneButton_Released"
+  id: "Touche"
+  layer: "Top"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "Touch\303\251"
+  font: "EL_VOLCAN_black"
+  id: "touche"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "Touche"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 1736.0
+    y: 300.0
+  }
+  type: TYPE_BOX
+  texture: "main/stoneButton_Released"
+  id: "Rate"
+  layer: "Top"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "Rat\303\251"
+  font: "EL_VOLCAN_black"
+  id: "rate"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "Rate"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 1336.0
+    y: 864.0
+  }
+  type: TYPE_BOX
+  texture: "main/scores"
+  id: "scoreP1"
+  layer: "Top"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "1"
+  font: "EL_VOLCAN_black"
+  id: "scoreP1Text"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "scoreP1"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 1736.0
+    y: 864.0
+  }
+  type: TYPE_BOX
+  texture: "main/scores"
+  id: "scoreP2"
+  layer: "Top"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "2"
+  font: "EL_VOLCAN_black"
+  id: "scoreP2Text"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "scoreP2"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 1336.0
+    y: 648.0
+  }
+  type: TYPE_BOX
+  texture: "main/scores"
+  id: "scoreP3"
+  layer: "Top"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "3"
+  font: "EL_VOLCAN_black"
+  id: "scoreP3Text"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "scoreP3"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 1736.0
+    y: 648.0
+  }
+  type: TYPE_BOX
+  texture: "main/scores"
+  id: "scoreP4"
+  layer: "Top"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "4"
+  font: "EL_VOLCAN_black"
+  id: "scoreP4Text"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "scoreP4"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 1336.0
+    y: 432.0
+  }
+  type: TYPE_BOX
+  texture: "main/scores"
+  id: "scoreP5"
+  layer: "Top"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "6"
+  font: "EL_VOLCAN_black"
+  id: "scoreP5Text"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "scoreP5"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 1736.0
+    y: 432.0
+  }
+  type: TYPE_BOX
+  texture: "main/scores"
+  id: "scoreP6"
+  layer: "Top"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "101"
+  font: "EL_VOLCAN_black"
+  id: "scoreP6Text"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "scoreP6"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 1536.0
+    y: 128.0
+  }
+  scale {
+    x: 0.5
+    y: 0.5
+  }
+  type: TYPE_BOX
+  texture: "main/reste3"
+  id: "Reste"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 1336.0
+    y: 964.0
+  }
+  scale {
+    x: 0.5
+    y: 0.5
+  }
+  type: TYPE_BOX
+  texture: "main/scores"
+  id: "LabelJ1"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "J1"
+  font: "EL_VOLCAN_black"
+  id: "J1Label"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "LabelJ1"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 1736.0
+    y: 964.0
+  }
+  scale {
+    x: 0.5
+    y: 0.5
+  }
+  type: TYPE_BOX
+  texture: "main/scores"
+  id: "LabelJ2"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "J2\n"
+  ""
+  font: "EL_VOLCAN_black"
+  id: "J2Label"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "LabelJ2"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 1336.0
+    y: 748.0
+  }
+  scale {
+    x: 0.5
+    y: 0.5
+  }
+  type: TYPE_BOX
+  texture: "main/scores"
+  id: "LabelJ3"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "J3\n"
+  ""
+  font: "EL_VOLCAN_black"
+  id: "J3Label"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "LabelJ3"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 1736.0
+    y: 748.0
+  }
+  scale {
+    x: 0.5
+    y: 0.5
+  }
+  type: TYPE_BOX
+  texture: "main/scores"
+  id: "LabelJ4"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "J4"
+  font: "EL_VOLCAN_black"
+  id: "J4Label"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "LabelJ4"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 1336.0
+    y: 532.0
+  }
+  scale {
+    x: 0.5
+    y: 0.5
+  }
+  type: TYPE_BOX
+  texture: "main/scores"
+  id: "LabelJ5"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "J5"
+  font: "EL_VOLCAN_black"
+  id: "J5Label"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "LabelJ5"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 1736.0
+    y: 532.0
+  }
+  scale {
+    x: 0.5
+    y: 0.5
+  }
+  type: TYPE_BOX
+  texture: "main/scores"
+  id: "LabelJ6"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "J6"
+  font: "EL_VOLCAN_black"
+  id: "J6Label"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "LabelJ6"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 1596.0
+    y: 1036.0
+  }
+  scale {
+    x: 0.5
+    y: 0.5
+  }
+  type: TYPE_BOX
+  id: "Tour"
+  layer: "Top"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "1\n"
+  ""
+  font: "bigone"
+  id: "TourNumber"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "Tour"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: -300.0
+  }
+  size {
+    x: 120.0
+    y: 80.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.502
+  }
+  type: TYPE_TEXT
+  text: "TOUR"
+  font: "bigone"
+  id: "text"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "Tour"
+  layer: "Top"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 200.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "/"
+  font: "bigone"
+  id: "text1"
+  parent: "Tour"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 400.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "3"
+  font: "bigone"
+  id: "nbtours"
+  parent: "Tour"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 960.0
+    y: 623.0
+  }
+  type: TYPE_BOX
+  texture: "main/grass"
+  id: "waitbox"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    y: 200.0
+  }
+  size {
+    x: 800.0
+    y: 800.0
+  }
+  color {
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "WAIT"
+  font: "bigone"
+  id: "waitinformation"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "waitbox"
+  inherit_alpha: true
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "JoueurSuivant"
+  font: "bigone"
+  id: "gameState"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "waitbox"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    y: -200.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "Reste"
+  font: "bigone"
+  id: "tirrestant"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "waitbox"
+  inherit_alpha: true
+}
+layers {
+  name: "Top"
+}
+material: "/builtins/materials/gui.material"
+adjust_reference: ADJUST_REFERENCE_PARENT

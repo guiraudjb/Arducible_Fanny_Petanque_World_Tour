@@ -1,0 +1,213 @@
+function init(self)
+	activekeyboard=true
+	lasthit=0
+	lastchange=0
+	tour=1
+	joueurEnCours=1
+	reste=3
+	nbTours=4
+	moduloChangeplayer=nbTours*3
+	cibleEnCours=0
+	scorejoueurs = {}
+	scorejoueurs[1]=0
+	scorejoueurs[2]=0
+	scorejoueurs[3]=0
+	scorejoueurs[4]=0
+	scorejoueurs[5]=0
+	scorejoueurs[6]=0
+	tirRealise = {}
+	tirRealise[1] = 0
+	tirRealise[2] = 0
+	tirRealise[3] = 0
+	tirRealise[4] = 0
+	tirRealise[5] = 0
+	tirRealise[6] = 0
+	hitcount = {}
+	hitcount[1] = 0
+	hitcount[2] = 0
+	hitcount[3] = 0
+	hitcount[4] = 0
+	hitcount[5] = 0
+	hitcount[6] = 0
+	misscount={}
+	misscount[1] = 0
+	misscount[2] = 0
+	misscount[3] = 0
+	misscount[4] = 0
+	misscount[5] = 0
+	misscount[6] = 0
+	determinerCibleAToucherPourLeJoueur()
+end
+
+function anoncingPlayer()
+	
+	if SoundVolume == true then
+		if joueurEnCours == 1 then
+			sound.play("joueur1#sound")
+		end
+		if joueurEnCours == 2 then
+			sound.play("joueur2#sound")
+		end
+		if joueurEnCours == 3 then
+			sound.play("joueur3#sound")
+		end
+		if joueurEnCours == 4 then
+			sound.play("joueur4#sound")
+		end
+		if joueurEnCours == 5 then
+			sound.play("joueur5#sound")
+		end
+		if joueurEnCours == 6 then
+			sound.play("joueur6#sound")
+		end
+
+	end
+end
+
+function sleep (a) 
+	local sec = tonumber(os.clock() + a); 
+	while (os.clock() < sec) do 
+	end 
+end
+
+function gererInterruptions()
+	--activekeyboard=false
+	-- gérer la fin de partie
+	shotCount()
+	print("Tour " .. tour .. "joueur : " .. joueurEnCours .. "reste" .. reste )
+	if joueurEnCours == NumberPlayer and tour == NombreDeTours and reste == 0 then
+		print("fin de partie")
+		lastchange=os.time()
+		lasthit=os.time()
+		--sleep(2)
+		
+		msg.post("main:/CollectionLoader#main", "changeScene", { newScene = "Ending" })
+	-- gérer le changement de tour
+	elseif joueurEnCours == NumberPlayer and reste == 0 then
+		print("tour suivant")
+		lastchange=os.time()
+		reste=3
+		joueurEnCours=1
+		anoncingPlayer()
+		tourSuivant()
+		determinerCibleAToucherPourLeJoueur()
+	-- gérer le changement de joueur
+	elseif reste == 0 then
+		print("joueur suivant")
+		lastchange=os.time()
+		reste=3
+		joueurSuivant()
+		anoncingPlayer()
+		determinerCibleAToucherPourLeJoueur()
+	-- gérer le passage à la cible suivante
+	else
+	print("cible suivante")
+	
+		determinerCibleAToucherPourLeJoueur()
+	end
+	print("Tour " .. tour .. "joueur : " .. joueurEnCours .. "reste" .. reste )
+end
+
+function determinerCibleAToucherPourLeJoueur()
+	if hitcount[joueurEnCours] < 7 then
+		cibleEnCours = hitcount[joueurEnCours] + 1
+	else
+		--print("cible aléatoire")
+		oldcible = cibleEnCours
+		while cibleEnCours == oldcible
+		do
+			cibleEnCours = math.random (1, 7)
+		end
+	end
+	
+end
+
+function shotCount()
+	tirRealise[joueurEnCours] = hitcount[joueurEnCours] + misscount[joueurEnCours]
+end
+
+function hitCount()
+	hitcount[joueurEnCours] = hitcount[joueurEnCours] + 1
+end
+
+function missCount()
+	misscount[joueurEnCours] = misscount[joueurEnCours] + 1
+end
+
+function updateScore()
+	scorejoueurs[joueurEnCours]=scorejoueurs[joueurEnCours]+1
+end
+
+function joueurSuivant()
+	print("valeur joueur en cours avant changement de joueur" .. joueurEnCours)
+	if joueurEnCours < NumberPlayer then
+		joueurEnCours = joueurEnCours + 1
+	else
+		joueurEnCours = 1
+		print(joueurEnCours .. "retour joueur 1")
+	end
+end
+
+function tourSuivant()
+	if tour < NombreDeTours then
+		tour = tour +1
+	else
+		finpartie()
+	end
+end
+
+function finpartie()
+	msg.post("main:/CollectionLoader#main", "changeScene", { newScene = "Ending" })
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	print(cibleEnCours)
+	--if activekeyboard==false then
+	--	print("waiting")
+		--timer.delay(1, false, function() activekeyboard=true end)
+		--end
+		--print(lasthit)
+		if lasthit + 2 < os.time() then
+			activekeyboard=true
+		end
+
+end
+
+function fixed_update(self, dt)
+	-- This function is called if 'Fixed Update Frequency' is enabled in the Engine section of game.project
+	-- Can be coupled tourwith fixed updates of the physics simulation if 'Use Fixed Timestep' is enabled in
+	-- Physics section of game.project
+	-- Add update code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Learn more: https://defold.com/manuals/message-passing/
+	-- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+	-- Add input-handling code here. The game object this script is attached to
+	-- must have acquired input focus:
+	--
+	--    msg.post(".", "acquire_input_focus")
+	--
+	-- All mapped input bindings will be received. Mouse and touch input will
+	-- be received regardless of where on the screen it happened.
+	-- Learn more: https://defold.com/manuals/input/
+	-- Remove this function if not needed
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Learn more: https://defold.com/manuals/hot-reload/
+	-- Remove this function if not needed
+end

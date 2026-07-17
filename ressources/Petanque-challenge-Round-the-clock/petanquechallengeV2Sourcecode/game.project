@@ -1,0 +1,51 @@
+[project]
+title = Petanque Challenge 2
+version = 2
+dependencies#0 = https://github.com/subsoap/defos/archive/refs/tags/v2.8.3.zip
+
+[bootstrap]
+main_collection = /main/main.collectionc
+
+[input]
+game_binding = /input/game.input_bindingc
+use_accelerometer = 0
+
+[display]
+width = 1920
+height = 1080
+high_dpi = 1
+fullscreen = 1
+
+[ios]
+bundle_identifier = com.example.todo
+
+[osx]
+bundle_identifier = com.example.todo
+
+[android]
+app_icon_36x36 = /assets/app_icons/36x36.png
+app_icon_48x48 = /assets/app_icons/48x48.png
+app_icon_72x72 = /assets/app_icons/72x72.png
+app_icon_96x96 = /assets/app_icons/96x96.png
+app_icon_144x144 = /assets/app_icons/144x144.png
+app_icon_192x192 = /assets/app_icons/192x192.png
+input_method = KeyEvent
+package = com.arducible.petanqueChallenge2
+version_code = 11
+target_sdk_version = 35
+minimum_sdk_version = 21
+
+[script]
+shared_state = 1
+
+[physics]
+gravity_y = -1000.0
+scale = 0.01
+
+[engine]
+fixed_update_frequency = 20
+
+[graphics]
+default_texture_min_filter = nearest
+default_texture_mag_filter = nearest
+

@@ -1,0 +1,173 @@
+{
+  :bundle {
+    :android {
+      :architectures #{
+        "arm64-android"
+        "armv7-android"
+      }
+      :build_report false
+      :bundle_format #{
+        "aab"
+        "apk"
+      }
+      :contentless false
+      :install false
+      :key-pass ""
+      :keystore ""
+      :keystore-pass ""
+      :launch false
+      :liveupdate false
+      :texture_compression "enabled"
+      :variant "release"
+      :with_symbols true
+    }
+    :last-bundle-command :bundle-linux
+    :linux {
+      :build_report false
+      :contentless false
+      :liveupdate false
+      :platform "x86_64-linux"
+      :texture_compression "enabled"
+      :variant "debug"
+      :with_symbols true
+    }
+    :output-directory "/home/adm1/Documents/Petanque-challenge-Round-the-clock"
+  }
+  :code {
+    :find {
+      :term "activekeyboard"
+    }
+  }
+  :workflow {
+    :recent-files [
+      [
+        "/preset/joueur2.go"
+        :scene
+      ]
+      [
+        "/preset/joueur3.go"
+        :scene
+      ]
+      [
+        "/preset/joueur4.go"
+        :scene
+      ]
+      [
+        "/preset/joueur5.go"
+        :scene
+      ]
+      [
+        "/preset/joueur6.go"
+        :scene
+      ]
+      [
+        "/manifest.private.der"
+        :text
+      ]
+      [
+        "/main/scripts/Target3.script"
+        :code
+      ]
+      [
+        "/main/scripts/Target2.script"
+        :code
+      ]
+      [
+        "/main/collections/GameInfo.collection"
+        :scene
+      ]
+      [
+        "/main/MainMenuGui.gui"
+        :scene
+      ]
+      [
+        "/main/optionsMenu.gui"
+        :scene
+      ]
+      [
+        "/main/main.collection"
+        :scene
+      ]
+      [
+        "/main/IngameMenu.gui"
+        :scene
+      ]
+      [
+        "/main/helpMenu.gui"
+        :scene
+      ]
+      [
+        "/main/ending.gui"
+        :scene
+      ]
+      [
+        "/assets/main.atlas"
+        :scene
+      ]
+      [
+        "/main/collections/InGame.collection"
+        :scene
+      ]
+      [
+        "/main/collections/Options.collection"
+        :scene
+      ]
+      [
+        "/main/scripts/Target1.script"
+        :code
+      ]
+      [
+        "/main/scripts/cible1.script"
+        :code
+      ]
+      [
+        "/input/game.input_binding"
+        :cljfx-form-view
+      ]
+      [
+        "/main/collections/MainMenu.collection"
+        :scene
+      ]
+      [
+        "/game.project"
+        :cljfx-form-view
+      ]
+      [
+        "/main/collections/Credit.collection"
+        :scene
+      ]
+      [
+        "/main/collections/Ending.collection"
+        :scene
+      ]
+      [
+        "/main/scripts/ending.gui_script"
+        :code
+      ]
+      [
+        "/main/scripts/HelpMenu.gui_script"
+        :code
+      ]
+      [
+        "/main/scripts/ingame.script"
+        :code
+      ]
+      [
+        "/main/scripts/IngameMenu.gui_script"
+        :code
+      ]
+      [
+        "/main/scripts/main.script"
+        :code
+      ]
+      [
+        "/main/scripts/MainMenu.gui_script"
+        :code
+      ]
+      [
+        "/main/scripts/OptionMenu.gui_script"
+        :code
+      ]
+    ]
+  }
+}

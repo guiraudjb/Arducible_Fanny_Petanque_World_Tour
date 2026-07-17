@@ -1,0 +1,259 @@
+local function animateLogos5(self)
+	print("Executing animateLogos5")
+	-- Animates scale to 100%
+	local s = 1.0
+	gui.animate(self.gameLogo, gui.PROP_SCALE, vmath.vector4(s, s, s, 0), gui.EASING_INOUT, 1.4,
+	0)
+
+
+	gui.set_enabled(self.Increase_Number_Player, true)
+	gui.set_enabled(self.Decrease_Number_Player, true)
+	gui.set_enabled(self.Selected_Number_Player, true)
+	gui.set_enabled(self.SelectedNumberPlayerText, true)
+	gui.set_enabled(self.Start_Game, true)
+	gui.set_enabled(self.Options, true)
+	gui.set_enabled(self.Aide, true)
+	gui.set_enabled(self.ExitGame, true)
+	gui.set_enabled(self.SelectNumberPlayerText, true)
+	
+end
+
+local function animateLogos4(self)
+
+	-- Set Animation Delay
+	local d = 2.0
+	print ("Executing animateLogos4")
+	-- Get the current color and set alpha to 0 as a basis for fading up
+	local to_color = gui.get_color(self.gameLogo)
+	to_color.w = 1.0
+
+	-- Animate the alpha value from 0 to 1
+	gui.animate(self.gameLogo, gui.PROP_COLOR, to_color, gui.EASING_IN, 1.5, d)
+
+	-- Animate the scale up to 120%
+	local s = 1.2
+	gui.animate(self.gameLogo, gui.PROP_SCALE, vmath.vector4(s, s, s, 0), gui.EASING_IN, 3.0,
+	d, animateLogos5)
+
+end	
+local function playclick()
+	if SoundVolume == true then
+		sound.play("ClickSound#Click")
+	end
+end
+
+
+function init(self)
+	-- Acquires Input Focus
+	msg.post(".", "acquire_input_focus")
+	defos.set_cursor_pos(960, 740) 
+	--self.TSLogo = gui.get_node("TSLogo")
+	self.gameLogo = gui.get_node("gameLogo")
+
+	-- Create Script Properties for each Node in the GUI
+	self.Increase_Number_Player = gui.get_node("Increase_Number_Player")
+	self.Decrease_Number_Player = gui.get_node("Decrease_Number_Player")
+	self.Selected_Number_Player = gui.get_node("Selected_Number_Player")
+	self.SelectedNumberPlayerText = gui.get_node("SelectedNumberPlayerText")
+	gui.set_text(self.SelectedNumberPlayerText, NumberPlayer)
+	self.Start_Game = gui.get_node("Start_Game")
+	self.Options = gui.get_node("Options")
+	self.Aide = gui.get_node("Aide")
+	self.ExitGame = gui.get_node("ExitGame")
+	self.SelectNumberPlayerText = gui.get_node("SelectNumberPlayerText")
+
+	gui.set_enabled(self.Increase_Number_Player, false)
+	gui.set_enabled(self.Decrease_Number_Player, false)
+	gui.set_enabled(self.Selected_Number_Player, false)
+	gui.set_enabled(self.SelectedNumberPlayerText, false)
+	gui.set_enabled(self.Start_Game, false)
+	gui.set_enabled(self.Options, false)
+	gui.set_enabled(self.Aide, false)
+	gui.set_enabled(self.ExitGame, false)
+	gui.set_enabled(self.SelectNumberPlayerText, false)
+	if SoundVolume == true then
+		sound.play("IntroSound#intro")
+	end
+	if animatelogo == true then
+		animatelogo=false
+		animateLogos4(self)
+	else
+		gui.set_alpha(self.gameLogo, 1)
+		animateLogos5(self)
+	end
+end
+
+
+
+
+
+function final(self)
+	-- Add finalization code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	print(activekeyboard)
+	
+	if lasthit + 2 < os.time() then
+		activekeyboard=true
+	end
+	
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Learn more: https://defold.com/manuals/message-passing/
+	-- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+
+	if action.pressed and gui.pick_node(gui.get_node("Decrease_Number_Player"), action.x, action.y) then
+		gui.play_flipbook(self.Decrease_Number_Player, hash("BouleG"))
+		playclick()
+	end
+
+	if action.released and gui.pick_node(gui.get_node("Decrease_Number_Player"), action.x, action.y) then
+		gui.play_flipbook(self.Decrease_Number_Player, hash("Boule"))
+		if NumberPlayer > 1 then
+			NumberPlayer = NumberPlayer - 1
+		else
+			NumberPlayer = 1
+		end
+		
+		gui.set_text(self.SelectedNumberPlayerText, NumberPlayer)
+		--print(NumberPlayer)
+				
+	end
+
+	if action_id == hash("hit1") then
+		gui.play_flipbook(self.Decrease_Number_Player, hash("BouleG"))
+		
+		if action.released then
+			playclick()
+			gui.play_flipbook(self.Decrease_Number_Player, hash("Boule"))
+				if NumberPlayer > 1 then
+					NumberPlayer = NumberPlayer - 1
+				else
+					NumberPlayer = 1
+				end
+		end
+		gui.set_text(self.SelectedNumberPlayerText, NumberPlayer)
+		--print(NumberPlayer)
+	end
+		
+
+	if action.pressed and gui.pick_node(gui.get_node("Increase_Number_Player"), action.x, action.y) then
+		gui.play_flipbook(self.Increase_Number_Player, hash("BouleG"))
+		playclick()
+	end
+
+	if action.released and gui.pick_node(gui.get_node("Increase_Number_Player"), action.x, action.y) then
+		gui.play_flipbook(self.Increase_Number_Player, hash("Boule"))
+		if NumberPlayer < 6 then
+			NumberPlayer = NumberPlayer + 1
+		else
+			NumberPlayer = 6
+		end 
+		gui.set_text(self.SelectedNumberPlayerText, NumberPlayer)
+		--print(NumberPlayer)
+	end
+
+	if action_id == hash("hit3") then
+		gui.play_flipbook(self.Increase_Number_Player, hash("BouleG"))
+		if action.released then
+			playclick()
+			gui.play_flipbook(self.Increase_Number_Player, hash("Boule"))
+			if NumberPlayer < 6 then
+				NumberPlayer = NumberPlayer + 1
+			else
+				NumberPlayer = 6
+			end
+		end 
+		gui.set_text(self.SelectedNumberPlayerText, NumberPlayer)
+
+	end
+	
+
+	if action.pressed and gui.pick_node(gui.get_node("Start_Game"), action.x, action.y) then
+		gui.play_flipbook(self.Start_Game, hash("BouleG"))
+		playclick()
+		
+	end
+
+	if action.released and gui.pick_node(gui.get_node("Start_Game"), action.x, action.y) then
+		gui.play_flipbook(self.Start_Game, hash("Boule"))
+		msg.post("main:/CollectionLoader#main", "changeScene", { newScene = "Ingame" })
+	end
+	if activekeyboard == true then
+		if action_id == hash("hit7") then
+
+		gui.play_flipbook(self.Start_Game, hash("BouleG"))
+			if action.released then
+				activekeyboard=false
+				lasthit=os.time()
+				playclick()
+				gui.play_flipbook(self.Start_Game, hash("Boule"))
+				msg.post("main:/CollectionLoader#main", "changeScene", { newScene = "Ingame" })
+			end
+		end
+	end
+	if action.pressed and gui.pick_node(gui.get_node("Options"), action.x, action.y) then
+		gui.play_flipbook(self.Options, hash("BouleG"))
+		playclick()
+	end
+
+	if action.released and gui.pick_node(gui.get_node("Options"), action.x, action.y) then
+		gui.play_flipbook(self.Options, hash("Boule"))
+		msg.post("main:/CollectionLoader#main", "changeScene", { newScene = "Options" })
+	end
+
+	if action_id == hash("hit4") then
+		gui.play_flipbook(self.Options, hash("BouleG"))
+			
+		if action.released then
+			playclick()
+			gui.play_flipbook(self.Options, hash("Boule"))
+			msg.post("main:/CollectionLoader#main", "changeScene", { newScene = "Options" })
+		end
+
+	end
+	
+	if action.pressed and gui.pick_node(gui.get_node("Aide"), action.x, action.y) then
+		gui.play_flipbook(self.Aide, hash("BouleG"))
+		playclick()
+	end
+
+	if action.released and gui.pick_node(gui.get_node("Aide"), action.x, action.y) then
+		gui.play_flipbook(self.Aide, hash("Boule"))
+		msg.post("main:/CollectionLoader#main", "changeScene", { newScene = "GameInfo" })
+	end
+
+	if action_id == hash("hit5") then
+		gui.play_flipbook(self.Aide, hash("BouleG"))
+		if action.released then
+			playclick()
+			gui.play_flipbook(self.Aide, hash("Boule"))
+			msg.post("main:/CollectionLoader#main", "changeScene", { newScene = "GameInfo" })
+		end
+	end
+	if action.pressed and gui.pick_node(gui.get_node("ExitGame"), action.x, action.y) then
+		gui.play_flipbook(self.ExitGame, hash("stoneButton_Pressed"))
+		playclick()
+	end
+
+	if action.released and gui.pick_node(gui.get_node("ExitGame"), action.x, action.y) then
+		gui.play_flipbook(self.ExitGame, hash("stoneButton_Released"))
+		msg.post("@system:", "exit", {code = 0})
+	end
+	
+	
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Learn more: https://defold.com/manuals/hot-reload/
+	-- Remove this function if not needed
+end

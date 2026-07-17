@@ -1,0 +1,310 @@
+function init(self)
+	-- Add initialization code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+	msg.post(".", "acquire_input_focus")
+	defos.set_cursor_pos(960, 740) 
+	
+	self.Exit = gui.get_node("Exit")
+	self.NombreDeTours = gui.get_node("NombreDeTours")
+	self.j1 = gui.get_node("j1")
+	self.j2 = gui.get_node("j2")
+	self.j3 = gui.get_node("j3")
+	self.j4 = gui.get_node("j4")
+	self.j5 = gui.get_node("j5")
+	self.j6 = gui.get_node("j6")
+	
+	self.j1hit = gui.get_node("j1hit")
+	self.j2hit = gui.get_node("j2hit")
+	self.j3hit = gui.get_node("j3hit")
+	self.j4hit = gui.get_node("j4hit")
+	self.j5hit = gui.get_node("j5hit")
+	self.j6hit = gui.get_node("j6hit")
+
+	self.j1miss = gui.get_node("j1miss")
+	self.j2miss = gui.get_node("j2miss")
+	self.j3miss = gui.get_node("j3miss")
+	self.j4miss = gui.get_node("j4miss")
+	self.j5miss = gui.get_node("j5miss")
+	self.j6miss = gui.get_node("j6miss")
+
+	self.tauxj1 = gui.get_node("tauxj1")
+	self.tauxj2 = gui.get_node("tauxj2")
+	self.tauxj3 = gui.get_node("tauxj3")
+	self.tauxj4 = gui.get_node("tauxj4")
+	self.tauxj5 = gui.get_node("tauxj5")
+	self.tauxj6 = gui.get_node("tauxj6")
+
+	self.j1HitText = gui.get_node("j1HitText")
+	self.j2HitText = gui.get_node("j2HitText")
+	self.j3HitText = gui.get_node("j3HitText")
+	self.j4HitText = gui.get_node("j4HitText")
+	self.j5HitText = gui.get_node("j5HitText")
+	self.j6HitText = gui.get_node("j6HitText")
+	self.j1MissText = gui.get_node("j1MissText")
+	self.j2MissText = gui.get_node("j2MissText")
+	self.j3MissText = gui.get_node("j3MissText")
+	self.j4MissText = gui.get_node("j4MissText")
+	self.j5MissText = gui.get_node("j5MissText")
+	self.j6MissText = gui.get_node("j6MissText")
+	self.tauxJ1Text = gui.get_node("tauxJ1Text")
+	self.tauxJ2Text = gui.get_node("tauxJ2Text")
+	self.tauxJ3Text = gui.get_node("tauxJ3Text")
+	self.tauxJ4Text = gui.get_node("tauxJ4Text")
+	self.tauxJ5Text = gui.get_node("tauxJ5Text")
+	self.tauxJ6Text = gui.get_node("tauxJ6Text")
+
+	showscore(self)
+end
+
+local function playclick()
+	if SoundVolume == true then
+		sound.play("ClickSound#Click")
+	end
+end
+
+function showscore(self)
+	gui.set_text(self.NombreDeTours, NombreDeTours)
+	if NumberPlayer == 1 then
+		gui.set_enabled(self.j2, false)
+		gui.set_enabled(self.j3, false)
+		gui.set_enabled(self.j4, false)
+		gui.set_enabled(self.j5, false)
+		gui.set_enabled(self.j6, false)
+		
+		gui.set_enabled(self.j2hit, false)
+		gui.set_enabled(self.j3hit, false)
+		gui.set_enabled(self.j4hit, false)
+		gui.set_enabled(self.j5hit, false)
+		gui.set_enabled(self.j6hit, false)
+
+		gui.set_enabled(self.j2miss, false)
+		gui.set_enabled(self.j3miss, false)
+		gui.set_enabled(self.j4miss, false)
+		gui.set_enabled(self.j5miss, false)
+		gui.set_enabled(self.j6miss, false)
+
+		gui.set_enabled(self.tauxj2, false)
+		gui.set_enabled(self.tauxj3, false)
+		gui.set_enabled(self.tauxj4, false)
+		gui.set_enabled(self.tauxj5, false)
+		gui.set_enabled(self.tauxj6, false)
+		gui.set_text(self.j1HitText, hitcount[1])
+		gui.set_text(self.j1MissText, misscount[1])
+		gui.set_text(self.tauxJ1Text, string.format("%.2f %%",hitcount[1]*100/(hitcount[1]+misscount[1])))
+		
+	end
+
+	if NumberPlayer == 2 then
+		
+		gui.set_enabled(self.j3, false)
+		gui.set_enabled(self.j4, false)
+		gui.set_enabled(self.j5, false)
+		gui.set_enabled(self.j6, false)
+		
+		gui.set_enabled(self.j3hit, false)
+		gui.set_enabled(self.j4hit, false)
+		gui.set_enabled(self.j5hit, false)
+		gui.set_enabled(self.j6hit, false)
+		
+		gui.set_enabled(self.j3miss, false)
+		gui.set_enabled(self.j4miss, false)
+		gui.set_enabled(self.j5miss, false)
+		gui.set_enabled(self.j6miss, false)
+		
+		gui.set_enabled(self.tauxj3, false)
+		gui.set_enabled(self.tauxj4, false)
+		gui.set_enabled(self.tauxj5, false)
+		gui.set_enabled(self.tauxj6, false)
+		gui.set_text(self.j1HitText, hitcount[1])
+		gui.set_text(self.j1MissText, misscount[1])
+		gui.set_text(self.tauxJ1Text, string.format("%.2f %%",hitcount[1]*100/(hitcount[1]+misscount[1])))
+
+		gui.set_text(self.j2HitText, hitcount[2])
+		gui.set_text(self.j2MissText, misscount[2])
+		gui.set_text(self.tauxJ2Text, string.format("%.2f %%",hitcount[2]*100/(hitcount[2]+misscount[2])))
+		
+	end
+	if NumberPlayer == 3 then
+		
+		gui.set_enabled(self.j4, false)
+		gui.set_enabled(self.j5, false)
+		gui.set_enabled(self.j6, false)
+		
+		gui.set_enabled(self.j4hit, false)
+		gui.set_enabled(self.j5hit, false)
+		gui.set_enabled(self.j6hit, false)
+		
+		gui.set_enabled(self.j4miss, false)
+		gui.set_enabled(self.j5miss, false)
+		gui.set_enabled(self.j6miss, false)
+		
+		gui.set_enabled(self.tauxj4, false)
+		gui.set_enabled(self.tauxj5, false)
+		gui.set_enabled(self.tauxj6, false)
+
+		gui.set_text(self.j1HitText, hitcount[1])
+		gui.set_text(self.j1MissText, misscount[1])
+		gui.set_text(self.tauxJ1Text, string.format("%.2f %%",hitcount[1]*100/(hitcount[1]+misscount[1])))
+
+		gui.set_text(self.j2HitText, hitcount[2])
+		gui.set_text(self.j2MissText, misscount[2])
+		gui.set_text(self.tauxJ2Text, string.format("%.2f %%",hitcount[2]*100/(hitcount[2]+misscount[2])))
+		
+		gui.set_text(self.j3HitText, hitcount[3])
+		gui.set_text(self.j3MissText, misscount[3])
+		gui.set_text(self.tauxJ3Text, string.format("%.2f %%",hitcount[3]*100/(hitcount[3]+misscount[3])))
+		end
+	if NumberPlayer == 4 then
+		
+		gui.set_enabled(self.j5, false)
+		gui.set_enabled(self.j6, false)
+		
+		gui.set_enabled(self.j5hit, false)
+		gui.set_enabled(self.j6hit, false)
+		
+		gui.set_enabled(self.j5miss, false)
+		gui.set_enabled(self.j6miss, false)
+		
+		gui.set_enabled(self.tauxj5, false)
+		gui.set_enabled(self.tauxj6, false)
+
+		gui.set_text(self.j1HitText, hitcount[1])
+		gui.set_text(self.j1MissText, misscount[1])
+		gui.set_text(self.tauxJ1Text, string.format("%.2f %%",hitcount[1]*100/(hitcount[1]+misscount[1])))
+
+		gui.set_text(self.j2HitText, hitcount[2])
+		gui.set_text(self.j2MissText, misscount[2])
+		gui.set_text(self.tauxJ2Text, string.format("%.2f %%",hitcount[2]*100/(hitcount[2]+misscount[2])))
+
+		gui.set_text(self.j3HitText, hitcount[3])
+		gui.set_text(self.j3MissText, misscount[3])
+		gui.set_text(self.tauxJ3Text, string.format("%.2f %%",hitcount[3]*100/(hitcount[3]+misscount[3])))
+
+		gui.set_text(self.j4HitText, hitcount[4])
+		gui.set_text(self.j4MissText, misscount[4])
+		gui.set_text(self.tauxJ4Text, string.format("%.2f %%",hitcount[4]*100/(hitcount[4]+misscount[4])))
+	end
+	if NumberPlayer == 5 then
+		
+		gui.set_enabled(self.j6, false)
+
+		gui.set_enabled(self.j6hit, false)
+		
+		gui.set_enabled(self.j6miss, false)
+		
+		gui.set_enabled(self.tauxj6, false)
+
+		gui.set_text(self.j1HitText, hitcount[1])
+		gui.set_text(self.j1MissText, misscount[1])
+		gui.set_text(self.tauxJ1Text, string.format("%.2f %%",hitcount[1]*100/(hitcount[1]+misscount[1])))
+
+		gui.set_text(self.j2HitText, hitcount[2])
+		gui.set_text(self.j2MissText, misscount[2])
+		gui.set_text(self.tauxJ2Text, string.format("%.2f %%",hitcount[2]*100/(hitcount[2]+misscount[2])))
+
+		gui.set_text(self.j3HitText, hitcount[3])
+		gui.set_text(self.j3MissText, misscount[3])
+		gui.set_text(self.tauxJ3Text, string.format("%.2f %%",hitcount[3]*100/(hitcount[3]+misscount[3])))
+
+		gui.set_text(self.j4HitText, hitcount[4])
+		gui.set_text(self.j4MissText, misscount[4])
+		gui.set_text(self.tauxJ4Text, string.format("%.2f %%",hitcount[4]*100/(hitcount[4]+misscount[4])))
+
+		gui.set_text(self.j5HitText, hitcount[5])
+		gui.set_text(self.j5MissText, misscount[5])
+		gui.set_text(self.tauxJ5Text, string.format("%.2f %%",hitcount[5]*100/(hitcount[5]+misscount[5])))
+		end
+	
+		if NumberPlayer == 6 then
+			gui.set_text(self.j1HitText, hitcount[1])
+			gui.set_text(self.j1MissText, misscount[1])
+			gui.set_text(self.tauxJ1Text, string.format("%.2f %%",hitcount[1]*100/(hitcount[1]+misscount[1])))
+
+			gui.set_text(self.j2HitText, hitcount[2])
+			gui.set_text(self.j2MissText, misscount[2])
+			gui.set_text(self.tauxJ2Text, string.format("%.2f %%",hitcount[2]*100/(hitcount[2]+misscount[2])))
+
+			gui.set_text(self.j3HitText, hitcount[3])
+			gui.set_text(self.j3MissText, misscount[3])
+			gui.set_text(self.tauxJ3Text, string.format("%.2f %%",hitcount[3]*100/(hitcount[3]+misscount[3])))
+
+			gui.set_text(self.j4HitText, hitcount[4])
+			gui.set_text(self.j4MissText, misscount[4])
+			gui.set_text(self.tauxJ4Text, string.format("%.2f %%",hitcount[4]*100/(hitcount[4]+misscount[4])))
+
+			gui.set_text(self.j5HitText, hitcount[5])
+			gui.set_text(self.j5MissText, misscount[5])
+			gui.set_text(self.tauxJ5Text, string.format("%.2f %%",hitcount[5]*100/(hitcount[5]+misscount[5])))
+
+			gui.set_text(self.j6HitText, hitcount[6])
+			gui.set_text(self.j6MissText, misscount[6])
+			gui.set_text(self.tauxJ6Text, string.format("%.2f %%",hitcount[6]*100/(hitcount[6]+misscount[6])))
+			
+		end
+	
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	print(activekeyboard)
+	if lasthit + 2 < os.time() then
+		activekeyboard=true
+		
+	end
+	-- Add update code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Learn more: https://defold.com/manuals/message-passing/
+	-- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+	-- Add input-handling code here. The game object this script is attached to
+	-- must have acquired input focus:
+	--
+	--    msg.post(".", "acquire_input_focus")
+	--
+	-- All mapped input bindings will be received. Mouse and touch input will
+	-- be received regardless of where on the screen it happened.
+	-- Learn more: https://defold.com/manuals/input/
+	-- Remove this function if not needed
+	if action.pressed and gui.pick_node(gui.get_node("Exit"), action.x, action.y) then
+		gui.play_flipbook(self.Exit, hash("stoneButton_Pressed"))
+		playclick()
+	end
+
+	if action.released and gui.pick_node(gui.get_node("Exit"), action.x, action.y) then
+		gui.play_flipbook(self.Exit, hash("stoneButton_Released"))
+		msg.post("main:/CollectionLoader#main", "changeScene", { newScene = "MainMenu" })
+	end
+	if activekeyboard == true then
+		if action_id == hash("hit7") then
+				gui.play_flipbook(self.Exit, hash("stoneButton_Pressed"))
+				if action.released then
+					activekeyboard=false
+					lasthit=os.time()
+					playclick()
+					gui.play_flipbook(self.Exit, hash("stoneButton_Released"))
+
+					msg.post("main:/CollectionLoader#main", "changeScene", { newScene = "MainMenu" })
+				end
+		end
+		end
+	
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Learn more: https://defold.com/manuals/hot-reload/
+	-- Remove this function if not needed
+end

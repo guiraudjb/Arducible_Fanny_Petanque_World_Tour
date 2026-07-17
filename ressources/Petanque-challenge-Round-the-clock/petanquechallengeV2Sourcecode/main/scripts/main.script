@@ -1,0 +1,45 @@
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	defos.set_cursor_pos(960, 740) 
+	NumberPlayer = 2
+	NombreDeTours = 3
+	---print(scorejoueurs[1])
+	SoundVolume=true
+	animatelogo=true
+	self.currentScene=""
+	activekeyboard=false
+	lasthit=os.time()
+	changeScene(self, "MainMenu")
+end
+
+function changeScene(self,pCurrentScene)
+	if pCurrentScene ~= self.currentScene then
+		if self.currentScene ~= "" then
+			msg.post("/CollectionLoader#"..self.currentScene, "unload")	
+		end
+		msg.post("/CollectionLoader#"..pCurrentScene, "load")
+		self.currentScene = pCurrentScene
+	end
+
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Learn more: https://defold.com/manuals/message-passing/
+	-- Remove this function if not needed
+	if message_id == hash("changeScene") then
+		changeScene(self, message.newScene)
+	end
+
+
+	if message_id ==hash("proxy_loaded")then
+		msg.post(sender, "init")
+		msg.post(sender, "enable")
+	end
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash("touch") and action.pressed then
+		print("Touch!")
+	end
+end

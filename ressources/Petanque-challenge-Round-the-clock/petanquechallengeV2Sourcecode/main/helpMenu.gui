@@ -1,0 +1,128 @@
+script: "/main/scripts/HelpMenu.gui_script"
+fonts {
+  name: "EL_VOLCAN_black"
+  font: "/preset/EL_VOLCAN_black.font"
+}
+fonts {
+  name: "little_el_volcan"
+  font: "/preset/little_el_volcan.font"
+}
+fonts {
+  name: "medium_el_volcan"
+  font: "/preset/medium_el_volcan.font"
+}
+textures {
+  name: "main"
+  texture: "/assets/main.atlas"
+}
+nodes {
+  position {
+    x: 59.0
+    y: 1032.0
+  }
+  scale {
+    x: 0.5
+    y: 0.5
+  }
+  size {
+    x: 190.0
+    y: 139.0
+  }
+  type: TYPE_BOX
+  texture: "main/stoneButton_Released"
+  id: "Exit"
+  layer: "Top"
+  inherit_alpha: true
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "Retour"
+  font: "EL_VOLCAN_black"
+  id: "exitButton"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "Exit"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 960.0
+    y: 540.0
+  }
+  size {
+    x: 1920.0
+    y: 1080.0
+  }
+  type: TYPE_BOX
+  texture: "main/background"
+  id: "box"
+  inherit_alpha: true
+  alpha: 0.9
+}
+nodes {
+  position {
+    x: -960.0
+    y: -40.0
+  }
+  size {
+    x: 1920.0
+    y: 1000.0
+  }
+  type: TYPE_TEXT
+  text: "1. Objectif du jeu\n"
+  "    Votre but est simple : viser et toucher la cible d\303\251sign\303\251e par le syst\303\250me. Chaque bonne cible touch\303\251e vous rapproche de la victoire.\n"
+  "\n"
+  "2. D\303\251roulement d\342\200\231un tour\n"
+  "    Lancers par tour : Chaque joueur dispose de trois lancers par tour pour tenter de toucher la cible active.\n"
+  "\n"
+  "    Cible d\303\251sign\303\251e : L\342\200\231\303\251cran de l\342\200\231application affichera clairement la cible que vous devez viser \303\240 chaque instant. Soyez attentif aux indications !\n"
+  "\n"
+  "3. Comptabilisation des points et des lancers\n"
+  "    La d\303\251tection est automatique et pr\303\251cise gr\303\242ce \303\240 notre syst\303\250me connect\303\251.\n"
+  "    \n"
+  "    Tir r\303\251ussi : Si vous touchez la cible d\303\251sign\303\251e par le syst\303\250me, un point est automatiquement comptabilis\303\251 pour ce lancer. Le syst\303\250me enregistre \303\251galement votre tir.\n"
+  "    \n"
+  "    Tir manqu\303\251 (mauvaise cible) : Si votre boule frappe une cible diff\303\251rente de celle qui \303\251tait d\303\251sign\303\251e, un tir manqu\303\251 sera automatiquement comptabilis\303\251. Le syst\303\250me enregistre \303\251galement votre tir.\n"
+  "    \n"
+  "    Tir manqu\303\251 (aucune cible) : Si votre boule ne touche aucune cible, vous devrez alors interagir manuellement. Sous le contr\303\264le des autres joueurs, actionnez une cible (n\342\200\231importe laquelle, sauf celle qui \303\251tait d\303\251sign\303\251e) pour valider votre tir manqu\303\251. Ce geste confirmera la comptabilisation d\342\200\231un tir manqu\303\251 par le syst\303\250me.\n"
+  "\n"
+  "4. Navigation dans les menus\n"
+  "    Navigation par les boules : La navigation se fait en manipulant les boules (lancers sur des cibles sp\303\251cifiques) ou des actions sur des cibles pour simuler des s\303\251lections."
+  font: "medium_el_volcan"
+  id: "help"
+  xanchor: XANCHOR_LEFT
+  yanchor: YANCHOR_TOP
+  pivot: PIVOT_W
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+  }
+  line_break: true
+  parent: "box"
+  layer: "Top"
+  inherit_alpha: true
+}
+layers {
+  name: "background"
+}
+layers {
+  name: "Top"
+}
+material: "/builtins/materials/gui.material"
+adjust_reference: ADJUST_REFERENCE_PARENT

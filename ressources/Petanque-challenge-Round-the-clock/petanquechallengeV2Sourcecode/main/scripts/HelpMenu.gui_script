@@ -1,0 +1,72 @@
+function init(self)
+	-- Add initialization code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+	msg.post(".", "acquire_input_focus")
+	defos.set_cursor_pos(960, 740) 
+	self.Exit = gui.get_node("Exit")
+end
+
+local function playclick()
+	if SoundVolume == true then
+		sound.play("ClickSound#Click")
+	end
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	if lasthit + 2 < os.time() then
+		activekeyboard=true
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Learn more: https://defold.com/manuals/message-passing/
+	-- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+	-- Add input-handling code here. The game object this script is attached to
+	-- must have acquired input focus:
+	--
+	--    msg.post(".", "acquire_input_focus")
+	--
+	-- All mapped input bindings will be received. Mouse and touch input will
+	-- be received regardless of where on the screen it happened.
+	-- Learn more: https://defold.com/manuals/input/
+	-- Remove this function if not needed
+	if action.pressed and gui.pick_node(gui.get_node("Exit"), action.x, action.y) then
+		gui.play_flipbook(self.Exit, hash("stoneButton_Pressed"))
+		playclick()
+	end
+
+	if action.released and gui.pick_node(gui.get_node("Exit"), action.x, action.y) then
+		gui.play_flipbook(self.Exit, hash("stoneButton_Released"))
+		msg.post("main:/CollectionLoader#main", "changeScene", { newScene = "MainMenu" })
+	end
+	
+	if action_id == hash("hit7") then
+		gui.play_flipbook(self.Exit, hash("stoneButton_Pressed"))
+		if action.released then
+			activekeyboard=false
+			lasthit=os.time()
+				playclick()
+				gui.play_flipbook(self.Exit, hash("stoneButton_Released"))
+				msg.post("main:/CollectionLoader#main", "changeScene", { newScene = "MainMenu" })
+			end
+	end
+		
+	
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Learn more: https://defold.com/manuals/hot-reload/
+	-- Remove this function if not needed
+end

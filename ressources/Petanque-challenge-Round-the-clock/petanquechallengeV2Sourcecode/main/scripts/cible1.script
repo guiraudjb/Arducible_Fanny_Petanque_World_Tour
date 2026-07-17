@@ -1,0 +1,34 @@
+function init(self)
+	msg.post(".", "acquire_input_focus")
+end
+
+function on_input(self, action_id, action)
+
+	if action_id == hash("hit1") then --TEST 2
+		if cibleEnCour==1 then
+			timeLeft=timeLeft+5
+			sound.play("HitSound#HitSound3")
+			score=score+1
+			randomTarget()
+		end 
+		
+		--go.set("#sprite", "tint",  vmath.vector4(1, 1, 1, 1)) --RESTAURER LA COULEUR DE LA CIBLE AVANT DE JOUER L'ANIMATION
+		sprite.play_flipbook("#sprite", "explosion", function()
+		sprite.play_flipbook("#sprite", "boule")
+		end) --FERMETURE DE L'APPEL SPRITE PLAY FLIPBOOK
+	end -- FIN TEST 3
+end --FIN FONCTION
+
+function update(self, dt)
+	if cibleEnCour==1 then
+		go.set("#sprite", "tint",  vmath.vector4(0, 1, 0, 1)) --TINTER EN VERT TRANSPARENT LA CIBLE
+	else
+		go.set("#sprite", "tint",  vmath.vector4(1, 1, 1, 1)) -- TEINTE NORMALE
+	end
+end
+
+function fixed_update(self, dt)
+end
+
+function on_message(self, message_id, message, sender)
+end

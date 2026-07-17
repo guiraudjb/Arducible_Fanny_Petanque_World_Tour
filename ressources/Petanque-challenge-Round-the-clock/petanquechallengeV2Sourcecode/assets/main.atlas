@@ -1,0 +1,88 @@
+images {
+  image: "/assets/app_icons/icon_180.png"
+}
+images {
+  image: "/assets/images/background.png"
+}
+images {
+  image: "/assets/images/blueButton_Pressed.png"
+}
+images {
+  image: "/assets/images/blueButton_Released.png"
+}
+images {
+  image: "/assets/images/yellowStar.png"
+}
+images {
+  image: "/assets/images/Arducible.png"
+}
+images {
+  image: "/assets/images/stoneButton_Pressed.png"
+}
+images {
+  image: "/assets/images/stoneButton_Released.png"
+}
+images {
+  image: "/assets/images/BrightBackground.png"
+}
+images {
+  image: "/assets/images/scores.png"
+}
+images {
+  image: "/assets/images/reste1.png"
+}
+images {
+  image: "/assets/images/reste2.png"
+}
+images {
+  image: "/assets/images/reste3.png"
+}
+images {
+  image: "/assets/images/mute.png"
+}
+images {
+  image: "/assets/images/unmute.png"
+}
+images {
+  image: "/assets/images/bigcase.png"
+}
+images {
+  image: "/assets/images/briques.png"
+}
+images {
+  image: "/assets/images/Boule.png"
+}
+images {
+  image: "/assets/images/grass.png"
+}
+images {
+  image: "/assets/images/BouleG.png"
+}
+animations {
+  id: "explode"
+  images {
+    image: "/assets/images/Explosion1.png"
+  }
+  images {
+    image: "/assets/images/Explosion2.png"
+  }
+  images {
+    image: "/assets/images/Explosion3.png"
+  }
+  images {
+    image: "/assets/images/Boule.png"
+  }
+  fps: 4
+}
+animations {
+  id: "TagetToHit"
+  images {
+    image: "/assets/images/Boule.png"
+  }
+  images {
+    image: "/assets/images/BouleG.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 2
+}
+extrude_borders: 2

@@ -1,0 +1,354 @@
+script: "/main/scripts/MainMenu.gui_script"
+fonts {
+  name: "EL_VOLCAN_black"
+  font: "/preset/EL_VOLCAN_black.font"
+}
+fonts {
+  name: "medium_el_volcan"
+  font: "/preset/medium_el_volcan.font"
+}
+textures {
+  name: "main"
+  texture: "/assets/main.atlas"
+}
+nodes {
+  position {
+    x: 960.0
+    y: 540.0
+  }
+  type: TYPE_BOX
+  texture: "main/background"
+  id: "Gui_Background"
+  layer: "background"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 620.0
+    y: 360.0
+  }
+  size {
+    x: 190.0
+    y: 190.0
+  }
+  type: TYPE_BOX
+  texture: "main/Boule"
+  id: "Decrease_Number_Player"
+  layer: "button"
+  inherit_alpha: true
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "-"
+  font: "EL_VOLCAN_black"
+  id: "DecreaseNumberPlayer"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "Decrease_Number_Player"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 1260.0
+    y: 360.0
+  }
+  size {
+    x: 190.0
+    y: 190.0
+  }
+  type: TYPE_BOX
+  texture: "main/Boule"
+  id: "Increase_Number_Player"
+  layer: "button"
+  inherit_alpha: true
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "+"
+  font: "EL_VOLCAN_black"
+  id: "IncreaseNumberPlayer"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "Increase_Number_Player"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 960.0
+    y: 295.0
+  }
+  type: TYPE_BOX
+  texture: "main/yellowStar"
+  id: "Selected_Number_Player"
+  layer: "button"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "1\n"
+  ""
+  font: "EL_VOLCAN_black"
+  id: "SelectedNumberPlayerText"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "Selected_Number_Player"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 960.0
+    y: 530.0
+  }
+  size {
+    x: 100.0
+    y: 100.0
+  }
+  type: TYPE_BOX
+  texture: "main/Boule"
+  id: "Start_Game"
+  layer: "Notification"
+  inherit_alpha: true
+}
+nodes {
+  scale {
+    x: 0.8
+    y: 0.8
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "C\'est\n"
+  "Parti!"
+  font: "EL_VOLCAN_black"
+  id: "text"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "Start_Game"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 960.0
+    y: 910.0
+  }
+  scale {
+    x: 0.2
+    y: 0.2
+  }
+  type: TYPE_BOX
+  texture: "main/Arducible"
+  id: "gameLogo"
+  layer: "Notification"
+  inherit_alpha: true
+  alpha: 0.0
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 620.0
+    y: 700.0
+  }
+  size {
+    x: 190.0
+    y: 190.0
+  }
+  type: TYPE_BOX
+  texture: "main/Boule"
+  id: "Options"
+  layer: "button"
+  inherit_alpha: true
+}
+nodes {
+  scale {
+    x: 0.5
+    y: 0.5
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "Options"
+  font: "EL_VOLCAN_black"
+  id: "text1"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "Options"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 1260.0
+    y: 700.0
+  }
+  size {
+    x: 190.0
+    y: 190.0
+  }
+  type: TYPE_BOX
+  texture: "main/Boule"
+  id: "Aide"
+  layer: "button"
+  inherit_alpha: true
+}
+nodes {
+  scale {
+    x: 0.5
+    y: 0.5
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "Aide"
+  font: "EL_VOLCAN_black"
+  id: "text2"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "Aide"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 960.0
+    y: 410.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "Nombre de joueurs"
+  font: "medium_el_volcan"
+  id: "SelectNumberPlayerText"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  layer: "button"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 100.0
+    y: 980.0
+  }
+  size {
+    x: 190.0
+    y: 139.0
+  }
+  type: TYPE_BOX
+  texture: "main/stoneButton_Released"
+  id: "ExitGame"
+  layer: "button"
+  inherit_alpha: true
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "Sortie"
+  font: "EL_VOLCAN_black"
+  id: "exitButton"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "ExitGame"
+  inherit_alpha: true
+}
+layers {
+  name: "background"
+}
+layers {
+  name: "button"
+}
+layers {
+  name: "Notification"
+}
+material: "/builtins/materials/gui.material"
+adjust_reference: ADJUST_REFERENCE_PARENT

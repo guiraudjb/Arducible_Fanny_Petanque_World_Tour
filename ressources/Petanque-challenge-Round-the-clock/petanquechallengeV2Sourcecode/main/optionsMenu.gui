@@ -1,0 +1,258 @@
+script: "/main/scripts/OptionMenu.gui_script"
+fonts {
+  name: "EL_VOLCAN_black"
+  font: "/preset/EL_VOLCAN_black.font"
+}
+fonts {
+  name: "little_el_volcan"
+  font: "/preset/little_el_volcan.font"
+}
+fonts {
+  name: "medium_el_volcan"
+  font: "/preset/medium_el_volcan.font"
+}
+textures {
+  name: "main"
+  texture: "/assets/main.atlas"
+}
+nodes {
+  position {
+    x: 960.0
+    y: 530.0
+  }
+  size {
+    x: 100.0
+    y: 100.0
+  }
+  type: TYPE_BOX
+  texture: "main/Boule"
+  id: "Exit"
+  layer: "front"
+  inherit_alpha: true
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "Retour"
+  font: "EL_VOLCAN_black"
+  id: "exitButton"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "Exit"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 960.0
+    y: 150.0
+  }
+  color {
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_BOX
+  texture: "main/unmute"
+  id: "Sound"
+  layer: "front"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 620.0
+    y: 360.0
+  }
+  size {
+    x: 190.0
+    y: 190.0
+  }
+  type: TYPE_BOX
+  texture: "main/Boule"
+  id: "Decrease_Number_Tours"
+  layer: "front"
+  inherit_alpha: true
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "-"
+  font: "EL_VOLCAN_black"
+  id: "DecreaseNumberTours"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "Decrease_Number_Tours"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 1260.0
+    y: 360.0
+  }
+  size {
+    x: 190.0
+    y: 190.0
+  }
+  type: TYPE_BOX
+  texture: "main/Boule"
+  id: "Increase_Number_Tours"
+  layer: "front"
+  inherit_alpha: true
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "+"
+  font: "EL_VOLCAN_black"
+  id: "IncreaseNumberTours"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "Increase_Number_Tours"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 960.0
+    y: 312.0
+  }
+  type: TYPE_BOX
+  texture: "main/scores"
+  id: "Selected_Number_Tours"
+  layer: "front"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "1\n"
+  ""
+  font: "EL_VOLCAN_black"
+  id: "SelectedNumberTourText"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "Selected_Number_Tours"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 960.0
+    y: 540.0
+  }
+  type: TYPE_BOX
+  texture: "main/background"
+  id: "Gui_Background"
+  layer: "Top"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 799.0
+    y: 150.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "SON\n"
+  "Mute / Unmute"
+  font: "medium_el_volcan"
+  id: "soundInfo"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  layer: "Top"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 960.0
+    y: 417.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "Personnaliser le nombre\n"
+  " de tours"
+  font: "medium_el_volcan"
+  id: "choixNbtours"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  layer: "Top"
+  inherit_alpha: true
+}
+layers {
+  name: "Top"
+}
+layers {
+  name: "front"
+}
+material: "/builtins/materials/gui.material"
+adjust_reference: ADJUST_REFERENCE_PARENT
