@@ -24,9 +24,12 @@ consommation réelle de 1/cible).*
 
 | Composant | Détail | Fichier |
 |---|---|---|
-| Arduino Leonardo | ATmega32u4, USB HID natif — reconnu par l'ordinateur comme un clavier. Reçoit les 3 signaux de cible et envoie les touches `E`/`R`/`T`. | — |
-| Connecteurs RJ45 (×3) + câble Ethernet Cat5/6 | Un câble réseau par cible ramène le signal du capteur + alimentation vers le boîtier Leonardo. | [Schéma de câblage](schematics/arduino-leonardo-rj45-wiring.png) |
+| Carte Pro Micro (ATmega32U4) | Même puce qu'un Arduino Leonardo, dont elle reprend le brochage — reconnue comme tel par l'ordinateur (USB HID natif, clavier). Reçoit les 3 signaux de cible et envoie les touches `E`/`R`/`T`. | [Photo fournisseur](renders/vendor/pro-micro-board.png) · [Pièce Fritzing](fritzing/pro-micro-jeremylee-sparkfun.fzpz) |
+| Sketch Arduino | Boucle de lecture des 3 broches cible + retranscription clavier via `Keyboard.h`. | [littlepromicro.ino](firmware/littlepromicro.ino) |
+| Boîtier de protection (prototype) | Petit boîtier imprimé en 3D pour la carte nue, antérieur au boîtier de la borne ci-dessous. | [FCStd](enclosure/promicrousbcv1.FCStd) |
+| Connecteurs RJ45 (×3) + câble Ethernet Cat5/6 | Un câble réseau par cible ramène le signal du capteur + alimentation vers la carte Pro Micro. | [Schéma Fritzing](schematics/pro-micro-wiring.png) ([source](fritzing/cablage-pro-micro.fzz)) · [Pièce Fritzing RJ45](fritzing/rj45-8-jack-sparkfun.fzpz) (déjà incluse nativement dans Fritzing : Core Parts → « RJ45 Jack ») · [Ancien schéma Leonardo](schematics/arduino-leonardo-rj45-wiring.png) |
 | Câble Micro-USB | Liaison Leonardo ↔ PC. | — |
+| Boîtier imprimé en 3D (façade, fermeture, casquette, support WS2812) | Réutilise le design du contrôleur Pro Micro, adapté pour loger le Leonardo. | [FCStd](enclosure/boitierJeufreecad020.FCStd) · [Façade STL](enclosure/boitierJeu-facade.stl) · [Fermeture STL](enclosure/boitierJeu-fermeture.stl) · [Casquette STL](enclosure/boitierJeufreecad020-casquette.stl) · [Support WS2812 STL](enclosure/boitierJeu-supportws2812.stl) |
 
 > Le schéma de câblage montre aussi 4 boutons "Key up/left/right/down" :
 > **obsolètes**, hérités d'un prototype antérieur — le jeu actuel n'utilise
