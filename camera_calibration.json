@@ -1,0 +1,14 @@
+{
+  "active_camera_index": 0,
+  "cameras": {
+    "0": {
+      "CamFPS": 5,
+      "CaptureHeight": 240,
+      "CaptureWidth": 320,
+      "ZoneHeightPercent": 100,
+      "ZoneOffsetXPercent": 0,
+      "ZoneOffsetYPercent": 0,
+      "ZoneWidthPercent": 50
+    }
+  }
+}
