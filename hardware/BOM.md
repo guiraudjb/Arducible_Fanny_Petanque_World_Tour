@@ -10,15 +10,18 @@ estimées.
 
 | Réf. | Composant | Qté/cible | Qté totale | Fichier |
 |---|---|---|---|---|
-| U1 | Capteur à effet Hall **OH37** (Nanjing Ouzhuo Tech, SOT-23) | 1 | 3 | [BOM JLCPCB](pcb/bom-jlcpcb.png) |
-| R1 | Résistance **10 kΩ** (CMS 0603) | 1 | 3 | [BOM JLCPCB](pcb/bom-jlcpcb.png) |
-| — | PCB détection (Gerber `arduciblesmd`, 2 couches) | 1 | 3 | [Gerber](pcb/gerber-pcb-detection.zip) · [modèle 3D](pcb/pcb-detection-3d-model.zip) |
+| U1 | Capteur à effet Hall **OH37** (Nanjing Ouzhuo Tech, SOT-23) | 1 | 3 | [BOM JLCPCB](pcb/bom-jlcpcb-v3.csv) |
+| R1 | Résistance **10 kΩ** (CMS 0603) | 1 | 3 | [BOM JLCPCB](pcb/bom-jlcpcb-v3.csv) |
+| J1 | Connecteur **JST-XH 3 points** (DATA/-/+, LCSC C2316) | 1 | 3 | [BOM JLCPCB](pcb/bom-jlcpcb-v3.csv) |
+| — | PCB détection v3 (Gerber `arduciblesmdv3`, 2 couches) | 1 | 3 | [Gerber](pcb/gerber-pcb-detection-v3.zip) · [BOM](pcb/bom-jlcpcb-v3.csv) · [Pick & Place](pcb/pick-and-place-v3.csv) · [modèle 3D](pcb/pcb-detection-3d-model.zip) |
 | — | Aimant néodyme cylindrique **∅4×2 mm, N80** (solidaire de la boule, déclenche le capteur) | 1 | 3 | [FCStd](cad/aimant-neodyme-4x2.FCStd) |
 
-*Source composants : capture "Bill of Material" JLCPCB
-(`ressources/archives/PCB pour détection/composantssmd.png`) —
-OH37 commandé ×25, résistance 10k ×30 (quantités de lot, pas la
-consommation réelle de 1/cible).*
+*Fichiers de commande JLCPCB (Gerber/BOM/Pick & Place, prêts à l'import)
+générés le 2026-07-17, à jour dans `pcb/*-v3.*`. Version précédente sans
+connecteur conservée : [Gerber](pcb/gerber-pcb-detection.zip). Source des
+quantités de lot (pas la consommation réelle de 1/cible) : capture
+"Bill of Material" JLCPCB (`ressources/archives/PCB pour détection/composantssmd.png`)
+— OH37 commandé ×25, résistance 10k ×30.*
 
 ## Électronique — contrôleur central (×1)
 
