@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Fanny World Tour — Card Studio</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="topbar">
+  <h1>Card Studio</h1>
+  <div class="topbar-controls">
+    <label>Jokers
+      <select id="jokerCount">
+        <option value="0">0</option>
+        <option value="2" selected>2</option>
+        <option value="4">4</option>
+        <option value="6">6</option>
+      </select>
+    </label>
+    <label>Taille
+      <select id="sizePreset">
+        <option value="poker">Poker (63x88mm)</option>
+        <option value="bridge">Bridge (58x89mm)</option>
+        <option value="tarot">Tarot (70x120mm)</option>
+        <option value="square">Carrée (65x65mm)</option>
+        <option value="mini">Mini (44x63mm)</option>
+        <option value="jumbo">Jumbo (88x122mm)</option>
+        <option value="custom">Personnalisée…</option>
+      </select>
+    </label>
+    <span id="customSizeInputs" class="hidden">
+      <input id="customW" type="number" min="20" max="200" value="63" step="1" style="width:52px"> ×
+      <input id="customH" type="number" min="20" max="200" value="88" step="1" style="width:52px"> mm
+    </span>
+    <label>Coins
+      <select id="cornerStyle">
+        <option value="rounded">Arrondis</option>
+        <option value="square">Carrés</option>
+      </select>
+    </label>
+    <label class="checkbox-label"><input type="checkbox" id="showLabel" checked> Afficher le nom</label>
+    <label>Aperçu profil
+      <select id="previewProfile">
+        <option value="home">Maison / Sprites</option>
+        <option value="mpc">MakePlayingCards</option>
+        <option value="printeurope">Print Europe</option>
+      </select>
+    </label>
+    <span id="progress" class="progress">0 / 54</span>
+    <button id="clearAll" class="btn btn-ghost">Tout vider</button>
+  </div>
+  <div class="topbar-exports">
+    <button id="exportSprite" class="btn">Export sprites jeu vidéo</button>
+    <button id="exportMpc" class="btn">Export MakePlayingCards</button>
+    <button id="exportPrintEurope" class="btn">Export Print Europe</button>
+  </div>
+</header>
+
+<main class="layout">
+  <section class="grid-panel">
+    <h2>Plan de jeu <span class="hint">(clique une case, puis clique une image à droite)</span></h2>
+    <div id="suitGrids"></div>
+    <div id="jokerGrid" class="suit-row"></div>
+  </section>
+
+  <section class="preview-panel">
+    <h2>Aperçu</h2>
+    <div id="previewBox" class="preview-box">
+      <div class="preview-placeholder">Sélectionne une case</div>
+    </div>
+    <button id="clearSlot" class="btn btn-ghost">Vider cette case</button>
+  </section>
+
+  <section class="picker-panel">
+    <div class="picker-tabs">
+      <button class="tab-btn active" data-tab="fanny">Fanny World Tour</button>
+      <button class="tab-btn" data-tab="custom">Mes imports</button>
+    </div>
+    <div id="tabFanny" class="tab-content active">
+      <input id="search" type="search" placeholder="Rechercher un pays…">
+    </div>
+    <div id="tabCustom" class="tab-content">
+      <label class="upload-btn">
+        Importer des images…
+        <input id="uploadInput" type="file" accept="image/*" multiple hidden>
+      </label>
+      <p class="hint">Les images importées restent disponibles entre les sessions (stockées côté serveur).</p>
+    </div>
+    <div id="assetGrid" class="country-grid"></div>
+  </section>
+</main>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

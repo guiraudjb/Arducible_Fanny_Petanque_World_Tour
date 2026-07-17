@@ -532,6 +532,86 @@
   }
   .bom-links a { font-weight: 700; }
 
+  /* ---------- Illustrated part cards (fiches pièce) ---------- */
+  .part-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  .part-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    padding: 0.75rem;
+  }
+  .part-card .thumb {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: contain;
+    background: #fff;
+    border: 1px solid var(--line);
+  }
+  .part-card .thumb.none {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--line);
+    font-size: 0.75rem;
+    text-align: center;
+    padding: 0.5rem;
+  }
+  .part-card h4 {
+    font-family: "Rockwell", "Roboto Slab", Georgia, serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    margin: 0.75rem 0 0.3rem;
+  }
+  .part-card .qty {
+    font-family: "Courier New", ui-monospace, "SFMono-Regular", monospace;
+    font-size: 0.76rem;
+    color: var(--ink-soft);
+  }
+  .part-card .files {
+    margin-top: 0.5rem;
+    font-size: 0.76rem;
+  }
+  .part-card .files a {
+    font-family: "Courier New", ui-monospace, "SFMono-Regular", monospace;
+    color: var(--neon-blue);
+    text-decoration: underline;
+    margin-right: 0.6rem;
+  }
+  .hero-render {
+    width: 100%;
+    max-width: 42rem;
+    display: block;
+    margin: 2.5rem auto 0;
+    background: #fff;
+    border: 1px solid var(--line);
+    box-shadow: 0 14px 32px var(--shadow);
+  }
+  .hero-render + p.caption {
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    margin-top: 0.6rem;
+  }
+  .code-block {
+    margin-top: 1.25rem;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    font-family: "Courier New", ui-monospace, "SFMono-Regular", monospace;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+
   /* ---------- Footer luggage tag ---------- */
   footer {
     padding: 4rem 1.5rem 5rem;
@@ -591,10 +671,18 @@
 
 <main>
 
-  <section id="teaser" aria-label="Bande-annonce du tour du monde">
-    <p class="eyebrow">En vidéo</p>
-    <h2 class="section-title">111 pays, un seul plateau de jeu</h2>
-    <p class="section-lede">Le teaser parcourt le tour du monde pays par pays : décor, hymne national et portrait de Fanny changent à chaque étape.</p>
+  <section id="intro" aria-label="Introduction">
+    <p class="eyebrow">Le projet</p>
+    <h2 class="section-title">Un jeu électromécanique, de la vision par ordinateur, et un jeu vidéo</h2>
+    <p class="section-lede">Fanny Pétanque World Tour, c'est la rencontre de trois choses : un <strong>jeu électromécanique</strong> — trois cibles physiques à capteurs à effet Hall, montées sur un châssis en tôle pliée ; de la <strong>vision par ordinateur</strong> — une webcam et un suivi de pose (MediaPipe) qui vérifient, sans jamais viser à la place du joueur, qu'il reste dans la zone de tir désignée ; et un <strong>jeu vidéo</strong> — écrit en Python/Pygame, qui fait défiler un tour du monde à travers 111 pays.</p>
+    <p class="section-lede">Ce guide documente la conception complète de la borne, pièce par pièce, en quatre parties : le jeu et son installation, le contrôleur Arduino et son boîtier imprimé en 3D, le système de détection et l'articulation de chaque cible, puis le châssis et ses contraintes mécaniques.</p>
+    <p class="section-lede" style="font-size:0.85rem;">Code, documentation, schémas et modèles 3D sont distribués sous licence <a href="LICENSE">Creative Commons BY 4.0</a> : réutilisation libre, y compris commerciale, à condition de créditer l'auteur.</p>
+  </section>
+
+  <section id="partie1" aria-label="Partie 1 — Le jeu vidéo et son installation">
+    <p class="eyebrow">Partie 1</p>
+    <h2 class="section-title">Le jeu vidéo et son installation</h2>
+    <p class="section-lede">111 pays, un seul plateau de jeu : le teaser parcourt le tour du monde pays par pays, décor, hymne national et portrait de Fanny changeant à chaque étape.</p>
     <div class="video-frame">
       <video id="teaser-video" controls preload="none" poster="videos/poster-teaser.jpg" playsinline>
         <source src="videos/teaser-fr.mp4" type="video/mp4" />
@@ -603,11 +691,8 @@
     <button type="button" class="lang-toggle" id="teaser-lang-toggle"
       data-fr-src="videos/teaser-fr.mp4" data-fr-label="Watch in English"
       data-en-src="videos/teaser-en.mp4" data-en-label="Voir en français">Watch in English</button>
-  </section>
 
-  <section id="rail" aria-label="Captures d'écran du jeu">
-    <p class="eyebrow">Captures d'écran</p>
-    <h2 class="section-title">Une partie, de la première pièce à l'écran des scores</h2>
+    <h3 class="bom-group-title">Une partie, de la première pièce à l'écran des scores</h3>
     <div class="rail-scroll">
       <figure class="postcard">
         <img src="screenshots/insert-coin.jpg" alt="Écran d'accueil affichant « insert coin » et le meilleur score." loading="lazy" />
@@ -630,12 +715,105 @@
         <figcaption>Fin de manche</figcaption>
       </figure>
     </div>
+
+    <h3 class="bom-group-title">Un tour du monde en cent onze pays</h3>
+    <p class="section-lede">Chaque série de tirs réussis fait passer au pays suivant : décor, hymne national, portrait et réplique de Fanny changent ensemble, dans l'ordre du tour.</p>
+    <div class="tour-meta">
+      <div><span class="stat-value neon" data-text="111">111</span><span class="stat-label">Pays</span></div>
+      <div><span class="stat-value neon" data-text="3">3</span><span class="stat-label">Cibles</span></div>
+      <div><span class="stat-value neon" data-text="4">4</span><span class="stat-label">Tirs / pays¹</span></div>
+      <div><span class="stat-value neon" data-text="1">1</span><span class="stat-label">Compagne de route</span></div>
+    </div>
+    <div class="tour-grid">
+      <div class="stamp">
+        <p class="country">France</p>
+        <p>« Tout a commencé en 1907 à La Ciotat ! Jules Lenoir, trop rhumatisant pour courir, a joué "les pieds tanqués" — et la pétanque était née. »</p>
+      </div>
+      <div class="stamp">
+        <p class="country">Thaïlande</p>
+        <p>« Un véritable sport d'État : importée il y a 60 ans par la reine mère, elle compte aujourd'hui 2 millions de pratiquants. »</p>
+      </div>
+      <div class="stamp">
+        <p class="country">Madagascar</p>
+        <p>« La pétanque est reine ! Introduite par les colons français, elle est aujourd'hui championne du monde en 1999 et en 2016. »</p>
+      </div>
+      <div class="stamp">
+        <p class="country">Wallis-et-Futuna</p>
+        <p>« Le territoire a accueilli les Océania 2025, où les Futuniennes ont décroché l'or en triplette dames. »</p>
+      </div>
+    </div>
+    <p class="section-lede" style="margin-top:1.5rem;font-size:0.85rem;">¹ Valeur par défaut, réglable dans <code>config.ini</code> (<code>hits_per_country</code>).</p>
+
+    <h3 class="bom-group-title">Fiche technique</h3>
+    <div class="manual">
+      <div>
+        <h3>Contrôles clavier</h3>
+        <dl>
+          <dt>E / R / T</dt><dd>cible gauche / centre / droite</dd>
+          <dt>C</dt><dd>ajoute un crédit</dd>
+          <dt>M</dt><dd>coupe / relance la musique</dd>
+          <dt>S</dt><dd>active / coupe les effets</dd>
+          <dt>Échap</dt><dd>quitte le jeu</dd>
+        </dl>
+      </div>
+      <div>
+        <h3>Sous le capot</h3>
+        <ul>
+          <li>Python + Pygame pour la boucle de jeu et l'affichage</li>
+          <li>OpenCV + MediaPipe Pose Landmarker pour le suivi de pose</li>
+          <li>Configuration entière via <code>config.ini</code> (résolution, plein écran, effet CRT, durées, bonus de temps)</li>
+          <li>Meilleur score sauvegardé automatiquement</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="bom-group-title">Installation</h3>
+    <div class="manual">
+      <div>
+        <h3>Lancer le jeu</h3>
+        <dl>
+          <dt>1.</dt><dd><code>pip install -r requirements.txt</code></dd>
+          <dt>2.</dt><dd><code>python main.py</code></dd>
+        </dl>
+      </div>
+      <div>
+        <h3>Détails</h3>
+        <ul>
+          <li>Un <code>config.ini</code> est généré automatiquement au premier lancement s'il n'existe pas.</li>
+          <li>Le jeu reste jouable sans webcam ni cibles physiques (mode clavier seul).</li>
+          <li>Documentation complète : <a href="README.md">README.md</a>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="bom-group-title">Une vraie borne, de vraies cibles</h3>
+    <p class="section-lede">Trois extraits pris sur le vif : la cible de près, la borne en plein concours, et un reportage sur un prototype antérieur.</p>
+    <div class="video-row">
+      <figure class="video-tile">
+        <video controls preload="none" poster="videos/poster-demo-cible.jpg" playsinline>
+          <source src="videos/demo-cible.mp4" type="video/mp4" />
+        </video>
+        <figcaption>La cible à effet Hall, de près</figcaption>
+      </figure>
+      <figure class="video-tile">
+        <video controls preload="none" poster="videos/poster-demo-evenement.jpg" playsinline>
+          <source src="videos/demo-evenement.mp4" type="video/mp4" />
+        </video>
+        <figcaption>En situation, aux Apéros de la Pétanque</figcaption>
+      </figure>
+      <figure class="video-tile">
+        <video controls preload="none" poster="videos/poster-demo-reportage.jpg" playsinline>
+          <source src="videos/demo-reportage.mp4" type="video/mp4" />
+        </video>
+        <figcaption>Reportage sur un prototype antérieur</figcaption>
+      </figure>
+    </div>
   </section>
 
-  <section id="how" aria-label="Comment ça marche">
-    <p class="eyebrow">Le matériel</p>
-    <h2 class="section-title">Pas de souris, pas de manette : trois vraies cibles</h2>
-    <p class="section-lede">Le joueur ne vise rien à l'écran. Il touche trois cibles physiques montées sur un socle, équipées de capteurs à effet Hall.</p>
+  <section id="partie2" aria-label="Partie 2 — Le contrôleur Arduino">
+    <p class="eyebrow">Partie 2</p>
+    <h2 class="section-title">Le contrôleur Arduino</h2>
+    <p class="section-lede">Pas de souris, pas de manette : chaque cible touchée envoie un simple signal électrique, converti en touche clavier par un Arduino Leonardo.</p>
 
     <div class="schematic">
       <div class="node">
@@ -660,98 +838,80 @@
         Une webcam couplée à un suivi de pose (<strong>MediaPipe</strong>) ne sert jamais à viser : elle vérifie seulement que le joueur reste dans la zone de tir désignée. S'il en sort, les trois cibles sont inhibées jusqu'à son retour.
       </p>
     </div>
-  </section>
 
-  <section id="en-vrai" aria-label="La borne en situation réelle">
-    <p class="eyebrow">Pas un rendu 3D</p>
-    <h2 class="section-title">Une vraie borne, de vraies cibles</h2>
-    <p class="section-lede">Trois extraits pris sur le vif : la cible de près, la borne en plein concours, et un reportage sur un prototype antérieur.</p>
-    <div class="video-row">
-      <figure class="video-tile">
-        <video controls preload="none" poster="videos/poster-demo-cible.jpg" playsinline>
-          <source src="videos/demo-cible.mp4" type="video/mp4" />
-        </video>
-        <figcaption>La cible à effet Hall, de près</figcaption>
-      </figure>
-      <figure class="video-tile">
-        <video controls preload="none" poster="videos/poster-demo-evenement.jpg" playsinline>
-          <source src="videos/demo-evenement.mp4" type="video/mp4" />
-        </video>
-        <figcaption>En situation, aux Apéros de la Pétanque</figcaption>
-      </figure>
-      <figure class="video-tile">
-        <video controls preload="none" poster="videos/poster-demo-reportage.jpg" playsinline>
-          <source src="videos/demo-reportage.mp4" type="video/mp4" />
-        </video>
-        <figcaption>Reportage sur un prototype antérieur</figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <section id="tour" aria-label="Tour du monde">
-    <p class="eyebrow">Le jeu</p>
-    <h2 class="section-title">Un tour du monde en cent onze pays</h2>
-    <p class="section-lede">Chaque série de tirs réussis fait passer au pays suivant : décor, hymne national, portrait et réplique de Fanny changent ensemble, dans l'ordre du tour.</p>
-
-    <div class="tour-meta">
-      <div><span class="stat-value neon" data-text="111">111</span><span class="stat-label">Pays</span></div>
-      <div><span class="stat-value neon" data-text="3">3</span><span class="stat-label">Cibles</span></div>
-      <div><span class="stat-value neon" data-text="4">4</span><span class="stat-label">Tirs / pays¹</span></div>
-      <div><span class="stat-value neon" data-text="1">1</span><span class="stat-label">Compagne de route</span></div>
-    </div>
-
-    <div class="tour-grid">
-      <div class="stamp">
-        <p class="country">France</p>
-        <p>« Tout a commencé en 1907 à La Ciotat ! Jules Lenoir, trop rhumatisant pour courir, a joué "les pieds tanqués" — et la pétanque était née. »</p>
+    <h3 class="bom-group-title">Le contrôleur : une carte Pro Micro</h3>
+    <p class="section-lede">Le contrôleur est une carte <strong>Pro Micro</strong> (ATmega32U4 — la même puce qu'un Arduino Leonardo, dont elle reprend le brochage) : l'ordinateur la reconnaît comme un Leonardo. Le sketch qu'elle exécute est minimal : trois entrées numériques, une par cible, sont lues en boucle et retranscrites en pression/relâchement des touches <code>E</code>, <code>R</code>, <code>T</code> via la bibliothèque <code>Keyboard</code>.</p>
+    <div class="part-grid">
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/vendor/pro-micro-board.png" alt="Capture d'une fiche produit fournisseur pour une carte Pro Micro ATmega32U4, avec les variantes connecteur Micro-USB et USB-C." loading="lazy" />
+        <h4>Carte Pro Micro (ATmega32U4)</h4>
+        <p class="qty">1 / contrôleur</p>
+        <p class="files"><a href="hardware/fritzing/pro-micro-jeremylee-sparkfun.fzpz">Fritzing</a></p>
       </div>
-      <div class="stamp">
-        <p class="country">Thaïlande</p>
-        <p>« Un véritable sport d'État : importée il y a 60 ans par la reine mère, elle compte aujourd'hui 2 millions de pratiquants. »</p>
-      </div>
-      <div class="stamp">
-        <p class="country">Madagascar</p>
-        <p>« La pétanque est reine ! Introduite par les colons français, elle est aujourd'hui championne du monde en 1999 et en 2016. »</p>
-      </div>
-      <div class="stamp">
-        <p class="country">Wallis-et-Futuna</p>
-        <p>« Le territoire a accueilli les Océania 2025, où les Futuniennes ont décroché l'or en triplette dames. »</p>
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/enclosure/promicro-board.png" alt="Rendu 3D d'un petit boîtier de protection prototype pour la carte Pro Micro." loading="lazy" />
+        <h4>Boîtier de protection (prototype)</h4>
+        <p class="qty">1 / contrôleur</p>
+        <p class="files"><a href="hardware/enclosure/promicrousbcv1.FCStd">FCStd</a></p>
       </div>
     </div>
-    <p class="section-lede" style="margin-top:1.5rem;font-size:0.85rem;">¹ Valeur par défaut, réglable dans <code>config.ini</code> (<code>hits_per_country</code>).</p>
+    <p class="bom-links">Sketch Arduino : <a href="hardware/firmware/littlepromicro.ino">littlepromicro.ino</a></p>
+    <pre class="code-block"><code>//programme pour jeu Arducible
+//auteur Jean-Baptiste GUIRAUD
+#include &lt;Keyboard.h&gt;
+const int b1 = 10;
+const int Cible1 = 15;
+const int Cible2 = 14;
+const int Cible3 = 16;
+
+void setup() {
+  pinMode(b1, INPUT_PULLUP);
+  pinMode(Cible1,INPUT);
+  pinMode(Cible2,INPUT);
+  pinMode(Cible3,INPUT);
+  Keyboard.begin();
+  delay(3000);
+}
+
+void loop(){
+    if(digitalRead(b1)) {
+      Keyboard.release(KEY_RIGHT_ARROW);
+    } else {
+      Keyboard.press(KEY_RIGHT_ARROW);
+    }
+
+    if(digitalRead(Cible1)) {
+      Keyboard.press('e');
+    } else {
+      Keyboard.release('e');
+    }
+
+    if(digitalRead(Cible2)) {
+      Keyboard.press('r');
+    } else {
+      Keyboard.release('r');
+    }
+
+    if(digitalRead(Cible3)) {
+      Keyboard.press('t');
+    } else {
+      Keyboard.release('t');
+    }
+}</code></pre>
+
+    <h3 class="bom-group-title">Câblage</h3>
+    <p class="section-lede">Un câble réseau (RJ45, Cat5/6) par cible ramène le signal du capteur et l'alimentation jusqu'à la carte Pro Micro ; un câble Micro-USB relie ensuite la carte à l'ordinateur.</p>
+    <img class="hero-render" src="hardware/schematics/pro-micro-wiring.png" alt="Schéma de câblage Fritzing entre un jack RJ45 et la carte Pro Micro : broches signal, alimentation et masse reliées via le câble réseau." />
+    <p class="caption">Schéma réalisé sous Fritzing — fichier source : <a href="hardware/fritzing/cablage-pro-micro.fzz">cablage-pro-micro.fzz</a>. Le bouton-poussoir représente ici une cible générique (capteur à effet Hall) pour la démonstration du câblage.</p>
+    <p class="bom-links">Ancien schéma (contrôleur Leonardo, boutons obsolètes) conservé pour référence : <a href="hardware/schematics/arduino-leonardo-rj45-wiring.png">arduino-leonardo-rj45-wiring.png</a>.</p>
   </section>
 
-  <section id="specs" aria-label="Fiche technique">
-    <p class="eyebrow">Fiche technique</p>
-    <h2 class="section-title">Pour qui veut monter la borne ou lire le code</h2>
-
-    <div class="manual">
-      <div>
-        <h3>Contrôles clavier</h3>
-        <dl>
-          <dt>E / R / T</dt><dd>cible gauche / centre / droite</dd>
-          <dt>I</dt><dd>ajoute un crédit</dd>
-          <dt>M</dt><dd>coupe / relance la musique</dd>
-          <dt>S</dt><dd>active / coupe les effets</dd>
-          <dt>Échap</dt><dd>quitte le jeu</dd>
-        </dl>
-      </div>
-      <div>
-        <h3>Sous le capot</h3>
-        <ul>
-          <li>Python + Pygame pour la boucle de jeu et l'affichage</li>
-          <li>OpenCV + MediaPipe Pose Landmarker pour le suivi de pose</li>
-          <li>Configuration entière via <code>config.ini</code> (résolution, plein écran, effet CRT, durées, bonus de temps)</li>
-          <li>Meilleur score sauvegardé automatiquement</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <section id="construction" aria-label="Construction du châssis">
-    <p class="eyebrow">Documentation matériel</p>
-    <h2 class="section-title">Construction du châssis</h2>
-    <p class="section-lede">Nomenclature extraite directement des assemblages FreeCAD (<code>ChassisAssemblageV7.FCStd</code>, <code>assemblageArticulation.FCStd</code>) — chaque pièce ci-dessous est téléchargeable (STEP, FreeCAD, Gerber). Nomenclature complète : <a href="hardware/BOM.md">hardware/BOM.md</a>.</p>
+  <section id="partie3" aria-label="Partie 3 — Le système de détection">
+    <p class="eyebrow">Partie 3</p>
+    <h2 class="section-title">Le système de détection</h2>
+    <p class="section-lede">Chaque cible embarque un capteur à effet Hall qui détecte le passage d'un aimant, sans aucun contact électrique avec la boule elle-même.</p>
+    <img class="hero-render" src="hardware/schematics/pcb-detection-oh37.png" alt="Plan du PCB de détection : capteur à effet Hall OH37 en haut, résistance 10 kΩ au milieu, trois pastilles de connexion en bas vers le câble RJ45." />
+    <p class="caption">PCB détection (2 couches) — <a href="hardware/pcb/bom-jlcpcb.png">BOM JLCPCB</a> · <a href="hardware/pcb/gerber-pcb-detection.zip">Gerber</a> · <a href="hardware/pcb/pcb-detection-3d-model.zip">Modèle 3D</a></p>
 
     <h3 class="bom-group-title">Articulation d'une cible (×3)</h3>
     <ol class="bom-steps">
@@ -760,66 +920,150 @@
       <li>Dans l'axe du bracket : rondelle épaisse → tampon ressort silicone CR60 → rondelle fine → 2ᵉ rondelle épaisse, traversés par la vis CHC M8×70 (l'axe principal), serrée par un écrou M8.</li>
       <li>Sur cet axe : la boule de pétanque, puis l'interface axe-aimant portant l'aimant néodyme en bout de course — un coup sur la boule fait pivoter l'axe contre le tampon ressort, ce qui déplace l'aimant devant le capteur Hall et déclenche la détection.</li>
     </ol>
-    <div class="bom-table-wrap">
-      <table class="bom-table">
-        <thead><tr><th>Pièce</th><th>Qté/cible</th><th>Total</th><th>Fichier</th></tr></thead>
-        <tbody>
-          <tr><td>Plaque d'articulation milieu (découpe laser 140×40×5&nbsp;mm)</td><td class="num">1</td><td class="num">3</td><td class="files"><a href="hardware/cad/plaque-milieu.step">STEP</a><a href="hardware/cad/plaque-milieu.FCStd">FCStd</a></td></tr>
-          <tr><td>Plaque d'articulation sup (idem)</td><td class="num">1</td><td class="num">3</td><td class="files"><a href="hardware/cad/plaque-sup.step">STEP</a><a href="hardware/cad/plaque-sup.FCStd">FCStd</a></td></tr>
-          <tr><td>Plaque d'articulation inf (idem)</td><td class="num">1</td><td class="num">3</td><td class="files"><a href="hardware/cad/plaque-inf.step">STEP</a><a href="hardware/cad/plaque-inf.FCStd">FCStd</a></td></tr>
-          <tr><td>Vis TF Pozi M4×50 zinguée</td><td class="num">2</td><td class="num">6</td><td class="files"><a href="hardware/cad/vis-m4x50-tf-pozi.FCStd">FCStd</a></td></tr>
-          <tr><td>Écrou frein M4</td><td class="num">6</td><td class="num">18</td><td class="files"><a href="hardware/cad/ecrou-frein-m4.FCStd">FCStd</a></td></tr>
-          <tr><td>Vis métaux M4×30</td><td class="num">4</td><td class="num">12</td><td class="files"><a href="hardware/cad/vis-m4x30.FCStd">FCStd</a></td></tr>
-          <tr><td>Rotule radiale GE8C, alésage 8&nbsp;mm</td><td class="num">1</td><td class="num">3</td><td class="files"><a href="hardware/cad/rotule-ge8c.FCStd">FCStd</a></td></tr>
-          <tr><td>Entretoise carte électronique H31</td><td class="num">1</td><td class="num">3</td><td class="files"><a href="hardware/cad/entretoise-h31.FCStd">FCStd</a></td></tr>
-          <tr><td>Rondelle épaisse M8×21×4 (DIN 7349)</td><td class="num">2</td><td class="num">6</td><td class="files"><a href="hardware/cad/rondelle-epaisse-din7349-m8.FCStd">FCStd</a></td></tr>
-          <tr><td>Rondelle 8×22×1,5&nbsp;mm</td><td class="num">1</td><td class="num">3</td><td class="files"><span class="none">—</span></td></tr>
-          <tr><td>Tampon ressort silicone CR60 ∅20, 60&nbsp;SHA</td><td class="num">1</td><td class="num">3</td><td class="files"><a href="hardware/cad/tampon-ressort-cr60.FCStd">FCStd</a><a href="hardware/cad/tampon-ressort-cr60.stl">STL</a></td></tr>
-          <tr><td>Vis CHC BTR M8×70 classe 12.9 (axe principal)</td><td class="num">1</td><td class="num">3</td><td class="files"><a href="hardware/cad/vis-chc-m8x70.FCStd">FCStd</a></td></tr>
-          <tr><td>Écrou frein M8</td><td class="num">1</td><td class="num">3</td><td class="files"><a href="hardware/cad/ecrou-frein-m8.FCStd">FCStd</a></td></tr>
-          <tr><td>Boule de pétanque pleine ∅70&nbsp;mm</td><td class="num">1</td><td class="num">3</td><td class="files"><a href="hardware/cad/boule-petanque-pleine.FCStd">FCStd</a></td></tr>
-          <tr><td>Interface axe-aimant ∅4&nbsp;mm</td><td class="num">1</td><td class="num">3</td><td class="files"><a href="hardware/cad/interface-axe-aimant-4mm.FCStd">FCStd</a></td></tr>
-          <tr><td>Aimant néodyme ∅4×2&nbsp;mm N80</td><td class="num">1</td><td class="num">3</td><td class="files"><a href="hardware/cad/aimant-neodyme-4x2.FCStd">FCStd</a></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="bom-links">Sous-assemblage complet : <a href="hardware/cad/assemblage-articulation.FCStd">assemblage-articulation.FCStd</a></p>
 
-    <h3 class="bom-group-title">Châssis (×1)</h3>
-    <ol class="bom-steps">
-      <li>Le plateau V7 (tôle pliée) sert de base : 6 équerres viennent s'y fixer directement, en deux groupes de 3.</li>
-      <li>Chaque groupe de 3 équerres porte un rail support V7 — 2 rails au total.</li>
-      <li>Les 3 sous-ensembles articulation (un par cible) se fixent chacun directement sur le plateau, en vis-à-vis des rails support.</li>
-    </ol>
-    <div class="bom-table-wrap">
-      <table class="bom-table">
-        <thead><tr><th>Pièce</th><th>Dimensions</th><th>Qté</th><th>Fichier</th></tr></thead>
-        <tbody>
-          <tr><td>Plateau V7 (base, tôle pliée)</td><td class="num">800×343×86&nbsp;mm</td><td class="num">1</td><td class="files"><a href="hardware/cad/plateau-v7.step">STEP</a></td></tr>
-          <tr><td>Équerre V7</td><td class="num">~38×30–48&nbsp;mm</td><td class="num">6</td><td class="files"><a href="hardware/cad/equaire-v7.step">STEP</a></td></tr>
-          <tr><td>Support V7 (rail)</td><td class="num">8×328,7×77,8&nbsp;mm</td><td class="num">2</td><td class="files"><a href="hardware/cad/support-v7.step">STEP</a></td></tr>
-          <tr><td>Sous-assemblage articulation (ci-dessus)</td><td class="num">70×140×136,3&nbsp;mm</td><td class="num">3</td><td class="files"><a href="hardware/cad/assemblage-articulation.FCStd">FCStd</a></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="bom-links">Assemblage complet : <a href="hardware/cad/chassis-assemblage-v7.FCStd">chassis-assemblage-v7.FCStd</a></p>
+    <img class="hero-render" src="hardware/renders/articulation/assemblage-articulation.png" alt="Rendu 3D assemblé de l'articulation d'une cible : la boule de pétanque montée sur son bracket, rotule et axe visibles en dessous." />
+    <p class="caption">Articulation assemblée — rendu 3D (aucune photo de l'exemplaire réel monté n'est disponible pour l'instant)</p>
 
-    <h3 class="bom-group-title">Électronique (×3 + contrôleur)</h3>
-    <div class="bom-table-wrap">
-      <table class="bom-table">
-        <thead><tr><th>Composant</th><th>Qté/cible</th><th>Total</th><th>Fichier</th></tr></thead>
-        <tbody>
-          <tr><td>Capteur à effet Hall OH37 (SOT-23)</td><td class="num">1</td><td class="num">3</td><td class="files"><a href="hardware/pcb/bom-jlcpcb.png">BOM JLCPCB</a></td></tr>
-          <tr><td>Résistance 10&nbsp;kΩ (CMS 0603)</td><td class="num">1</td><td class="num">3</td><td class="files"><a href="hardware/pcb/bom-jlcpcb.png">BOM JLCPCB</a></td></tr>
-          <tr><td>PCB détection (2 couches)</td><td class="num">1</td><td class="num">3</td><td class="files"><a href="hardware/pcb/gerber-pcb-detection.zip">Gerber</a><a href="hardware/pcb/pcb-detection-3d-model.zip">Modèle 3D</a></td></tr>
-        </tbody>
-      </table>
+    <div class="part-grid">
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/articulation/plaque-milieu.png" alt="Rendu 3D de la plaque d'articulation milieu." loading="lazy" />
+        <h4>Plaque milieu (découpe laser 140×40×5&nbsp;mm)</h4>
+        <p class="qty">1 / cible · 3 au total</p>
+        <p class="files"><a href="hardware/cad/plaque-milieu.step">STEP</a><a href="hardware/cad/plaque-milieu.FCStd">FCStd</a></p>
+      </div>
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/articulation/plaque-sup.png" alt="Rendu 3D de la plaque d'articulation sup." loading="lazy" />
+        <h4>Plaque sup</h4>
+        <p class="qty">1 / cible · 3 au total</p>
+        <p class="files"><a href="hardware/cad/plaque-sup.step">STEP</a><a href="hardware/cad/plaque-sup.FCStd">FCStd</a></p>
+      </div>
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/articulation/plaque-inf.png" alt="Rendu 3D de la plaque d'articulation inf." loading="lazy" />
+        <h4>Plaque inf</h4>
+        <p class="qty">1 / cible · 3 au total</p>
+        <p class="files"><a href="hardware/cad/plaque-inf.step">STEP</a><a href="hardware/cad/plaque-inf.FCStd">FCStd</a></p>
+      </div>
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/vendor/vis-m4x50-tf-pozi.jpg" alt="Photo de vis métaux tête fraisée TF Pozi M4×50, acier zingué blanc." loading="lazy" />
+        <h4>Vis TF Pozi M4×50</h4>
+        <p class="qty">2 / cible · 6 au total</p>
+        <p class="files"><a href="hardware/cad/vis-m4x50-tf-pozi.FCStd">FCStd</a></p>
+      </div>
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/vendor/ecrou-frein-m4.jpg" alt="Photo d'écrou frein M4, acier zingué blanc." loading="lazy" />
+        <h4>Écrou frein M4</h4>
+        <p class="qty">6 / cible · 18 au total</p>
+        <p class="files"><a href="hardware/cad/ecrou-frein-m4.FCStd">FCStd</a></p>
+      </div>
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/articulation/vis-m4x30.png" alt="Rendu 3D de vis métaux M4×30." loading="lazy" />
+        <h4>Vis métaux M4×30</h4>
+        <p class="qty">4 / cible · 12 au total</p>
+        <p class="files"><a href="hardware/cad/vis-m4x30.FCStd">FCStd</a></p>
+      </div>
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/vendor/rotule-ge8c.jpg" alt="Photo de rotule radiale GE8C, alésage 8 mm." loading="lazy" />
+        <h4>Rotule radiale GE8C</h4>
+        <p class="qty">1 / cible · 3 au total</p>
+        <p class="files"><a href="hardware/cad/rotule-ge8c.FCStd">FCStd</a></p>
+      </div>
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/articulation/entretoise-h31.png" alt="Rendu 3D de l'entretoise carte électronique H31, sur-mesure." loading="lazy" />
+        <h4>Entretoise H31</h4>
+        <p class="qty">1 / cible · 3 au total</p>
+        <p class="files"><a href="hardware/cad/entretoise-h31.FCStd">FCStd</a></p>
+      </div>
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/vendor/rondelle-epaisse-m8.jpg" alt="Photo de rondelle plate épaisse M8×21×4, série L, DIN 7349." loading="lazy" />
+        <h4>Rondelle épaisse M8×21×4 (DIN 7349)</h4>
+        <p class="qty">2 / cible · 6 au total</p>
+        <p class="files"><a href="hardware/cad/rondelle-epaisse-din7349-m8.FCStd">FCStd</a></p>
+      </div>
+      <div class="part-card">
+        <div class="thumb none">Non modélisée séparément</div>
+        <h4>Rondelle 8×22×1,5&nbsp;mm</h4>
+        <p class="qty">1 / cible · 3 au total</p>
+        <p class="files"><span class="none">—</span></p>
+      </div>
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/articulation/tampon-ressort-cr60.png" alt="Rendu 3D du tampon ressort silicone CR60, amortisseur de rebond." loading="lazy" />
+        <h4>Tampon ressort silicone CR60 ∅20, 60&nbsp;SHA</h4>
+        <p class="qty">1 / cible · 3 au total</p>
+        <p class="files"><a href="hardware/cad/tampon-ressort-cr60.FCStd">FCStd</a><a href="hardware/cad/tampon-ressort-cr60.stl">STL</a></p>
+      </div>
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/vendor/vis-chc-m8x70.jpg" alt="Photo de vis métaux CHC BTR M8×70 classe 12.9, acier brut." loading="lazy" />
+        <h4>Vis CHC BTR M8×70 classe 12.9 (axe principal)</h4>
+        <p class="qty">1 / cible · 3 au total</p>
+        <p class="files"><a href="hardware/cad/vis-chc-m8x70.FCStd">FCStd</a></p>
+      </div>
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/vendor/ecrou-frein-m8.jpg" alt="Photo d'écrou frein M8, acier zingué blanc." loading="lazy" />
+        <h4>Écrou frein M8</h4>
+        <p class="qty">1 / cible · 3 au total</p>
+        <p class="files"><a href="hardware/cad/ecrou-frein-m8.FCStd">FCStd</a></p>
+      </div>
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/articulation/boule-petanque-pleine.png" alt="Rendu 3D de la boule de pétanque pleine, diamètre 70 mm, avec le perçage pour l'axe." loading="lazy" />
+        <h4>Boule de pétanque pleine ∅70&nbsp;mm</h4>
+        <p class="qty">1 / cible · 3 au total</p>
+        <p class="files"><a href="hardware/cad/boule-petanque-pleine.FCStd">FCStd</a></p>
+      </div>
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/articulation/interface-axe-aimant-4mm.png" alt="Rendu 3D de l'interface axe-aimant, sur-mesure, diamètre 4 mm." loading="lazy" />
+        <h4>Interface axe-aimant ∅4&nbsp;mm</h4>
+        <p class="qty">1 / cible · 3 au total</p>
+        <p class="files"><a href="hardware/cad/interface-axe-aimant-4mm.FCStd">FCStd</a></p>
+      </div>
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/vendor/aimant-neodyme-4x2.jpg" alt="Photo d'aimant néodyme cylindrique diamètre 4×2 mm, N80." loading="lazy" />
+        <h4>Aimant néodyme ∅4×2&nbsp;mm N80</h4>
+        <p class="qty">1 / cible · 3 au total</p>
+        <p class="files"><a href="hardware/cad/aimant-neodyme-4x2.FCStd">FCStd</a></p>
+      </div>
     </div>
-    <p class="bom-links">
-      Contrôleur : Arduino Leonardo (USB HID natif) — schéma de câblage RJ45 :
-      <a href="hardware/schematics/arduino-leonardo-rj45-wiring.png">arduino-leonardo-rj45-wiring.png</a>.
-      Les boutons "Key up/left/right/down" visibles sur ce schéma sont obsolètes
-      (prototype antérieur) : le jeu actuel n'utilise que les 3 cibles E/R/T.
+    <p class="bom-links">Sous-assemblage complet : <a href="hardware/cad/assemblage-articulation.FCStd">assemblage-articulation.FCStd</a>. Nomenclature complète : <a href="hardware/BOM.md">hardware/BOM.md</a>.</p>
+  </section>
+
+  <section id="partie4" aria-label="Partie 4 — Le châssis">
+    <p class="eyebrow">Partie 4</p>
+    <h2 class="section-title">Le châssis</h2>
+    <p class="section-lede">Le plateau V7 (tôle pliée) sert de base : 6 équerres viennent s'y fixer directement, en deux groupes de 3, chaque groupe portant un rail support ; les 3 articulations se fixent chacune directement sur le plateau, en vis-à-vis des rails support.</p>
+
+    <img class="hero-render" src="hardware/renders/chassis/chassis-assemblage-v7.png" alt="Rendu 3D du châssis complet assemblé, avec les 3 boules de pétanque montées sur leurs articulations respectives." />
+    <p class="caption">Châssis complet assemblé (rendu 3D)</p>
+
+    <div class="part-grid">
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/chassis/plateau-v7.png" alt="Rendu 3D du plateau V7, base en tôle pliée." loading="lazy" />
+        <h4>Plateau V7 (base, tôle pliée)</h4>
+        <p class="qty">800×343×86&nbsp;mm · qté 1</p>
+        <p class="files"><a href="hardware/cad/plateau-v7.step">STEP</a></p>
+      </div>
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/chassis/equaire-v7.png" alt="Rendu 3D de l'équerre V7 reliant le plateau aux supports et articulations." loading="lazy" />
+        <h4>Équerre V7</h4>
+        <p class="qty">~38×30–48&nbsp;mm · qté 6</p>
+        <p class="files"><a href="hardware/cad/equaire-v7.step">STEP</a></p>
+      </div>
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/chassis/support-v7.png" alt="Rendu 3D du rail support V7." loading="lazy" />
+        <h4>Support V7 (rail)</h4>
+        <p class="qty">8×328,7×77,8&nbsp;mm · qté 2</p>
+        <p class="files"><a href="hardware/cad/support-v7.step">STEP</a></p>
+      </div>
+    </div>
+    <p class="bom-links">Assemblage complet : <a href="hardware/cad/chassis-assemblage-v7.FCStd">chassis-assemblage-v7.FCStd</a>. Sous-assemblage articulation (×3, voir Partie 3) : <a href="hardware/cad/assemblage-articulation.FCStd">assemblage-articulation.FCStd</a>.</p>
+
+    <h3 class="bom-group-title">Contraintes mécaniques</h3>
+    <p class="section-lede">
+      Le plateau tôle pliée fait office de base rigide unique : ses plis lui donnent une raideur hors-plan suffisante pour porter les 3 articulations indépendantes et leurs rails support sans avoir besoin d'une tôle épaisse ou d'un renfort supplémentaire.
+    </p>
+    <p class="section-lede">
+      À chaque impact de boule, la rotule GE8C et le tampon ressort silicone CR60 (60&nbsp;SHA) absorbent le choc avant qu'il n'atteigne le châssis : au lieu d'un choc rigide transmis directement aux vis de fixation, l'énergie se dissipe dans la compression du tampon, et le bracket revient en position par rappel élastique.
+    </p>
+    <p class="section-lede">
+      L'axe principal (vis CHC M8×70) est le seul chemin mécanique entre « la boule est touchée » et « l'aimant passe devant le capteur » : sa longueur et la course de compression du tampon fixent l'amplitude de rotation nécessaire pour déclencher la détection de façon fiable, sans réglage cible par cible.
     </p>
   </section>
 
@@ -828,7 +1072,7 @@
 <footer>
   <div class="tag">
     <h3>Fanny Pétanque World Tour</h3>
-    <p>An #ARDUCIBLE pétanque game. Licence CC0 1.0 Universal.</p>
+    <p>An #ARDUCIBLE pétanque game. Licence CC BY 4.0.</p>
     <div class="links">
       <a href="https://github.com/guiraudjb/Fanny_P-tanque_World_Tour">Code source</a>
       <a href="https://github.com/guiraudjb/Fanny_P-tanque_World_Tour#readme">Installation</a>

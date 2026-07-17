@@ -1,0 +1,57 @@
+Génération des vidéos "réseaux sociaux" (TikTok) du quizz
+===========================================================
+
+Une vidéo verticale (9:16) par pays, avec :
+- une intro de 7s (écran d'accueil, logo Fanny qui tourne, annonce du pays
+  et du format "quiz culture générale + pétanque")
+- les 5 questions du pays (narration TTS, feedback en couleur, explication
+  de Fanny)
+- un récap ("5/5 bonnes réponses")
+- une outro de 3.5s (pays suivant + like/abonnement)
+- l'hymne national du pays en fond sonore continu
+- un fond (au-dessus/en dessous du contenu) = portrait de Fanny en tenue
+  traditionnelle du pays
+
+Étape 1 : rendre les frames (nécessite le venv du JEU, pygame)
+----------------------------------------------------------------
+    /home/adm1/pythonvenv/bin/python3 ressources/utils/render_social_video_frames.py
+
+Sans argument : traite les 112 pays. Étape rapide (captures d'image,
+pas d'encodage vidéo) - quelques minutes au total.
+
+Pour ne (re)traiter que certains pays, passer leurs numéros (tier, de 0 à
+111) en argument, par exemple :
+    /home/adm1/pythonvenv/bin/python3 ressources/utils/render_social_video_frames.py 5 6 7
+
+Le manifest existant (ressources/social_videos/_work/manifest.json) est
+complété/mis à jour pour les pays demandés, jamais écrasé en entier.
+
+Étape 2 : assembler les vidéos (n'importe quel python3 avec ffmpeg)
+----------------------------------------------------------------------
+    python3 ressources/utils/build_social_videos.py
+
+Sans argument : construit la vidéo de tous les pays présents dans le
+manifest. Étape longue (~15 passes ffmpeg par pays) - prévoir plusieurs
+heures pour les 112 pays. Recommandé de lancer dans une session
+persistante pour ne pas dépendre du terminal :
+    nohup python3 ressources/utils/build_social_videos.py > social_videos_build.log 2>&1 &
+
+Pour ne (re)construire que certains pays :
+    python3 ressources/utils/build_social_videos.py 5 6 7
+
+Résultat
+--------
+Les vidéos finales sont écrites dans :
+    ressources/social_videos/{numéro}_{pays}.mp4
+
+Le dossier ressources/social_videos/_work/ contient les fichiers
+intermédiaires (frames, segments) - à supprimer une fois satisfait du
+résultat :
+    rm -rf ressources/social_videos/_work
+
+Réglages ajustables
+--------------------
+Dans ressources/utils/build_social_videos.py :
+- INTRO_DURATION / OUTRO_DURATION : durée des écrans d'accroche
+- ANTHEM_VOLUME : volume de l'hymne nationale en fond (0.18 par défaut,
+  réglé après retour utilisateur - 0.5 couvrait trop la voix)
