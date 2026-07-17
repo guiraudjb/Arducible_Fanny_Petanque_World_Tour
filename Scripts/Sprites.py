@@ -3,17 +3,23 @@ import random
 import pygame
 from pygame import *
 from Scripts.init import *
-from Scripts.dialogues import WORLD_TOUR_COUNTRIES, get_country_tier
+from Scripts.dialogues import WORLD_TOUR_COUNTRIES, get_country_tier_for_mode
 
 class Cible(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, size=None):
+        """size=None reprend la taille historique (3 cibles en ligne du jeu
+        de base) ; un couple (largeur, hauteur) explicite permet de réduire
+        la cible pour d'autres agencements (ex : étoile à 7 cibles de
+        Hardcore)."""
         pygame.sprite.Sprite.__init__(self)
+        if size is None:
+            size = (LARGEUR_ECRAN * 0.25, HAUTEUR_ECRAN * 0.44)
         self.images = []
         self.images.append(pygame.image.load('./assets/Images/Boule.png'))
         self.images.append(pygame.image.load('./assets/Images/BouleG.png'))
         self.images.append(pygame.image.load('./assets/Images/BouleGold.png'))
         for i in range(len(self.images)):
-            self.images[i] = pygame.transform.scale(self.images[i], (LARGEUR_ECRAN*0.25, HAUTEUR_ECRAN*0.44))
+            self.images[i] = pygame.transform.scale(self.images[i], size)
         self.image = self.images[0]
         self.rect = self.image.get_rect()
 
@@ -37,15 +43,23 @@ class WorldTourBackground(pygame.sprite.Sprite):
     que le batch Krea2 tourne : un pays sans fond conserve simplement le
     dernier fond affiché, comme les portraits de FannyCompanion. Le trou
     webcam ovale de la variante .png est découpé aux mêmes coordonnées que
-    les 9 fonds du jeu de base (cf. build_world_tour_backgrounds.py)."""
+    les 9 fonds du jeu de base (cf. build_world_tour_backgrounds.py).
 
-    def __init__(self):
+    webcam_variant_dir : dossier (sous assets/Images/) où chercher la
+    variante .png (trou webcam). None (défaut, jeu de base main.py) reprend
+    BackgroundWorldTour/ ; Hardcore passe BackgroundWorldTourHardcore/, où le
+    trou est découpé à une autre position (caméra/anneau déplacés pour ne
+    pas chevaucher les cibles de l'étoile) — les .jpg (sans webcam) restent
+    partagés entre les deux jeux, seule la variante .png diffère."""
+
+    def __init__(self, webcam_variant_dir=None):
         pygame.sprite.Sprite.__init__(self)
+        webcam_variant_dir = webcam_variant_dir or 'BackgroundWorldTour'
         self.no_webcam_images = {}
         self.webcam_images = {}
         for tier, (_pays, slug, _text) in enumerate(WORLD_TOUR_COUNTRIES):
             jpg_path = f'./assets/Images/BackgroundWorldTour/{tier + 1:03d}_{slug}.jpg'
-            png_path = f'./assets/Images/BackgroundWorldTour/{tier + 1:03d}_{slug}.png'
+            png_path = f'./assets/Images/{webcam_variant_dir}/{tier + 1:03d}_{slug}.png'
             if os.path.isfile(jpg_path):
                 jpg = pygame.image.load(jpg_path)
                 jpg = pygame.transform.scale(jpg, (LARGEUR_ECRAN, HAUTEUR_ECRAN))
@@ -183,10 +197,12 @@ class FannyCompanion(pygame.sprite.Sprite):
     """Compagnon in-game de Fanny, ancré dans le coin supérieur droit de
     l'écran : bulle de dialogue à gauche, personnage à droite de la bulle.
     Version "World Tour" : un nouveau PAYS toutes les COUNTRY_SCORE_SEUIL
-    points (get_country_tier, cf. Scripts/dialogues.py, généré depuis
-    fanny wold tour/speach.txt + pays_index.txt) — le portrait de Fanny et
-    sa réplique changent ensemble, contrairement à l'ancien système à deux
-    progressions découplées (pose/dialogue) du jeu de base. La banque de
+    points (get_country_tier_for_mode, cf. Scripts/dialogues.py, généré
+    depuis fanny wold tour/speach.txt + pays_index.txt) — le portrait de
+    Fanny et sa réplique changent ensemble, contrairement à l'ancien
+    système à deux progressions découplées (pose/dialogue) du jeu de base.
+    La progression parcourt self.mode_tiers (tour complet par défaut, ou
+    un continent choisi via set_mode() - voir WORLD_TOUR_MODES). La banque de
     portraits (assets/Images/FannyWorldTour/) peut être incomplète tant que
     le batch Krea2 tourne : un pays sans image conserve simplement le
     dernier portrait affiché plutôt que de planter. La surface de la bulle
@@ -201,11 +217,18 @@ class FannyCompanion(pygame.sprite.Sprite):
     ENDING_VOICE_PATH = './assets/Sounds/VoicesFanny/ending_invite.wav'
     ANTHEM_CROSSFADE_MS = 1500
 
-    def __init__(self, country_max_tier=None):
+    def __init__(self, country_max_tier=None, mode_tiers=None):
         pygame.sprite.Sprite.__init__(self)
         self.country_max_tier = (
             len(WORLD_TOUR_COUNTRIES) - 1 if country_max_tier is None else country_max_tier
         )
+        # Liste ordonnée de tiers parcourue par on_score_update()/reset() -
+        # le tour complet par défaut, ou un continent choisi via set_mode()
+        # (voir Scripts.dialogues.WORLD_TOUR_MODES, écran de sélection de
+        # mode ajouté le 2026-07-15). Les images restent chargées pour les
+        # 115 pays quel que soit le mode : seul l'ORDRE/l'ensemble parcouru
+        # par la progression change, pas les assets en mémoire.
+        self.mode_tiers = mode_tiers if mode_tiers is not None else list(range(self.country_max_tier + 1))
         self.gap = int(LARGEUR_ECRAN * 0.015)
         self.bubble_width = int(LARGEUR_ECRAN * 0.22)
 
@@ -305,17 +328,35 @@ class FannyCompanion(pygame.sprite.Sprite):
             self.map_image = self.map_images[tier]
         # sinon : carte pas encore générée pour ce pays, on garde la précédente
 
-    def reset(self):
-        self.country_tier = 0
-        self._ending_played = False
-        self._set_pose(0)
-        self._set_dialogue(0)
-        self._play_anthem(0)
+    def set_mode(self, mode_tiers):
+        """Change la liste de tiers utilisée par reset()/on_score_update()
+        pour la manche à venir (continent ou tour complet, cf.
+        Scripts.dialogues.WORLD_TOUR_MODES) - à appeler avant reset(), à
+        l'écran de sélection de mode. N'affecte pas les images déjà
+        chargées (toujours les 115 pays), juste l'ensemble/l'ordre parcouru."""
+        self.mode_tiers = mode_tiers
 
-    def on_score_update(self, score):
+    def reset(self):
+        first_tier = self.mode_tiers[0]
+        self.country_tier = first_tier
+        self._ending_played = False
+        self._set_pose(first_tier)
+        self._set_dialogue(first_tier)
+        self._play_anthem(first_tier)
+
+    def on_score_update(self, score, score_seuil=None):
         """Retourne True si ce coup vient de faire changer de pays (pour
-        que main.py puisse accorder le bonus de temps correspondant)."""
-        new_tier = min(get_country_tier(score, score_seuil=hits_per_country), self.country_max_tier)
+        que main.py puisse accorder le bonus de temps correspondant).
+        score_seuil=None reprend hits_per_country (jeu de base) ; un jeu
+        avec son propre rythme de tour du monde (ex : Hardcore, sa propre
+        section [Hardcore] de config.ini) passe sa valeur explicitement.
+        La progression est résolue à travers self.mode_tiers (tour complet
+        par défaut, ou le continent choisi via set_mode()) plutôt que
+        directement sur le score, pour supporter les tiers non contigus
+        d'un continent (voir get_country_tier_for_mode)."""
+        if score_seuil is None:
+            score_seuil = hits_per_country
+        new_tier = get_country_tier_for_mode(score, self.mode_tiers, score_seuil=score_seuil)
         if new_tier != self.country_tier:
             self.country_tier = new_tier
             self._set_pose(new_tier)
