@@ -24,6 +24,26 @@ hymne, son portrait et sa réplique.
   chaque étape (voir `Scripts/dialogues.py`).
 - Le jeu reste jouable sans webcam ni cibles physiques (mode clavier seul).
 
+## Les 4 jeux en un coup d'œil
+
+Un seul châssis physique (3 cibles en ligne) sert au jeu de base, un second
+châssis (7 cibles en étoile de David, cochonet au centre) sert à Hardcore et
+Round the Clock. Quizz ne tire sur aucun châssis.
+
+| Jeu | Fichier | Chassis | Principe | Touches | Modes | High score |
+|---|---|---|---|---|---|---|
+| **Fanny World Tour** | `main.py` | 3 cibles en ligne | Solo, contre-la-montre, tour du monde | `E R T` | Tour complet ou par continent | `[Score]` |
+| **Hardcore** | `main_hardcore.py` | 7 cibles étoile | Identique à Fanny, cochonet = pays suivant | `E R T Y U I O` | Tour complet ou par continent | `[Hardcore]` |
+| **Quizz** | `main_quizz.py` | Aucun (pas de tir) | 5 questions par pays (pétanque + culture générale) | `E R T` (choix) | Tour complet ou par continent | `[Quizz]` |
+| **Round the Clock** | `main_round_the_clock.py` | 7 cibles étoile | Multijoueur tour par tour, viser la cible imposée dans l'ordre 1→7 | `E R T Y U I O` (+ `Y`/`U`/`O` pour options/aide/valider) | Nombre de joueurs (1-6) et de manches (3-12) réglables en jeu | Aucun (non persistant, absent de l'original) |
+
+Déroulement commun à Fanny World Tour, Hardcore et Quizz (Round the Clock a
+son propre menu à cibles, voir plus bas) : **accueil** (`INSERT COIN` ou
+`FREEPLAY`) → **choix du mode** (tour complet ou un seul continent, carrousel
+`E`/`T`, validation `R`, ou lancement automatique au bout de 60 s sans choix)
+→ **décompte `GAME START IN`** → **partie** → **écran de fin**, puis retour à
+l'accueil.
+
 ## Installation
 
 ```bash
@@ -48,6 +68,8 @@ n'existe pas.
 | `Debug` | `DebugLine`, `FPS`, `ShowFps`, `DebugCam`, `Credit`, `FreePlay` | Grille de repérage, FPS cible/affiché, superposition du squelette MediaPipe sur l'image caméra réelle (au lieu d'un fond noir), crédits de départ, mode freeplay (voir ci-dessous) — section partagée par les 3 jeux |
 | `Score` | `high_score` | Meilleur score de Fanny World Tour (jeu de base), sauvegardé automatiquement |
 | `Hardcore` | `high_score`, `hits_per_country` | Meilleur score et rythme du tour du monde propres au mode Hardcore (7 cibles) |
+| `Quizz` | `high_score` | Meilleur score du Quizz (bonnes réponses sur 575), sauvegardé automatiquement |
+| `RoundTheClock` | `targets`, `default_players`, `min_players`, `max_players`, `default_rounds`, `min_rounds`, `max_rounds`, `shots_per_turn`, `hit_cooldown_ms`, `menu_cooldown_ms`, `banner_duration_s` | Réglages propres à Round the Clock (pas de high score persistant) |
 
 ### Crédits / mode freeplay
 
@@ -62,9 +84,21 @@ le choix de `C`, libre sur les 3 jeux.
 Avec `[Debug] FreePlay = True` : "INSERT COIN" et le compteur de crédits
 sont remplacés par **"PRESS A TARGET TO PLAY"** / **FREEPLAY**. Presser
 n'importe quelle cible physique équivaut alors à insérer un crédit fictif —
-Fanny/Hardcore lancent leur décompte habituel ("GAME START IN...", le temps
-de rejoindre la zone de tir), Round the Clock débloque son menu (`O` pour
-démarrer).
+Fanny/Hardcore/Quizz lancent leur écran de choix du mode (voir ci-dessous),
+Round the Clock débloque directement son menu (`O` pour démarrer).
+
+### Choix du mode (tour complet ou par continent)
+
+Sur Fanny World Tour, Hardcore et Quizz, un crédit disponible ouvre un écran
+de sélection avant que la partie ne démarre : un mode à la fois au centre
+(tour complet des 115 pays, ou un seul continent), avec le nombre de pays
+qu'il contient. Navigation au carrousel — `E` précédent, `T` suivant, `R`
+valider — matérialisée par les 3 boules physiques du socle (gauche/centre/
+droite), le joueur n'ayant pas de clavier sous les yeux sur la borne. Sans
+choix au bout de **60 secondes**, la partie démarre automatiquement sur le
+mode affiché (comme un appui sur `R`). Seul le mode "Tour complet" alimente
+le high score de sa section (`[Score]`/`[Hardcore]`/`[Quizz]`) — un score sur
+un seul continent, moins long, n'est pas comparable et s'affiche à part.
 
 ## Contrôles clavier
 
@@ -79,14 +113,19 @@ démarrer).
 ## Structure du projet
 
 ```
-main.py                  Boucle de jeu et logique d'écran
-Scripts/init.py           Config.ini, polices, couleurs, canaux audio
-Scripts/Sprites.py        Sprites (cibles, fonds, Fanny, bulles de dialogue)
-Scripts/opencvcam.py      Capture webcam + détection de pose MediaPipe
-Scripts/camera_calibration.py  Lecture/écriture camera_calibration.json
-Scripts/dialogues.py      Données des 115 pays (généré automatiquement)
-Scripts/quiz_questions.py Questions du quizz par pays (voir main_quizz.py)
-assets/                   Images, sons, fonts, modèle MediaPipe
+main.py                        Fanny World Tour : boucle de jeu et logique d'écran
+main_hardcore.py                Hardcore (7 cibles), fork de main.py
+main_quizz.py                   Quizz (sans tir), fork de main.py
+main_round_the_clock.py         Round the Clock (7 cibles, multijoueur), indépendant
+Scripts/init.py                 Config.ini, polices, couleurs, canaux audio
+Scripts/Sprites.py               Sprites (cibles, fonds, Fanny, bulles de dialogue)
+Scripts/opencvcam.py             Capture webcam + détection de pose MediaPipe
+Scripts/camera_calibration.py    Lecture/écriture camera_calibration.json
+Scripts/dialogues.py             Données des 115 pays (généré automatiquement)
+Scripts/quiz_questions.py        Questions du quizz par pays (voir main_quizz.py)
+Scripts/quiz_audio.py            Retrouve le mp3 TTS correspondant à un texte de quizz
+Scripts/round_the_clock/         État et sprites propres à Round the Clock
+assets/                          Images, sons, fonts, modèle MediaPipe
 ```
 
 ## Calibration de la caméra
@@ -206,12 +245,15 @@ réponses sur l'ensemble du tour (sur 575).
   4 questions de culture générale (capitale, continent, langue, monnaie).
   Chaque mauvaise réponse est toujours un vrai fait — juste celui d'un
   *autre* pays de la liste — jamais une donnée inventée.
-- **Aucun fichier audio pour l'instant** : les questions et réponses sont
-  entièrement affichées à l'écran, avec une police pleine à accentuation
-  complète (`assets/RoundTheClock/Fonts/DejaVuSans.ttf`) — la police "Neon
-  Glow" du reste du jeu n'a pas les glyphes accentués (é, à, ç...)
-  nécessaires en français.
-- `high_score` propre à Quizz (nombre de bonnes réponses sur 560), dans sa
+- Questions et réponses affichées à l'écran avec une police pleine à
+  accentuation complète (`assets/RoundTheClock/Fonts/DejaVuSans.ttf`) —
+  Alfa Slab One n'a pas les glyphes accentués (é, à, ç...) nécessaires en
+  français — et **narrées en voix de synthèse** (gTTS) : un mp3 par texte
+  unique dans `assets/Sounds/QuizzTTS/`, généré hors-ligne par
+  `ressources/utils/generate_quiz_audio.py` et retrouvé à l'exécution via
+  `Scripts/quiz_audio.py` (silencieux si un fichier manque plutôt que de
+  planter).
+- `high_score` propre à Quizz (nombre de bonnes réponses sur 575), dans sa
   propre section `[Quizz]` de `config.ini`, indépendant des autres jeux.
 
 ```bash
