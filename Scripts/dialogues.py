@@ -115,10 +115,33 @@ WORLD_TOUR_COUNTRIES = [
     ("Tahiti", "tahiti", "À Tahiti, la pétanque prospère depuis près de 40 ans ! Des compétitions sont organisées chaque semaine en Polynésie française, un vrai vivier de talents dans le Pacifique."),
     ("Vanuatu", "vanuatu", "Au Vanuatu, la pétanque se joue à l'ombre des volcans, avec une sélection qui participe fièrement aux Océania face à l'Australie et la Nouvelle-Zélande."),
     ("Wallis-et-Futuna", "wallis_et_futuna", "À Wallis-et-Futuna, la pétanque est un vrai sport de cœur : le territoire a même accueilli les Océania 2025, où les Futuniennes ont décroché l'or en triplette dames !"),
+    # Ajoutés le 2026-07-15 (recherche ressources/utils/RECHERCHE_ECOSYSTEME_PETANQUE.md,
+    # section "Pays absents du tour à considérer") - portraits assets/Images/FannyWorldTour/
+    # à fournir séparément (113_bresil.png, 114_israel.png, 115_liban.png), aucun outil de
+    # génération d'image disponible pour les produire automatiquement.
+    ("Brésil", "bresil", "Au Brésil, la « petanca » est l'une des trois disciplines de bocha reconnues par le Comité International Olympique, portée depuis 1991 par la Confédération Brésilienne de Bocha e Bolão !"),
+    ("Israël", "israel", "En Israël, la pétanque a sa propre fédération, reconnue par la FIPJP dès 1992 et membre fondateur de la Confédération Asiatique des Sports Boules en 1997 — un sport reconnu de haut niveau, soutenu par le ministère des Sports !"),
+    ("Liban", "liban", "Au Liban, la pétanque compte environ 400 licenciés répartis dans onze clubs à travers le pays — de quoi représenter fièrement les couleurs libanaises jusqu'aux Championnats du Monde à Dijon en 2024 !"),
 ]
 
 COUNTRY_SCORE_SEUIL = 5  # un nouveau pays tous les 5 tirs réussis
-COUNTRY_MAX_TIER = 111
+COUNTRY_MAX_TIER = 114  # 115 pays (112 d'origine + Brésil/Israël/Liban, 2026-07-15)
+
+# Tiers groupés par continent (même classification que
+# ressources/utils/quiz_country_facts.py, dupliquée ici en dur pour rester
+# disponible à l'exécution sans dépendre d'un fichier "build-only") - sert
+# aux modes de quizz par continent (main_quizz.py, 2026-07-15 : "le jeu est
+# trop long, il faut proposer plusieurs modes, un par continent"). Listes
+# volontairement non contiguës : certains pays géographiquement "européens"
+# du tour (Arménie, Turquie) sont classés Asie, et les 3 pays ajoutés le
+# 2026-07-15 s'insèrent dans leur continent réel, pas à la suite de la liste.
+CONTINENT_TIERS = {
+    "Europe": [0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 37],
+    "Afrique": [38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64],
+    "Asie": [3, 36, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 113, 114],
+    "Amérique": [89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 112],
+    "Océanie": [106, 107, 108, 109, 110, 111],
+}
 
 
 
@@ -127,6 +150,38 @@ def get_country_tier(score, score_seuil=COUNTRY_SCORE_SEUIL, max_tier=COUNTRY_MA
     toutes les score_seuil points, plafonné au dernier pays (Wallis-et-Futuna).
     """
     return min(score // score_seuil, max_tier)
+
+
+# Modes de jeu proposés à l'écran de sélection (le tour complet ou un tour
+# limité à un seul continent), PARTAGÉS par les 3 jeux qui parcourent
+# WORLD_TOUR_COUNTRIES (main.py, main_hardcore.py, main_quizz.py -
+# main_round_the_clock.py n'utilise pas ce système). Demande utilisateur du
+# 2026-07-15 : "le jeu est trop long, il faut proposer plusieurs modes, un
+# par continent", élargie le même jour à "l'ensemble des variantes du jeu".
+# Chaque entrée : (nom affiché, liste de tiers à jouer dans l'ordre). Seul
+# le mode "Tour complet" (index 0) doit alimenter un high score comparé à
+# l'historique (calibré sur les 115 pays) - un score sur un continent n'est
+# pas comparable, à gérer côté appelant (voir main_quizz.py::quiz_is_full_tour
+# pour l'exemple de référence).
+WORLD_TOUR_MODES = [
+    ("Tour complet", list(range(COUNTRY_MAX_TIER + 1))),
+    ("Europe", CONTINENT_TIERS["Europe"]),
+    ("Afrique", CONTINENT_TIERS["Afrique"]),
+    ("Asie", CONTINENT_TIERS["Asie"]),
+    ("Amérique", CONTINENT_TIERS["Amérique"]),
+    ("Océanie", CONTINENT_TIERS["Océanie"]),
+]
+
+
+def get_country_tier_for_mode(score, mode_tiers, score_seuil=COUNTRY_SCORE_SEUIL):
+    """Comme get_country_tier(), mais pour un mode restreint (continent) :
+    l'index de PROGRESSION dérivé du score (0..len(mode_tiers)-1) est
+    résolu à travers `mode_tiers` pour retrouver le vrai tier du pays
+    (nécessaire car les tiers d'un continent ne sont pas contigus - ex.
+    l'Asie inclut l'Arménie(3), la Turquie(36) et Israël/Liban(113/114),
+    entrecoupés d'autres continents)."""
+    position = min(score // score_seuil, len(mode_tiers) - 1)
+    return mode_tiers[position]
 
 
 # Score auquel le 5e tir est touché dans le dernier pays (Wallis-et-Futuna) :
