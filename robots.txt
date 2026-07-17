@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://guiraudjb.github.io/Arducible_Fanny_Petanque_World_Tour/sitemap.xml
