@@ -216,17 +216,20 @@ cette session) :
   "Plaque supérieure", `plaque-milieu.FCStd` affichait "Plaque inférieure" -
   **corrigés**.
 - 3 cotes corrompues sur le plan de `plaque-inf` (2D references corrompues/
-  pointant vers une ligne au lieu d'un cercle) : la cote de diamètre a été
-  **recréée et vérifiée** (rattachée au cercle du 4ᵉ trou du losange central,
-  affiche maintenant Ø4,5 comme les 3 autres trous identiques - confirmé par
-  export). Les 2 cotes d'espacement (X/Y) ont été **supprimées plutôt que
-  remplacées** : la première tentative de recréation affichait 7,32 mm pour
-  les deux (alors que la géométrie du sketch suggère plutôt 14 mm chacune),
-  valeur non vérifiable avec confiance - mieux vaut une cote absente qu'une
-  cote fausse qui a l'air correcte. Les 2 autres cotes "14" déjà correctes
-  sur le plan donnent une indication de la symétrie, mais une correction
-  fiable de ces 2 cotes manquantes nécessite de recliquer les bonnes arêtes
-  dans l'interface FreeCAD.
+  pointant vers une ligne au lieu d'un cercle) - **les 3 corrigées et
+  vérifiées** (session suivante) :
+  - Diamètre : rattaché au cercle du 4ᵉ trou du losange central, affiche
+    Ø4,5 comme les 3 autres trous identiques.
+  - Les 2 cotes d'espacement X/Y : une première tentative (référencer les
+    arêtes de 2 cercles directement) donnait 7,32 mm pour les deux au lieu
+    des 14 mm attendus - en creusant, TechDraw mesure entre le **bord** des
+    cercles référencés, pas leurs centres (confirmé par un test sur une
+    paire de trous alignés : 28 mm de centre à centre, 23,5 mm mesurés =
+    28 − 2×2,25 de rayon). Solution : référencer les **Vertex** du centre de
+    chaque cercle plutôt que les Edge du cercle lui-même (chaque cercle a un
+    vertex de centre discret dans la vue TechDraw, en plus de son edge de
+    circonférence - repéré en comparant aux coordonnées du sketch). Donne
+    bien 14 mm pour les deux, confirmé par export.
 
 Toute la démarche (AppImage, Xvfb, piège `freecadcmd` qui corrompt les
 fichiers avec pages TechDraw, attente réelle nécessaire après `recompute()`,
@@ -264,10 +267,6 @@ recréer ailleurs si besoin - son contenu peut servir de base).
 - Le correctif de sensibilité MediaPipe (session du 15-16) n'a toujours pas
   été testé avec une vraie caméra sur ce poste - à vérifier en priorité sur
   la borne physique à la reprise.
-- 2 cotes d'espacement manquantes (supprimées, pas remplacées) sur le plan
-  de `plaque-inf` (voir section 6 ci-dessus) - à ajouter interactivement
-  dans FreeCAD (valeur attendue probable : 14 mm chacune, à confirmer en
-  cliquant les bonnes arêtes, pas à déduire par script).
 - L'ancienne URL GitHub Pages (`.../Fanny_P-tanque_World_Tour/`) est morte
   (404 permanent, pas de redirect) - si elle traîne quelque part en externe
   (bio TikTok, post, favori...), il faut la mettre à jour à la main.
