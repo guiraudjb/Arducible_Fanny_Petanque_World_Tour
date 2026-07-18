@@ -44,9 +44,9 @@ Nomenclature exacte de `assemblageArticulation.FCStd` :
 
 | Pièce | Qté/cible | Qté totale | Fichier |
 |---|---|---|---|
-| Plaque d'articulation milieu (découpe laser 140×40×5 mm) | 1 | 3 | [STEP](cad/plaque-milieu.step) · [FCStd](cad/plaque-milieu.FCStd) |
-| Plaque d'articulation sup (idem) | 1 | 3 | [STEP](cad/plaque-sup.step) · [FCStd](cad/plaque-sup.FCStd) |
-| Plaque d'articulation inf (idem) | 1 | 3 | [STEP](cad/plaque-inf.step) · [FCStd](cad/plaque-inf.FCStd) |
+| Plaque d'articulation milieu (découpe laser 140×40×5 mm) | 1 | 3 | [STEP](cad/plaque-milieu.step) · [FCStd](cad/plaque-milieu.FCStd) · [Plan coté](plans/plaque-milieu.pdf) |
+| Plaque d'articulation sup (idem) | 1 | 3 | [STEP](cad/plaque-sup.step) · [FCStd](cad/plaque-sup.FCStd) · [Plan coté](plans/plaque-sup.pdf) |
+| Plaque d'articulation inf (idem) | 1 | 3 | [STEP](cad/plaque-inf.step) · [FCStd](cad/plaque-inf.FCStd) · [Plan coté](plans/plaque-inf.pdf) |
 | Vis métaux tête fraisée TF Pozi M4×50, acier zingué blanc | 2 | 6 | [FCStd](cad/vis-m4x50-tf-pozi.FCStd) |
 | Écrou frein M4 | 6 | 18 | [FCStd](cad/ecrou-frein-m4.FCStd) |
 | Vis métaux M4×30 | 4 | 12 | [FCStd](cad/vis-m4x30.FCStd) |
