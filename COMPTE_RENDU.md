@@ -215,11 +215,18 @@ cette session) :
 - Cartouches copiés-collés sans être renommés : `plaque-inf.FCStd` affichait
   "Plaque supérieure", `plaque-milieu.FCStd` affichait "Plaque inférieure" -
   **corrigés**.
-- Plusieurs cotes d'espacement de trous sur le plan de `plaque-inf` affichent
-  encore `0` au lieu d'une vraie valeur (2 références de cote corrompues) -
-  **pas corrigé** : nécessite de recliquer les bonnes arêtes dans l'interface
-  FreeCAD, pas quelque chose à deviner par script sans risquer de mettre une
-  cote fausse à la place d'une cote visiblement cassée.
+- 3 cotes corrompues sur le plan de `plaque-inf` (2D references corrompues/
+  pointant vers une ligne au lieu d'un cercle) : la cote de diamètre a été
+  **recréée et vérifiée** (rattachée au cercle du 4ᵉ trou du losange central,
+  affiche maintenant Ø4,5 comme les 3 autres trous identiques - confirmé par
+  export). Les 2 cotes d'espacement (X/Y) ont été **supprimées plutôt que
+  remplacées** : la première tentative de recréation affichait 7,32 mm pour
+  les deux (alors que la géométrie du sketch suggère plutôt 14 mm chacune),
+  valeur non vérifiable avec confiance - mieux vaut une cote absente qu'une
+  cote fausse qui a l'air correcte. Les 2 autres cotes "14" déjà correctes
+  sur le plan donnent une indication de la symétrie, mais une correction
+  fiable de ces 2 cotes manquantes nécessite de recliquer les bonnes arêtes
+  dans l'interface FreeCAD.
 
 Toute la démarche (AppImage, Xvfb, piège `freecadcmd` qui corrompt les
 fichiers avec pages TechDraw, attente réelle nécessaire après `recompute()`,
@@ -257,8 +264,10 @@ recréer ailleurs si besoin - son contenu peut servir de base).
 - Le correctif de sensibilité MediaPipe (session du 15-16) n'a toujours pas
   été testé avec une vraie caméra sur ce poste - à vérifier en priorité sur
   la borne physique à la reprise.
-- Cote cassée non corrigée sur le plan de `plaque-inf` (voir section 6
-  ci-dessus) - à corriger interactivement dans FreeCAD, pas par script.
+- 2 cotes d'espacement manquantes (supprimées, pas remplacées) sur le plan
+  de `plaque-inf` (voir section 6 ci-dessus) - à ajouter interactivement
+  dans FreeCAD (valeur attendue probable : 14 mm chacune, à confirmer en
+  cliquant les bonnes arêtes, pas à déduire par script).
 - L'ancienne URL GitHub Pages (`.../Fanny_P-tanque_World_Tour/`) est morte
   (404 permanent, pas de redirect) - si elle traîne quelque part en externe
   (bio TikTok, post, favori...), il faut la mettre à jour à la main.
