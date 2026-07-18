@@ -1,18 +1,27 @@
-# Compte rendu — session du 15-16 juillet 2026 (+ suite du 16)
+# Compte rendu — sessions du 15-18 juillet 2026
 
 Résumé pour reprendre le travail à un autre poste (rappel : la mémoire Claude Code
 n'est pas synchronisée entre machines, seul ce dépôt git l'est - voir aussi
-`.claude/` pour la config de session).
+`.claude/` pour la config de session). La skill FreeCAD headless mentionnée
+plus bas (`~/.claude/skills/freecad-headless/`) est en revanche **locale à
+cette machine** : à recréer sur un autre poste si besoin, voir sa description
+ci-dessous.
 
-## ⚠️ Rien n'est commité
+## ✅ Tout est commité et poussé (au 18 juillet)
 
-Tous les changements ci-dessous (et une bonne partie du travail des sessions
-précédentes - Round the Clock, fork Quizz, Hardcore, pays ajoutés, CAD...) sont
-encore en working tree, non commités. `git status` liste une centaine de
-fichiers modifiés/nouveaux. À trier/commiter par lots cohérents quand ce sera
-le bon moment - pas fait automatiquement tant que non demandé explicitement.
+`git status` est propre sur `main`, à jour avec `origin/main`
+(`github.com/guiraudjb/Arducible_Fanny_Petanque_World_Tour` - **dépôt
+renommé** depuis `Fanny_P-tanque_World_Tour` le 17 juillet, voir plus bas).
+Seuls restent volontairement non versionnés (trop lourds, régénérables, ou
+sensibles) :
+- `ressources/social_videos/` (~9,6 Go de rendus vidéo), `ressources/playing_cards/`
+  (~250 Mo), `ressources/quizz_pdf/_postcards_cache/` (cache d'images
+  téléchargées) — tous régénérables via les scripts de `ressources/utils/`.
+- `ressources/Petanque-challenge-Round-the-clock/.../.internal/` et
+  `x86_64-linux/` (cache/build Defold), `manifest.private.der`/`.public.der`
+  (vraie clé privée RSA - **ne jamais commiter**), `social_videos_build.log`.
 
-## Ce qui a été fait cette session
+## Session du 15-16 juillet 2026 (+ suite du 16)
 
 ### 1. Écran de choix du continent repositionné
 Avant : le décompte "GAME START IN" tournait avant l'écran de choix de mode.
@@ -133,6 +142,91 @@ conversation Claude Code, pas encore posté, pas enregistré dans le dépôt (à
 redemander si besoin - non conservé ailleurs que dans l'historique de
 session).
 
+## Session du 17-18 juillet 2026
+
+### 1. Tout commité et poussé (9 commits par sujet)
+Le vrac non commité des sessions précédentes a été trié en 9 commits
+thématiques (licence, CAD/BOM matériel, calibration caméra, Round the Clock,
+Quizz, Hardcore + système crédit/freeplay partagé, pays ajoutés, outils
+marketing, docs) puis poussé. Au passage : identité git configurée sur ce
+poste (`guiraudjb <guiraudjb@gmail.com>`), remote basculé en SSH (HTTPS sans
+identifiants stockés ne fonctionnait pas). Plusieurs pièges évités en cours
+de route : un dépôt git imbriqué (`ressources/Petanque-challenge-Round-the-clock/`
+avait son propre `.git` pointant vers un repo GitHub séparé - `.git` retiré,
+contenu vendored tel quel), 251 Mo de cache de build Defold, une vraie clé
+privée RSA (`manifest.private.der`), et 9,6 Go de vidéos render exclus du
+dépôt (bien trop gros, régénérables).
+
+### 2. Dépôt GitHub renommé
+`Fanny_P-tanque_World_Tour` → `Arducible_Fanny_Petanque_World_Tour` (correction
+du nom du projet, cohérent avec #ARDUCIBLE partout ailleurs). Fait via un
+renommage GitHub classique (historique/stars/issues conservés, redirect
+automatique sur les pages du dépôt et les remotes git) plutôt qu'un nouveau
+dépôt vide. **Piège** : ce redirect ne couvre PAS GitHub Pages - l'ancienne
+URL (`guiraudjb.github.io/Fanny_P-tanque_World_Tour/`) renvoie un 404 pur et
+simple. Nouvelle URL : `guiraudjb.github.io/Arducible_Fanny_Petanque_World_Tour/`.
+Toutes les références internes (`index.html`, `robots.txt`, `sitemap.xml`,
+`README.md`) mises à jour et vérifiées à la fois en local et sur le site
+déployé.
+
+### 3. Référencement Google (SEO) de `index.html`
+La page n'avait **aucune structure HTML réelle** (pas de `<!doctype>`, `<html>`,
+`<head>`, `<body>` - juste des balises nues) ni de `<h1>` nulle part sur toute
+la page (tout partait de `<h2>`). Corrigé, plus canonical/Open
+Graph/Twitter Card/JSON-LD (`schema.org/VideoGame`), `robots.txt` et
+`sitemap.xml` créés (n'existaient pas). Ajout mots-clés multilingues
+réfléchis (pas de bourrage) : `alternateName` JSON-LD + une phrase visible
+citant les noms locaux vérifiés de la pétanque (Petanque, Petanca,
+Petong/เปตอง, петанк - sourcés depuis les recherches déjà faites sur
+l'écosystème pétanque, pas inventés). Volontairement **pas** de
+`hreflang`/`og:locale:alternate` : la page n'existe qu'en français, en
+ajouter aurait été factuellement faux.
+
+### 4. Corrections diverses trouvées en vérifiant le contenu
+- 3 mentions "111 pays" oubliées dans `index.html` lors du passage à 115
+  (README avait déjà été corrigé une session plus tôt).
+- `main.py`/`main_quizz.py` : écran "CHOISIS TON MODE" et bloc "GAME START
+  IN" pas alignés sur les positions déjà réajustées dans `main_hardcore.py`
+  - synchronisés.
+- README enrichi d'un tableau récapitulatif des 4 jeux et d'une section
+  "Choix du mode" qui n'était documentée nulle part ; découverte au passage
+  que la narration TTS du Quizz (`assets/Sounds/QuizzTTS/`) est bien câblée
+  alors que le README affirmait encore "aucun fichier audio".
+- PCB détection v3 (ajout d'un connecteur JST-XH) : fichiers de commande
+  JLCPCB récupérés depuis `ressources/archives/PCB pour détection/last pcb/`,
+  copiés dans `hardware/pcb/`, liés depuis `index.html`/`BOM.md`.
+
+### 5. Vérifications high-score et score Round the Clock
+Revérifié (technique headless habituelle, voir plus bas) que
+`save_high_score()`/`_hardcore()`/`_quizz()` ne s'exécutent bien qu'une
+seule fois par partie pour les 3 jeux à score, et que le score de Round the
+Clock (sans persistance, volontairement fidèle à l'original) s'accumule
+correctement en session et repart bien à zéro entre deux parties. Aucun bug
+trouvé cette fois - juste une re-confirmation après les changements
+récents.
+
+### 6. FreeCAD piloté en headless (nouvelle capacité, voir la skill)
+Nouveaux rendus 3D (plusieurs angles) de l'articulation complète et de ses
+3 plaques (`hardware/renders/articulation/`), et export des **plans cotés**
+qui existaient déjà dans les `.FCStd` mais n'avaient jamais été exportés
+(`hardware/plans/plaque-{sup,inf,milieu}.pdf`, liés depuis `index.html` et
+`BOM.md`). Deux bugs trouvés dans les fichiers CAD sources (pas introduits
+cette session) :
+- Cartouches copiés-collés sans être renommés : `plaque-inf.FCStd` affichait
+  "Plaque supérieure", `plaque-milieu.FCStd` affichait "Plaque inférieure" -
+  **corrigés**.
+- Plusieurs cotes d'espacement de trous sur le plan de `plaque-inf` affichent
+  encore `0` au lieu d'une vraie valeur (2 références de cote corrompues) -
+  **pas corrigé** : nécessite de recliquer les bonnes arêtes dans l'interface
+  FreeCAD, pas quelque chose à deviner par script sans risquer de mettre une
+  cote fausse à la place d'une cote visiblement cassée.
+
+Toute la démarche (AppImage, Xvfb, piège `freecadcmd` qui corrompt les
+fichiers avec pages TechDraw, attente réelle nécessaire après `recompute()`,
+addon A2plus...) est documentée dans une skill réutilisable :
+`~/.claude/skills/freecad-headless/SKILL.md` (locale à cette machine, à
+recréer ailleurs si besoin - son contenu peut servir de base).
+
 ## Repères utiles pour la suite
 
 - Numéros de gamestate : `main.py`/`main_hardcore.py` — 0 accueil, 3 choix du
@@ -147,21 +241,27 @@ session).
   Claude Code (memory) de ce projet - fichiers `project_continent_select_*`,
   `project_neon_glow_replaced`, `project_hud_palette_muted`,
   `project_score_highscore_verification`, `project_hardcore_hud_layout`,
-  `project_mediapipe_sensitivity_fix`. Ce compte-rendu en est un résumé
+  `project_mediapipe_sensitivity_fix`, `reference_site_and_repo_urls`,
+  `reference_freecad_headless_skill`. Ce compte-rendu en est un résumé
   condensé, pensé pour être lisible sans Claude Code (autre poste, autre
   outil).
+- Nouvelle URL du dépôt/site : voir section "Dépôt GitHub renommé" plus haut.
 
 ## Points de vigilance pour une prochaine session
 
-- `index.html` (page marketing) embarque encore "Neon Glow" en base64 - pas
-  touché, hors périmètre à moins d'être demandé.
-- La centaine de fichiers non commités mélange plusieurs sujets (Round the
-  Clock, Quizz, Hardcore, pays ajoutés, CAD, cette session) - un commit
-  global "tout en vrac" serait un mauvais message ; à découper par sujet le
-  moment venu.
-- Le correctif de sensibilité MediaPipe (section 7) n'a pas pu être testé
-  avec une vraie caméra sur ce poste - première chose à vérifier sur la
-  borne physique à la reprise.
-- `main_hardcore.py` est un fichier **non suivi par git** (`??` dans
-  `git status`, pas encore de premier commit) - tout le travail de la
-  section 6 n'existe que dans ce fichier en working tree.
+- `index.html` (page marketing) embarque toujours "Neon Glow" en base64 pour
+  le style décoratif des compteurs de stats (typo volontairement différente
+  du HUD du jeu, une police vintage néon pour l'affiche) - ce n'est **pas**
+  un oubli du remplacement par Alfa Slab One, juste un choix graphique
+  distinct pour cette page marketing ; à ne pas "corriger" par réflexe.
+- Le correctif de sensibilité MediaPipe (session du 15-16) n'a toujours pas
+  été testé avec une vraie caméra sur ce poste - à vérifier en priorité sur
+  la borne physique à la reprise.
+- Cote cassée non corrigée sur le plan de `plaque-inf` (voir section 6
+  ci-dessus) - à corriger interactivement dans FreeCAD, pas par script.
+- L'ancienne URL GitHub Pages (`.../Fanny_P-tanque_World_Tour/`) est morte
+  (404 permanent, pas de redirect) - si elle traîne quelque part en externe
+  (bio TikTok, post, favori...), il faut la mettre à jour à la main.
+- Gros dossiers volontairement non versionnés (voir section "Tout est
+  commité et poussé" en haut) - ne pas s'étonner de leur absence après un
+  clone frais, ils sont régénérables via `ressources/utils/`.
