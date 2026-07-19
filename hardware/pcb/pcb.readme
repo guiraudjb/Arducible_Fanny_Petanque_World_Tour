@@ -1,0 +1,108 @@
+# Synthèse des travaux — PCB détection v3
+
+Session du 2026-07-19. Point de départ : `pcb-detection-v3.fzz` (Fritzing),
+capteur à effet Hall OH37 + résistance de tirage 10K + connecteur JST-XH
+3 points (DATA/-/+), carte 34×48mm avec 2 trous de fixation.
+
+## 1. Nettoyage du fichier Fritzing (`hardware/pcb/pcb-detection-v3.fzz`)
+
+Le fichier accumulait des pistes en double sur les 3 vues (platine d'essai,
+schéma, circuit imprimé) : 3 générations de routage superposées pour les
+5 mêmes segments de net (GND, VCC×2, DATA×2), issues de re-routages
+successifs jamais nettoyés. Réduit de 27 à 7 instances de fils utiles,
+plus 2 fils orphelins (`<views/>` vides, purs restes de manipulation)
+supprimés. Topologie vérifiée intacte après coup : J1.− ↔ U1.1 (GND),
+R1 en pont entre DATA/VCC, identique dans les 3 vues.
+
+## 2. Composant Fritzing « carte complète » (`hardware/fritzing/PetanqueDetection_Board_v3.fzpz`)
+
+Objectif : disposer d'un visuel de la carte assemblée utilisable comme un
+seul composant dans d'autres schémas Fritzing (ex. câblage vers le Pro
+Micro), au lieu de recomposer OH37 + R 10K + connecteur à chaque fois.
+
+- **Bug d'import découvert et corrigé** : Fritzing 1.0.x n'accepte plus le
+  format en sous-dossiers (`icon/`, `pcb/`…) qu'utilisaient les anciens
+  `.fzpz` du dépôt (2013-2014) — confirmé en reproduisant l'échec avec un
+  fichier SparkFun d'origine jamais modifié. Solution trouvée sur le forum
+  Fritzing officiel : format « plat » avec préfixes (`part.<nom>.fzp`,
+  `svg.<vue>.<nom>.svg`, tous à la racine de l'archive). Import vérifié
+  via les logs de debug Fritzing (`fritzing -d`) : `unzipping` →
+  `loading bin 'My Parts'` → `after drop event`, sans erreur.
+- **Ordre des pistes corrigé deux fois** sur retour d'observation directe
+  des captures EasyEDA (`pcb_easyeda*.png`, vraie carte gerber) :
+  - vue de dessus : connecteur **+ / − / DATA** de gauche à droite (pas
+    DATA/−/+ comme sur la sérigraphie de la face arrière) ;
+  - la piste **−** part du pin **central** du OH37, passe **sous R1** sans
+    s'y connecter (R1 ne pontant que + et DATA), et non plus une piste
+    séparée avec croisement inventé.
+  - tracé resserré (faisceau de pistes serrées sur presque toute la
+    hauteur de la carte, évasement uniquement dans les derniers mm avant
+    le connecteur) au lieu de 3 voies largement espacées — mesuré au
+    pixel près sur `pcb_easyeda.png` pour caler les proportions.
+- **Vues schématique et circuit imprimé ajoutées** (jusque-là simple
+  copie de l'empreinte nue du connecteur XH3A) : la vue PCB reproduit
+  maintenant la carte à l'échelle réelle (34×48mm, 2 trous de fixation,
+  empreintes OH37/R1 en sérigraphie, même tracé que la vue platine
+  d'essai) ; la vue schématique reste une boîte à 3 broches (+/-/DATA),
+  suffisante pour câbler le module ailleurs.
+- **Texte de la carte** : `SMD_v3_Arducible` (vue platine d'essai + vue
+  PCB + description de la pièce).
+- **Repère « 10K »** positionné à droite de la résistance plutôt
+  qu'au-dessus.
+
+## 3. Modèle 3D paramétrique (`hardware/cad/detection-pcb-v3.FCStd`)
+
+`PartDesign::Body` classique (même convention que le reste du projet) +
+feuille de calcul `Parametres` pilotant toutes les dimensions (plaque,
+trous, position/taille de chaque composant) via expressions. Composants
+représentés par des volumes simples (boîtes), pas des répliques exactes
+des boîtiers — suffisant pour les vérifications d'encombrement.
+
+- Positions dérivées des données réelles déjà utilisées pour le
+  composant Fritzing (`pick-and-place-v3.csv`, rayon des trous du
+  `gerber-pcb-detection-v3.zip`).
+- Coins de la plaque **volontairement non arrondis** : un premier essai
+  avec congé (`PartDesign::Fillet`) cassait dès qu'on changeait
+  `plaque_largeur` (référence d'arête invalide — la topologie change,
+  bug classique FreeCAD). Un modèle qui casse au premier paramètre
+  modifié n'étant pas vraiment paramétrique, choix de coins droits pour
+  garantir que tous les paramètres restent modifiables sans rien casser
+  (testé : 34→40mm recalcule correctement plaque + trous).
+- **Connecteur JST-XH replacé sur la face arrière** (Z négatif, sous la
+  plaque) — il avait d'abord été mis sur la même face qu'OH37/R1 par
+  erreur, alors que `pick-and-place-v3.csv` le donne en couche `B`
+  (bottom) contre `T` (top) pour les deux autres. Vérifié par
+  bounding-box (J1 : Z -5.8→0, contre Z 1.6→7.4 pour l'ancienne version).
+
+## 4. Intégration dans les assemblages
+
+- **`hardware/cad/assemblage-articulation.FCStd`** : la carte y a été
+  importée (import A2plus) puis positionnée précisément **à la main par
+  l'utilisateur** dans l'interface (contraintes réelles contre
+  l'entretoise porte-carte) — mon placement automatique initial n'était
+  qu'approximatif (même transformation que l'entretoise, sans contrainte
+  A2plus vivante), la géométrie exacte de contact n'étant pas déductible
+  avec certitude depuis les seules données disponibles.
+- **`hardware/cad/chassis-assemblage-v7.FCStd`** : rafraîchi à partir de
+  l'assemblage d'articulation (mécanisme de mise à jour A2plus,
+  `updateImportedParts`) pour propager la carte dans les 3 instances du
+  mécanisme sur le châssis. Fait trois fois au total : une première fois
+  après l'ajout initial, une deuxième après la correction du connecteur
+  en face arrière, une troisième après l'assemblage manuel précis de
+  l'utilisateur — résultat final vérifié visuellement (vue de dessous) :
+  les 3 cartes plaquées et alignées de façon identique sur leur support.
+  Avertissement de solveur A2plus bénin à chaque mise à jour
+  (« Constraints inconsistent » sur une contrainte `centerOfMass` dont la
+  valeur dépend de la masse de l'articulation), sans effet visible sur le
+  résultat.
+
+## Fichiers modifiés/créés
+
+- `hardware/pcb/pcb-detection-v3.fzz` — nettoyé
+- `hardware/fritzing/PetanqueDetection_Board_v3.fzpz` — créé/corrigé
+- `hardware/pcb/pcb-detection-v3-breadboard-preview.png` — créé
+- `hardware/cad/detection-pcb-v3.FCStd` — créé
+- `hardware/renders/pcb/detection-pcb-v3-iso.png` — créé
+- `hardware/cad/assemblage-articulation.FCStd` — carte ajoutée puis
+  repositionnée manuellement (utilisateur)
+- `hardware/cad/chassis-assemblage-v7.FCStd` — mis à jour

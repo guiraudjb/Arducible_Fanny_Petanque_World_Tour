@@ -953,8 +953,8 @@ void loop(){
 
     <h3 class="bom-group-title">Câblage</h3>
     <p class="section-lede">Un câble réseau (RJ45, Cat5/6) par cible ramène le signal du capteur et l'alimentation jusqu'à la carte Pro Micro ; un câble Micro-USB relie ensuite la carte à l'ordinateur.</p>
-    <img class="hero-render" src="hardware/schematics/pro-micro-wiring.png" alt="Schéma de câblage Fritzing entre un jack RJ45 et la carte Pro Micro : broches signal, alimentation et masse reliées via le câble réseau." />
-    <p class="caption">Schéma réalisé sous Fritzing — fichier source : <a href="hardware/fritzing/cablage-pro-micro.fzz">cablage-pro-micro.fzz</a>. Le bouton-poussoir représente ici une cible générique (capteur à effet Hall) pour la démonstration du câblage.</p>
+    <img class="hero-render" src="hardware/schematics/pro-micro-wiring.png" alt="Schéma de câblage Fritzing : les 3 cartes de détection v3 (une par cible) reliées à la carte Pro Micro, broches DATA/+/− vers les broches 14, 15, 16 et VCC/GND." />
+    <p class="caption">Schéma réalisé sous Fritzing — fichier source : <a href="hardware/fritzing/cablage-pro-micro.fzz">cablage-pro-micro.fzz</a>. Les 3 cartes détection v3 représentent les 3 cibles, câblées ici directement pour la lisibilité du schéma (en pratique, chaque liaison passe par un câble RJ45).</p>
     <p class="bom-links">Ancien schéma (contrôleur Leonardo, boutons obsolètes) conservé pour référence : <a href="hardware/schematics/arduino-leonardo-rj45-wiring.png">arduino-leonardo-rj45-wiring.png</a>.</p>
   </section>
 
@@ -962,8 +962,8 @@ void loop(){
     <p class="eyebrow">Partie 3</p>
     <h2 class="section-title">Le système de détection</h2>
     <p class="section-lede">Chaque cible embarque un capteur à effet Hall qui détecte le passage d'un aimant, sans aucun contact électrique avec la boule elle-même.</p>
-    <img class="hero-render" src="hardware/schematics/pcb-detection-oh37.png" alt="Plan du PCB de détection : capteur à effet Hall OH37 en haut, résistance 10 kΩ au milieu, trois pastilles de connexion en bas vers le câble RJ45." />
-    <p class="caption">PCB détection v3 (2 couches, connecteur JST-XH 3 points) — <a href="hardware/pcb/gerber-pcb-detection-v3.zip">Gerber</a> · <a href="hardware/pcb/bom-jlcpcb-v3.csv">BOM</a> · <a href="hardware/pcb/pick-and-place-v3.csv">Pick &amp; Place</a> · <a href="hardware/pcb/pcb-detection-3d-model.zip">Modèle 3D</a> — fichiers prêts à l'import JLCPCB. <a href="hardware/pcb/gerber-pcb-detection.zip">Version précédente (Gerber, sans connecteur)</a> conservée pour référence.</p>
+    <img class="hero-render" src="hardware/pcb/pcb-detection-v3-breadboard-preview.png" alt="Plan du PCB de détection v3 : capteur à effet Hall OH37 en haut, résistance 10 kΩ au milieu, connecteur JST-XH 3 points (+/−/DATA) en bas." />
+    <p class="caption">PCB détection v3 (2 couches, connecteur JST-XH 3 points, connecteur en face arrière) — <a href="hardware/pcb/gerber-pcb-detection-v3.zip">Gerber</a> · <a href="hardware/pcb/bom-jlcpcb-v3.csv">BOM</a> · <a href="hardware/pcb/pick-and-place-v3.csv">Pick &amp; Place</a> · <a href="hardware/pcb/OBJ_arduciblesmdv3_2026-07-19.zip">Modèle 3D (OBJ)</a> · <a href="hardware/cad/detection-pcb-v3.FCStd">FCStd</a> · <a href="hardware/fritzing/PetanqueDetection_Board_v3.fzpz">Fritzing</a> — fichiers prêts à l'import JLCPCB.</p>
 
     <h3 class="bom-group-title">Articulation d'une cible (×3)</h3>
     <ol class="bom-steps">
