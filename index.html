@@ -134,6 +134,9 @@
     line-height: 1.6;
     overflow-x: hidden;
   }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  section { scroll-margin-top: 1.5rem; }
 
   h1, h2, h3 { text-wrap: balance; margin: 0; }
 
@@ -660,6 +663,150 @@
     color: var(--ink-soft);
   }
 
+  /* ---------- Floating section nav ---------- */
+  .floating-nav {
+    position: fixed;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    box-shadow: 0 10px 26px var(--shadow);
+    border-radius: 999px;
+    padding: 0.6rem 0.4rem;
+  }
+  .floating-nav a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 50%;
+    color: var(--ink-soft);
+    font-family: "Rockwell", "Roboto Slab", Georgia, serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .floating-nav a:hover,
+  .floating-nav a:focus-visible { background: var(--line); }
+  .floating-nav a.active {
+    background: var(--rust);
+    color: var(--paper-raised);
+  }
+  .floating-nav a .fn-label {
+    position: absolute;
+    right: calc(100% + 0.6rem);
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    padding: 0.3rem 0.7rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--ink);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+  }
+  .floating-nav a:hover .fn-label,
+  .floating-nav a:focus-visible .fn-label { opacity: 1; }
+
+  @media (max-width: 640px) {
+    .floating-nav {
+      top: auto;
+      bottom: 0.75rem;
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+      flex-direction: row;
+      max-width: calc(100vw - 1.5rem);
+      overflow-x: auto;
+    }
+    .floating-nav a .fn-label { display: none; }
+  }
+
+  /* ---------- Goodies : diaporama de cartes postales ---------- */
+  .diaporama { max-width: 42rem; margin: 2rem auto 0; }
+  .diaporama-frame {
+    position: relative;
+    background: #fff;
+    border: 1px solid var(--line);
+    box-shadow: 0 14px 32px var(--shadow);
+    aspect-ratio: 16/9;
+    overflow: hidden;
+  }
+  .diaporama-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .diaporama-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    margin-top: 0.9rem;
+  }
+  .diaporama-controls button {
+    font-family: "Rockwell", "Roboto Slab", Georgia, serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.78rem;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    padding: 0.5rem 1.1rem;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .diaporama-controls button:hover { background: var(--line); }
+  .diaporama-count { font-size: 0.8rem; color: var(--ink-soft); min-width: 4.5rem; text-align: center; }
+
+  /* ---------- Goodies : Fanny en tenue locale / jeu de cartes ---------- */
+  .fanny-outfit {
+    scroll-snap-align: center;
+    flex: 0 0 auto;
+    width: min(38vw, 150px);
+  }
+  .fanny-outfit img {
+    width: 100%;
+    display: block;
+    border: 1px solid var(--line);
+    box-shadow: 0 8px 18px var(--shadow);
+  }
+  .fanny-outfit figcaption {
+    margin-top: 0.5rem;
+    font-size: 0.72rem;
+    text-align: center;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .playing-card {
+    scroll-snap-align: center;
+    flex: 0 0 auto;
+    width: min(30vw, 130px);
+  }
+  .playing-card img {
+    width: 100%;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 8px 18px var(--shadow);
+  }
+
   /* ---------- Footer luggage tag ---------- */
   footer {
     padding: 4rem 1.5rem 5rem;
@@ -713,6 +860,16 @@
 <body>
 
 <div class="crt" aria-hidden="true"></div>
+
+<nav class="floating-nav" aria-label="Navigation rapide entre sections">
+  <a href="#intro" data-section="intro"><span aria-hidden="true">⌂</span><span class="fn-label">Accueil</span></a>
+  <a href="#partie1" data-section="partie1"><span aria-hidden="true">1</span><span class="fn-label">Le jeu vidéo</span></a>
+  <a href="#partie2" data-section="partie2"><span aria-hidden="true">2</span><span class="fn-label">Le châssis</span></a>
+  <a href="#partie3" data-section="partie3"><span aria-hidden="true">3</span><span class="fn-label">La cible</span></a>
+  <a href="#partie4" data-section="partie4"><span aria-hidden="true">4</span><span class="fn-label">Électronique</span></a>
+  <a href="#partie5" data-section="partie5"><span aria-hidden="true">5</span><span class="fn-label">Modélisation 3D</span></a>
+  <a href="#goodies" data-section="goodies"><span aria-hidden="true">★</span><span class="fn-label">Goodies</span></a>
+</nav>
 
 <header class="hero">
   <h1 class="sr-only">Fanny Pétanque World Tour — An #ARDUCIBLE pétanque game</h1>
@@ -1150,7 +1307,828 @@ void loop(){
     <p class="bom-links">Nomenclature complète : <a href="hardware/BOM.md">hardware/BOM.md</a>.</p>
   </section>
 
+  <section id="goodies" aria-label="Goodies">
+    <p class="eyebrow">Goodies</p>
+    <h2 class="section-title">Cartes postales, jeu de cartes et Fanny en tenue locale</h2>
+    <p class="section-lede">Le tour du monde a aussi produit son lot de souvenirs : 112 cartes postales illustrées (les 3 derniers pays ajoutés n'ont pas encore leur portrait), deux jeux de cartes à l'effigie de Fanny, et ses tenues traditionnelles pays par pays. À venir : des jeux de cartes jouables directement sur cette page — solitaire, vidéo poker, blackjack.</p>
+
+    <h3 class="bom-group-title">Cartes postales du tour</h3>
+    <div class="diaporama">
+      <div class="diaporama-frame">
+        <img id="postcard-img" src="goodies/postcards/001_allemagne.jpg" alt="Carte postale illustrée : Allemagne." />
+      </div>
+      <div class="diaporama-controls">
+        <button type="button" id="postcard-prev" aria-label="Carte postale précédente">◀ Précédent</button>
+        <span class="diaporama-count" id="postcard-count">1 / 112</span>
+        <button type="button" id="postcard-next" aria-label="Carte postale suivante">Suivant ▶</button>
+      </div>
+    </div>
+
+    <h3 class="bom-group-title">Fanny, en tenue locale</h3>
+    <div class="rail-scroll">
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/001_allemagne.jpg" alt="Portrait de Fanny en tenue traditionnelle : Allemagne." loading="lazy" />
+        <figcaption>Allemagne</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/002_andorre.jpg" alt="Portrait de Fanny en tenue traditionnelle : Andorre." loading="lazy" />
+        <figcaption>Andorre</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/003_angleterre.jpg" alt="Portrait de Fanny en tenue traditionnelle : Angleterre." loading="lazy" />
+        <figcaption>Angleterre</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/004_armenie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Armenie." loading="lazy" />
+        <figcaption>Armenie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/005_autriche.jpg" alt="Portrait de Fanny en tenue traditionnelle : Autriche." loading="lazy" />
+        <figcaption>Autriche</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/006_belgique.jpg" alt="Portrait de Fanny en tenue traditionnelle : Belgique." loading="lazy" />
+        <figcaption>Belgique</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/007_bulgarie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Bulgarie." loading="lazy" />
+        <figcaption>Bulgarie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/008_danemark.jpg" alt="Portrait de Fanny en tenue traditionnelle : Danemark." loading="lazy" />
+        <figcaption>Danemark</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/009_ecosse.jpg" alt="Portrait de Fanny en tenue traditionnelle : Ecosse." loading="lazy" />
+        <figcaption>Ecosse</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/010_espagne.jpg" alt="Portrait de Fanny en tenue traditionnelle : Espagne." loading="lazy" />
+        <figcaption>Espagne</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/011_estonie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Estonie." loading="lazy" />
+        <figcaption>Estonie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/012_finlande.jpg" alt="Portrait de Fanny en tenue traditionnelle : Finlande." loading="lazy" />
+        <figcaption>Finlande</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/013_france.jpg" alt="Portrait de Fanny en tenue traditionnelle : France." loading="lazy" />
+        <figcaption>France</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/014_guernesey.jpg" alt="Portrait de Fanny en tenue traditionnelle : Guernesey." loading="lazy" />
+        <figcaption>Guernesey</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/015_hongrie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Hongrie." loading="lazy" />
+        <figcaption>Hongrie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/016_irlande.jpg" alt="Portrait de Fanny en tenue traditionnelle : Irlande." loading="lazy" />
+        <figcaption>Irlande</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/017_italie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Italie." loading="lazy" />
+        <figcaption>Italie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/018_jersey.jpg" alt="Portrait de Fanny en tenue traditionnelle : Jersey." loading="lazy" />
+        <figcaption>Jersey</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/019_lettonie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Lettonie." loading="lazy" />
+        <figcaption>Lettonie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/020_lituanie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Lituanie." loading="lazy" />
+        <figcaption>Lituanie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/021_luxembourg.jpg" alt="Portrait de Fanny en tenue traditionnelle : Luxembourg." loading="lazy" />
+        <figcaption>Luxembourg</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/022_monaco.jpg" alt="Portrait de Fanny en tenue traditionnelle : Monaco." loading="lazy" />
+        <figcaption>Monaco</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/023_norvege.jpg" alt="Portrait de Fanny en tenue traditionnelle : Norvege." loading="lazy" />
+        <figcaption>Norvege</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/024_pays_bas.jpg" alt="Portrait de Fanny en tenue traditionnelle : Pays Bas." loading="lazy" />
+        <figcaption>Pays Bas</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/025_pays_de_galles.jpg" alt="Portrait de Fanny en tenue traditionnelle : Pays De Galles." loading="lazy" />
+        <figcaption>Pays De Galles</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/026_pologne.jpg" alt="Portrait de Fanny en tenue traditionnelle : Pologne." loading="lazy" />
+        <figcaption>Pologne</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/027_portugal.jpg" alt="Portrait de Fanny en tenue traditionnelle : Portugal." loading="lazy" />
+        <figcaption>Portugal</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/028_roumanie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Roumanie." loading="lazy" />
+        <figcaption>Roumanie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/029_russie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Russie." loading="lazy" />
+        <figcaption>Russie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/030_saint_marin.jpg" alt="Portrait de Fanny en tenue traditionnelle : Saint Marin." loading="lazy" />
+        <figcaption>Saint Marin</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/031_serbie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Serbie." loading="lazy" />
+        <figcaption>Serbie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/032_slovaquie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Slovaquie." loading="lazy" />
+        <figcaption>Slovaquie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/033_slovenie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Slovenie." loading="lazy" />
+        <figcaption>Slovenie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/034_suede.jpg" alt="Portrait de Fanny en tenue traditionnelle : Suede." loading="lazy" />
+        <figcaption>Suede</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/035_suisse.jpg" alt="Portrait de Fanny en tenue traditionnelle : Suisse." loading="lazy" />
+        <figcaption>Suisse</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/036_tchequie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Tchequie." loading="lazy" />
+        <figcaption>Tchequie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/037_turquie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Turquie." loading="lazy" />
+        <figcaption>Turquie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/038_ukraine.jpg" alt="Portrait de Fanny en tenue traditionnelle : Ukraine." loading="lazy" />
+        <figcaption>Ukraine</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/039_algerie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Algerie." loading="lazy" />
+        <figcaption>Algerie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/040_benin.jpg" alt="Portrait de Fanny en tenue traditionnelle : Benin." loading="lazy" />
+        <figcaption>Benin</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/041_burkina_faso.jpg" alt="Portrait de Fanny en tenue traditionnelle : Burkina Faso." loading="lazy" />
+        <figcaption>Burkina Faso</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/042_cameroun.jpg" alt="Portrait de Fanny en tenue traditionnelle : Cameroun." loading="lazy" />
+        <figcaption>Cameroun</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/043_comores.jpg" alt="Portrait de Fanny en tenue traditionnelle : Comores." loading="lazy" />
+        <figcaption>Comores</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/044_congo.jpg" alt="Portrait de Fanny en tenue traditionnelle : Congo." loading="lazy" />
+        <figcaption>Congo</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/045_cote_d_ivoire.jpg" alt="Portrait de Fanny en tenue traditionnelle : Cote D Ivoire." loading="lazy" />
+        <figcaption>Cote D Ivoire</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/046_djibouti.jpg" alt="Portrait de Fanny en tenue traditionnelle : Djibouti." loading="lazy" />
+        <figcaption>Djibouti</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/047_egypte.jpg" alt="Portrait de Fanny en tenue traditionnelle : Egypte." loading="lazy" />
+        <figcaption>Egypte</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/048_gabon.jpg" alt="Portrait de Fanny en tenue traditionnelle : Gabon." loading="lazy" />
+        <figcaption>Gabon</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/049_guinee.jpg" alt="Portrait de Fanny en tenue traditionnelle : Guinee." loading="lazy" />
+        <figcaption>Guinee</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/050_libye.jpg" alt="Portrait de Fanny en tenue traditionnelle : Libye." loading="lazy" />
+        <figcaption>Libye</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/051_madagascar.jpg" alt="Portrait de Fanny en tenue traditionnelle : Madagascar." loading="lazy" />
+        <figcaption>Madagascar</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/052_mali.jpg" alt="Portrait de Fanny en tenue traditionnelle : Mali." loading="lazy" />
+        <figcaption>Mali</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/053_maurice.jpg" alt="Portrait de Fanny en tenue traditionnelle : Maurice." loading="lazy" />
+        <figcaption>Maurice</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/054_mauritanie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Mauritanie." loading="lazy" />
+        <figcaption>Mauritanie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/055_maroc.jpg" alt="Portrait de Fanny en tenue traditionnelle : Maroc." loading="lazy" />
+        <figcaption>Maroc</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/056_niger.jpg" alt="Portrait de Fanny en tenue traditionnelle : Niger." loading="lazy" />
+        <figcaption>Niger</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/057_ouganda.jpg" alt="Portrait de Fanny en tenue traditionnelle : Ouganda." loading="lazy" />
+        <figcaption>Ouganda</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/058_republique_centrafricaine.jpg" alt="Portrait de Fanny en tenue traditionnelle : Republique Centrafricaine." loading="lazy" />
+        <figcaption>Republique Centrafricaine</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/059_republique_democratique_du_congo.jpg" alt="Portrait de Fanny en tenue traditionnelle : Republique Democratique Du Congo." loading="lazy" />
+        <figcaption>Republique Democratique Du Congo</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/060_senegal.jpg" alt="Portrait de Fanny en tenue traditionnelle : Senegal." loading="lazy" />
+        <figcaption>Senegal</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/061_seychelles.jpg" alt="Portrait de Fanny en tenue traditionnelle : Seychelles." loading="lazy" />
+        <figcaption>Seychelles</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/062_tchad.jpg" alt="Portrait de Fanny en tenue traditionnelle : Tchad." loading="lazy" />
+        <figcaption>Tchad</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/063_togo.jpg" alt="Portrait de Fanny en tenue traditionnelle : Togo." loading="lazy" />
+        <figcaption>Togo</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/064_tunisie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Tunisie." loading="lazy" />
+        <figcaption>Tunisie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/065_zambie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Zambie." loading="lazy" />
+        <figcaption>Zambie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/066_afghanistan.jpg" alt="Portrait de Fanny en tenue traditionnelle : Afghanistan." loading="lazy" />
+        <figcaption>Afghanistan</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/067_bangladesh.jpg" alt="Portrait de Fanny en tenue traditionnelle : Bangladesh." loading="lazy" />
+        <figcaption>Bangladesh</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/068_brunei.jpg" alt="Portrait de Fanny en tenue traditionnelle : Brunei." loading="lazy" />
+        <figcaption>Brunei</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/069_cambodge.jpg" alt="Portrait de Fanny en tenue traditionnelle : Cambodge." loading="lazy" />
+        <figcaption>Cambodge</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/070_chine.jpg" alt="Portrait de Fanny en tenue traditionnelle : Chine." loading="lazy" />
+        <figcaption>Chine</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/071_coree_du_sud.jpg" alt="Portrait de Fanny en tenue traditionnelle : Coree Du Sud." loading="lazy" />
+        <figcaption>Coree Du Sud</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/072_inde.jpg" alt="Portrait de Fanny en tenue traditionnelle : Inde." loading="lazy" />
+        <figcaption>Inde</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/073_indonesie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Indonesie." loading="lazy" />
+        <figcaption>Indonesie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/074_iran.jpg" alt="Portrait de Fanny en tenue traditionnelle : Iran." loading="lazy" />
+        <figcaption>Iran</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/075_japon.jpg" alt="Portrait de Fanny en tenue traditionnelle : Japon." loading="lazy" />
+        <figcaption>Japon</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/076_kazakhstan.jpg" alt="Portrait de Fanny en tenue traditionnelle : Kazakhstan." loading="lazy" />
+        <figcaption>Kazakhstan</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/077_kirghizistan.jpg" alt="Portrait de Fanny en tenue traditionnelle : Kirghizistan." loading="lazy" />
+        <figcaption>Kirghizistan</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/078_laos.jpg" alt="Portrait de Fanny en tenue traditionnelle : Laos." loading="lazy" />
+        <figcaption>Laos</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/079_malaisie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Malaisie." loading="lazy" />
+        <figcaption>Malaisie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/080_mongolie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Mongolie." loading="lazy" />
+        <figcaption>Mongolie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/081_myanmar.jpg" alt="Portrait de Fanny en tenue traditionnelle : Myanmar." loading="lazy" />
+        <figcaption>Myanmar</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/082_nepal.jpg" alt="Portrait de Fanny en tenue traditionnelle : Nepal." loading="lazy" />
+        <figcaption>Nepal</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/083_pakistan.jpg" alt="Portrait de Fanny en tenue traditionnelle : Pakistan." loading="lazy" />
+        <figcaption>Pakistan</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/084_philippines.jpg" alt="Portrait de Fanny en tenue traditionnelle : Philippines." loading="lazy" />
+        <figcaption>Philippines</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/085_singapour.jpg" alt="Portrait de Fanny en tenue traditionnelle : Singapour." loading="lazy" />
+        <figcaption>Singapour</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/086_taiwan.jpg" alt="Portrait de Fanny en tenue traditionnelle : Taiwan." loading="lazy" />
+        <figcaption>Taiwan</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/087_thailande.jpg" alt="Portrait de Fanny en tenue traditionnelle : Thailande." loading="lazy" />
+        <figcaption>Thailande</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/088_turkmenistan.jpg" alt="Portrait de Fanny en tenue traditionnelle : Turkmenistan." loading="lazy" />
+        <figcaption>Turkmenistan</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/089_vietnam.jpg" alt="Portrait de Fanny en tenue traditionnelle : Vietnam." loading="lazy" />
+        <figcaption>Vietnam</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/090_argentine.jpg" alt="Portrait de Fanny en tenue traditionnelle : Argentine." loading="lazy" />
+        <figcaption>Argentine</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/091_bolivie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Bolivie." loading="lazy" />
+        <figcaption>Bolivie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/092_canada.jpg" alt="Portrait de Fanny en tenue traditionnelle : Canada." loading="lazy" />
+        <figcaption>Canada</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/093_chili.jpg" alt="Portrait de Fanny en tenue traditionnelle : Chili." loading="lazy" />
+        <figcaption>Chili</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/094_colombie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Colombie." loading="lazy" />
+        <figcaption>Colombie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/095_costa_rica.jpg" alt="Portrait de Fanny en tenue traditionnelle : Costa Rica." loading="lazy" />
+        <figcaption>Costa Rica</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/096_cuba.jpg" alt="Portrait de Fanny en tenue traditionnelle : Cuba." loading="lazy" />
+        <figcaption>Cuba</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/097_equateur.jpg" alt="Portrait de Fanny en tenue traditionnelle : Equateur." loading="lazy" />
+        <figcaption>Equateur</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/098_etats_unis.jpg" alt="Portrait de Fanny en tenue traditionnelle : Etats Unis." loading="lazy" />
+        <figcaption>Etats Unis</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/099_guatemala.jpg" alt="Portrait de Fanny en tenue traditionnelle : Guatemala." loading="lazy" />
+        <figcaption>Guatemala</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/100_haiti.jpg" alt="Portrait de Fanny en tenue traditionnelle : Haiti." loading="lazy" />
+        <figcaption>Haiti</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/101_mexique.jpg" alt="Portrait de Fanny en tenue traditionnelle : Mexique." loading="lazy" />
+        <figcaption>Mexique</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/102_paraguay.jpg" alt="Portrait de Fanny en tenue traditionnelle : Paraguay." loading="lazy" />
+        <figcaption>Paraguay</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/103_perou.jpg" alt="Portrait de Fanny en tenue traditionnelle : Perou." loading="lazy" />
+        <figcaption>Perou</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/104_republique_dominicaine.jpg" alt="Portrait de Fanny en tenue traditionnelle : Republique Dominicaine." loading="lazy" />
+        <figcaption>Republique Dominicaine</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/105_uruguay.jpg" alt="Portrait de Fanny en tenue traditionnelle : Uruguay." loading="lazy" />
+        <figcaption>Uruguay</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/106_venezuela.jpg" alt="Portrait de Fanny en tenue traditionnelle : Venezuela." loading="lazy" />
+        <figcaption>Venezuela</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/107_australie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Australie." loading="lazy" />
+        <figcaption>Australie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/108_nouvelle_caledonie.jpg" alt="Portrait de Fanny en tenue traditionnelle : Nouvelle Caledonie." loading="lazy" />
+        <figcaption>Nouvelle Caledonie</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/109_nouvelle_zelande.jpg" alt="Portrait de Fanny en tenue traditionnelle : Nouvelle Zelande." loading="lazy" />
+        <figcaption>Nouvelle Zelande</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/110_tahiti.jpg" alt="Portrait de Fanny en tenue traditionnelle : Tahiti." loading="lazy" />
+        <figcaption>Tahiti</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/111_vanuatu.jpg" alt="Portrait de Fanny en tenue traditionnelle : Vanuatu." loading="lazy" />
+        <figcaption>Vanuatu</figcaption>
+      </figure>
+      <figure class="fanny-outfit">
+        <img src="goodies/fanny/112_wallis_et_futuna.jpg" alt="Portrait de Fanny en tenue traditionnelle : Wallis Et Futuna." loading="lazy" />
+        <figcaption>Wallis Et Futuna</figcaption>
+      </figure>
+    </div>
+
+    <h3 class="bom-group-title">Le jeu de cartes — Deck 1</h3>
+    <div class="rail-scroll">
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/10-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 10 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/10-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 10 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/10-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 10 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/10-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 10 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/2-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 2 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/2-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 2 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/2-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 2 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/2-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 2 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/3-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 3 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/3-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 3 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/3-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 3 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/3-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 3 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/4-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 4 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/4-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 4 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/4-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 4 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/4-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 4 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/5-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 5 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/5-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 5 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/5-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 5 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/5-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 5 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/6-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 6 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/6-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 6 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/6-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 6 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/6-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 6 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/7-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 7 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/7-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 7 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/7-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 7 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/7-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 7 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/8-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 8 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/8-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 8 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/8-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 8 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/8-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 8 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/9-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 9 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/9-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 9 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/9-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 9 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/9-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : 9 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/A-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : A de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/A-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : A de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/A-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : A de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/A-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : A de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/J-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : J de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/J-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : J de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/J-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : J de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/J-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : J de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/K-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : K de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/K-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : K de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/K-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : K de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/K-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : K de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/Q-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : Q de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/Q-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : Q de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/Q-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : Q de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/Q-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : Q de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/back.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : Dos de carte." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/joker-black.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : Joker noir." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_1/joker-red.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 1 : Joker rouge." loading="lazy" />
+      </figure>
+    </div>
+
+    <h3 class="bom-group-title">Le jeu de cartes — Deck 2</h3>
+    <div class="rail-scroll">
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/10-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 10 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/10-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 10 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/10-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 10 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/10-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 10 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/2-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 2 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/2-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 2 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/2-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 2 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/2-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 2 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/3-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 3 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/3-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 3 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/3-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 3 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/3-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 3 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/4-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 4 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/4-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 4 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/4-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 4 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/4-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 4 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/5-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 5 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/5-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 5 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/5-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 5 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/5-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 5 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/6-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 6 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/6-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 6 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/6-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 6 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/6-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 6 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/7-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 7 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/7-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 7 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/7-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 7 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/7-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 7 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/8-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 8 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/8-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 8 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/8-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 8 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/8-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 8 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/9-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 9 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/9-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 9 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/9-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 9 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/9-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : 9 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/A-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : A de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/A-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : A de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/A-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : A de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/A-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : A de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/J-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : J de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/J-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : J de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/J-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : J de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/J-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : J de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/K-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : K de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/K-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : K de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/K-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : K de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/K-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : K de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/Q-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : Q de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/Q-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : Q de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/Q-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : Q de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/Q-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : Q de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/back.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : Dos de carte." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/joker-black-2.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : Joker noir #2." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/joker-black-3.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : Joker noir #3." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/joker-black.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : Joker noir." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/joker-red-2.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : Joker rouge #2." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/joker-red-3.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : Joker rouge #3." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/deck_2/joker-red.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : Joker rouge." loading="lazy" />
+      </figure>
+    </div>
+  </section>
+
 </main>
+
 
 <footer>
   <div class="tag">
@@ -1179,6 +2157,54 @@ void loop(){
       video.load();
       video.currentTime = t;
       if (wasPlaying) video.play();
+    });
+  })();
+</script>
+
+<script>
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll(".floating-nav a[data-section]"));
+    if (!links.length) return;
+    var sections = links
+      .map(function (a) { return document.getElementById(a.dataset.section); })
+      .filter(Boolean);
+    if (!sections.length || !("IntersectionObserver" in window)) return;
+    var byId = {};
+    links.forEach(function (a) { byId[a.dataset.section] = a; });
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        links.forEach(function (a) { a.classList.remove("active"); });
+        var link = byId[entry.target.id];
+        if (link) link.classList.add("active");
+      });
+    }, { rootMargin: "-45% 0px -45% 0px", threshold: 0 });
+    sections.forEach(function (s) { observer.observe(s); });
+  })();
+</script>
+
+<script>
+  (function () {
+    var img = document.getElementById("postcard-img");
+    var prevBtn = document.getElementById("postcard-prev");
+    var nextBtn = document.getElementById("postcard-next");
+    var count = document.getElementById("postcard-count");
+    if (!img || !prevBtn || !nextBtn || !count) return;
+    var postcards = [{"file": "001_allemagne.jpg", "name": "Allemagne"}, {"file": "002_andorre.jpg", "name": "Andorre"}, {"file": "003_angleterre.jpg", "name": "Angleterre"}, {"file": "004_armenie.jpg", "name": "Armenie"}, {"file": "005_autriche.jpg", "name": "Autriche"}, {"file": "006_belgique.jpg", "name": "Belgique"}, {"file": "007_bulgarie.jpg", "name": "Bulgarie"}, {"file": "008_danemark.jpg", "name": "Danemark"}, {"file": "009_ecosse.jpg", "name": "Ecosse"}, {"file": "010_espagne.jpg", "name": "Espagne"}, {"file": "011_estonie.jpg", "name": "Estonie"}, {"file": "012_finlande.jpg", "name": "Finlande"}, {"file": "013_france.jpg", "name": "France"}, {"file": "014_guernesey.jpg", "name": "Guernesey"}, {"file": "015_hongrie.jpg", "name": "Hongrie"}, {"file": "016_irlande.jpg", "name": "Irlande"}, {"file": "017_italie.jpg", "name": "Italie"}, {"file": "018_jersey.jpg", "name": "Jersey"}, {"file": "019_lettonie.jpg", "name": "Lettonie"}, {"file": "020_lituanie.jpg", "name": "Lituanie"}, {"file": "021_luxembourg.jpg", "name": "Luxembourg"}, {"file": "022_monaco.jpg", "name": "Monaco"}, {"file": "023_norvege.jpg", "name": "Norvege"}, {"file": "024_pays_bas.jpg", "name": "Pays Bas"}, {"file": "025_pays_de_galles.jpg", "name": "Pays De Galles"}, {"file": "026_pologne.jpg", "name": "Pologne"}, {"file": "027_portugal.jpg", "name": "Portugal"}, {"file": "028_roumanie.jpg", "name": "Roumanie"}, {"file": "029_russie.jpg", "name": "Russie"}, {"file": "030_saint_marin.jpg", "name": "Saint Marin"}, {"file": "031_serbie.jpg", "name": "Serbie"}, {"file": "032_slovaquie.jpg", "name": "Slovaquie"}, {"file": "033_slovenie.jpg", "name": "Slovenie"}, {"file": "034_suede.jpg", "name": "Suede"}, {"file": "035_suisse.jpg", "name": "Suisse"}, {"file": "036_tchequie.jpg", "name": "Tchequie"}, {"file": "037_turquie.jpg", "name": "Turquie"}, {"file": "038_ukraine.jpg", "name": "Ukraine"}, {"file": "039_algerie.jpg", "name": "Algerie"}, {"file": "040_benin.jpg", "name": "Benin"}, {"file": "041_burkina_faso.jpg", "name": "Burkina Faso"}, {"file": "042_cameroun.jpg", "name": "Cameroun"}, {"file": "043_comores.jpg", "name": "Comores"}, {"file": "044_congo.jpg", "name": "Congo"}, {"file": "045_cote_d_ivoire.jpg", "name": "Cote D Ivoire"}, {"file": "046_djibouti.jpg", "name": "Djibouti"}, {"file": "047_egypte.jpg", "name": "Egypte"}, {"file": "048_gabon.jpg", "name": "Gabon"}, {"file": "049_guinee.jpg", "name": "Guinee"}, {"file": "050_libye.jpg", "name": "Libye"}, {"file": "051_madagascar.jpg", "name": "Madagascar"}, {"file": "052_mali.jpg", "name": "Mali"}, {"file": "053_maurice.jpg", "name": "Maurice"}, {"file": "054_mauritanie.jpg", "name": "Mauritanie"}, {"file": "055_maroc.jpg", "name": "Maroc"}, {"file": "056_niger.jpg", "name": "Niger"}, {"file": "057_ouganda.jpg", "name": "Ouganda"}, {"file": "058_republique_centrafricaine.jpg", "name": "Republique Centrafricaine"}, {"file": "059_republique_democratique_du_congo.jpg", "name": "Republique Democratique Du Congo"}, {"file": "060_senegal.jpg", "name": "Senegal"}, {"file": "061_seychelles.jpg", "name": "Seychelles"}, {"file": "062_tchad.jpg", "name": "Tchad"}, {"file": "063_togo.jpg", "name": "Togo"}, {"file": "064_tunisie.jpg", "name": "Tunisie"}, {"file": "065_zambie.jpg", "name": "Zambie"}, {"file": "066_afghanistan.jpg", "name": "Afghanistan"}, {"file": "067_bangladesh.jpg", "name": "Bangladesh"}, {"file": "068_brunei.jpg", "name": "Brunei"}, {"file": "069_cambodge.jpg", "name": "Cambodge"}, {"file": "070_chine.jpg", "name": "Chine"}, {"file": "071_coree_du_sud.jpg", "name": "Coree Du Sud"}, {"file": "072_inde.jpg", "name": "Inde"}, {"file": "073_indonesie.jpg", "name": "Indonesie"}, {"file": "074_iran.jpg", "name": "Iran"}, {"file": "075_japon.jpg", "name": "Japon"}, {"file": "076_kazakhstan.jpg", "name": "Kazakhstan"}, {"file": "077_kirghizistan.jpg", "name": "Kirghizistan"}, {"file": "078_laos.jpg", "name": "Laos"}, {"file": "079_malaisie.jpg", "name": "Malaisie"}, {"file": "080_mongolie.jpg", "name": "Mongolie"}, {"file": "081_myanmar.jpg", "name": "Myanmar"}, {"file": "082_nepal.jpg", "name": "Nepal"}, {"file": "083_pakistan.jpg", "name": "Pakistan"}, {"file": "084_philippines.jpg", "name": "Philippines"}, {"file": "085_singapour.jpg", "name": "Singapour"}, {"file": "086_taiwan.jpg", "name": "Taiwan"}, {"file": "087_thailande.jpg", "name": "Thailande"}, {"file": "088_turkmenistan.jpg", "name": "Turkmenistan"}, {"file": "089_vietnam.jpg", "name": "Vietnam"}, {"file": "090_argentine.jpg", "name": "Argentine"}, {"file": "091_bolivie.jpg", "name": "Bolivie"}, {"file": "092_canada.jpg", "name": "Canada"}, {"file": "093_chili.jpg", "name": "Chili"}, {"file": "094_colombie.jpg", "name": "Colombie"}, {"file": "095_costa_rica.jpg", "name": "Costa Rica"}, {"file": "096_cuba.jpg", "name": "Cuba"}, {"file": "097_equateur.jpg", "name": "Equateur"}, {"file": "098_etats_unis.jpg", "name": "Etats Unis"}, {"file": "099_guatemala.jpg", "name": "Guatemala"}, {"file": "100_haiti.jpg", "name": "Haiti"}, {"file": "101_mexique.jpg", "name": "Mexique"}, {"file": "102_paraguay.jpg", "name": "Paraguay"}, {"file": "103_perou.jpg", "name": "Perou"}, {"file": "104_republique_dominicaine.jpg", "name": "Republique Dominicaine"}, {"file": "105_uruguay.jpg", "name": "Uruguay"}, {"file": "106_venezuela.jpg", "name": "Venezuela"}, {"file": "107_australie.jpg", "name": "Australie"}, {"file": "108_nouvelle_caledonie.jpg", "name": "Nouvelle Caledonie"}, {"file": "109_nouvelle_zelande.jpg", "name": "Nouvelle Zelande"}, {"file": "110_tahiti.jpg", "name": "Tahiti"}, {"file": "111_vanuatu.jpg", "name": "Vanuatu"}, {"file": "112_wallis_et_futuna.jpg", "name": "Wallis Et Futuna"}];
+    var i = 0;
+    function render() {
+      var p = postcards[i];
+      img.src = "goodies/postcards/" + p.file;
+      img.alt = "Carte postale illustrée : " + p.name + ".";
+      count.textContent = (i + 1) + " / " + postcards.length;
+    }
+    prevBtn.addEventListener("click", function () {
+      i = (i - 1 + postcards.length) % postcards.length;
+      render();
+    });
+    nextBtn.addEventListener("click", function () {
+      i = (i + 1) % postcards.length;
+      render();
     });
   })();
 </script>
