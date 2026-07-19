@@ -1016,6 +1016,12 @@
         </video>
         <figcaption>Reportage sur un prototype antérieur</figcaption>
       </figure>
+      <figure class="video-tile">
+        <video controls preload="none" poster="videos/poster-teaser-arducible.jpg" playsinline>
+          <source src="videos/teaser-arducible.mp4" type="video/mp4" />
+        </video>
+        <figcaption>Teaser #arducible</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -1059,6 +1065,16 @@
     <p class="section-lede">
       L'axe principal (vis CHC M8×70) est le seul chemin mécanique entre « la boule est touchée » et « l'aimant s'écarte du capteur puis y revient » : sa longueur et la course de compression du tampon fixent l'amplitude de rotation nécessaire pour que ce désalignement soit net et déclenche la détection de façon fiable, sans réglage cible par cible.
     </p>
+
+    <h3 class="bom-group-title">Montage en atelier</h3>
+    <div class="video-row">
+      <figure class="video-tile">
+        <video controls preload="none" poster="videos/poster-chassis-as-du-tir.jpg" playsinline>
+          <source src="videos/chassis-as-du-tir.mp4" type="video/mp4" />
+        </video>
+        <figcaption>Montage du châssis et essais de tir</figcaption>
+      </figure>
+    </div>
   </section>
 
   <section id="partie3" aria-label="Partie 3 — La cible et son articulation">
@@ -1182,6 +1198,40 @@
       </div>
     </div>
     <p class="bom-links">Sous-assemblage complet : <a href="hardware/cad/assemblage-articulation.FCStd">assemblage-articulation.FCStd</a>. Nomenclature complète : <a href="hardware/BOM.md">hardware/BOM.md</a>.</p>
+
+    <h3 class="bom-group-title">Montage en atelier</h3>
+    <div class="video-row">
+      <figure class="video-tile">
+        <video controls preload="none" poster="videos/poster-assemblage-articulation.jpg" playsinline>
+          <source src="videos/assemblage-articulation.mp4" type="video/mp4" />
+        </video>
+        <figcaption>Assemblage de l'articulation</figcaption>
+      </figure>
+      <figure class="video-tile">
+        <video controls preload="none" poster="videos/poster-percage-boule.jpg" playsinline>
+          <source src="videos/percage-taraudage-boule.mp4" type="video/mp4" />
+        </video>
+        <figcaption>Perçage et taraudage de la boule de pétanque</figcaption>
+      </figure>
+    </div>
+
+    <h3 class="bom-group-title">Boules alternatives pour jouer en intérieur</h3>
+    <p class="section-lede">Une boule de pétanque acier pleine (∅70&nbsp;mm, ~680&nbsp;g) peut abîmer un sol ou du mobilier en intérieur. Deux alternatives plus douces existent, avec des implications différentes sur le montage.</p>
+    <div class="part-grid">
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/vendor/boule-souple-alcomm.jpg" alt="Lot de boules souples Al'Comm pétanque, noires avec cochonnet bois, sur mousse de calage." loading="lazy" />
+        <h4>Boule souple Al'Comm pétanque</h4>
+        <p class="qty">∅72&nbsp;mm · ~680&nbsp;g (mêmes cotes qu'une boule acier)</p>
+        <p class="files"><a href="https://www.alcommpetanque.fr/">alcommpetanque.fr</a></p>
+      </div>
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/vendor/boule-la-schmolle.jpg" alt="Coffret de 6 boules La Schmolle colorées et un cochonnet tricolore, vus de dessus dans leur emballage." loading="lazy" />
+        <h4>Boule La Schmolle</h4>
+        <p class="qty">∅70&nbsp;mm · 280&nbsp;g — alternative légère, pour les enfants</p>
+        <p class="files"><a href="https://www.laschmolle.com/">laschmolle.com</a></p>
+      </div>
+    </div>
+    <p class="section-lede" style="font-size:0.85rem;">La boule Al'Comm (PVC rempli de microbilles d'acier) reprend le poids et le diamètre d'une boule traditionnelle : elle s'utilise sans rien changer au montage, tampon ressort CR60 inclus. La boule La Schmolle (plastique souple, 280&nbsp;g) est nettement plus légère — l'impact qu'elle transmet à l'axe est plus faible, donc un tampon ressort de dureté (SHA) inférieure au CR60 standard est recommandé pour garder une détection fiable avec ces boules.</p>
   </section>
 
   <section id="partie4" aria-label="Partie 4 — Électronique">
@@ -1277,6 +1327,16 @@ void loop(){
     <img class="hero-render" src="hardware/schematics/pro-micro-wiring.png" alt="Schéma de câblage Fritzing : les 3 cartes de détection v3 (une par cible) reliées à la carte Pro Micro, broches DATA/+/− vers les broches 14, 15, 16 et VCC/GND." />
     <p class="caption">Schéma réalisé sous Fritzing — fichier source : <a href="hardware/fritzing/cablage-pro-micro.fzz">cablage-pro-micro.fzz</a>. Les 3 cartes détection v3 représentent les 3 cibles, câblées ici directement pour la lisibilité du schéma (en pratique, chaque liaison passe par un câble RJ45).</p>
     <p class="bom-links">Ancien schéma (contrôleur Leonardo, boutons obsolètes) conservé pour référence : <a href="hardware/schematics/arduino-leonardo-rj45-wiring.png">arduino-leonardo-rj45-wiring.png</a>.</p>
+
+    <h3 class="bom-group-title">Montage en atelier</h3>
+    <div class="video-row">
+      <figure class="video-tile">
+        <video controls preload="none" poster="videos/poster-assemblage-electronique.jpg" playsinline>
+          <source src="videos/assemblage-electronique.mp4" type="video/mp4" />
+        </video>
+        <figcaption>Câblage des cibles et de la carte détection</figcaption>
+      </figure>
+    </div>
   </section>
 
   <section id="partie5" aria-label="Partie 5 — Modélisation 3D : boîtiers, entretoises et interfaces">
