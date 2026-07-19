@@ -726,7 +726,7 @@
     <p class="eyebrow">Le projet</p>
     <h2 class="section-title">Un jeu électromécanique, de la vision par ordinateur, et un jeu vidéo</h2>
     <p class="section-lede">Fanny Pétanque World Tour, c'est la rencontre de trois choses : un <strong>jeu électromécanique</strong> — trois cibles physiques à capteurs à effet Hall, montées sur un châssis en tôle pliée ; de la <strong>vision par ordinateur</strong> — une webcam et un suivi de pose (MediaPipe) qui vérifient, sans jamais viser à la place du joueur, qu'il reste dans la zone de tir désignée ; et un <strong>jeu vidéo</strong> — écrit en Python/Pygame, qui fait défiler un tour du monde à travers 115 pays.</p>
-    <p class="section-lede">Ce guide documente la conception complète de la borne, pièce par pièce, en quatre parties : le jeu et son installation, le contrôleur Arduino et son boîtier imprimé en 3D, le système de détection et l'articulation de chaque cible, puis le châssis et ses contraintes mécaniques.</p>
+    <p class="section-lede">Ce guide documente la conception complète de la borne, pièce par pièce, en cinq parties : le jeu vidéo, le châssis, la cible et son articulation, l'électronique, puis la modélisation 3D des boîtiers, entretoises et interfaces sur mesure.</p>
     <p class="section-lede" style="font-size:0.85rem;">Code, documentation, schémas et modèles 3D sont distribués sous licence <a href="LICENSE">Creative Commons BY 4.0</a> : réutilisation libre, y compris commerciale, à condition de créditer l'auteur.</p>
   </section>
 
@@ -862,115 +862,59 @@
     </div>
   </section>
 
-  <section id="partie2" aria-label="Partie 2 — Le contrôleur Arduino">
+  <section id="partie2" aria-label="Partie 2 — Le châssis">
     <p class="eyebrow">Partie 2</p>
-    <h2 class="section-title">Le contrôleur Arduino</h2>
-    <p class="section-lede">Pas de souris, pas de manette : chaque cible touchée envoie un simple signal électrique, converti en touche clavier par un Arduino Leonardo.</p>
+    <h2 class="section-title">Le châssis</h2>
+    <p class="section-lede">Le plateau V7 (tôle pliée) sert de base : 6 équerres viennent s'y fixer directement, en deux groupes de 3, chaque groupe portant un rail support ; les 3 articulations se fixent chacune directement sur le plateau, en vis-à-vis des rails support.</p>
 
-    <div class="schematic">
-      <div class="node">
-        <div class="icon icon-target"></div>
-        <h3>Cible à effet Hall</h3>
-        <p>Trois cibles physiques sur socle, une par voie (gauche / centre / droite).</p>
-      </div>
-      <div class="arrow" aria-hidden="true">→</div>
-      <div class="node">
-        <div class="icon icon-chip"><span class="pin" style="left:14px"></span><span class="pin" style="left:44px"></span></div>
-        <h3>Arduino Leonardo</h3>
-        <p>Reconnu par l'ordinateur comme un clavier USB standard.</p>
-      </div>
-      <div class="arrow" aria-hidden="true">→</div>
-      <div class="node">
-        <div class="icon icon-keys"><span>E</span><span>R</span><span>T</span></div>
-        <h3>Fanny Pétanque World Tour</h3>
-        <p>Le jeu reçoit de simples touches clavier, une par cible touchée.</p>
-      </div>
-      <p class="gate-note">
-        <span class="icon icon-cam" style="width:28px;height:28px;display:inline-block;vertical-align:middle;margin-right:0.5rem;"></span>
-        Une webcam couplée à un suivi de pose (<strong>MediaPipe</strong>) ne sert jamais à viser : elle vérifie seulement que le joueur reste dans la zone de tir désignée. S'il en sort, les trois cibles sont inhibées jusqu'à son retour.
-      </p>
-    </div>
+    <img class="hero-render" src="hardware/renders/chassis/chassis-assemblage-v7.png" alt="Rendu 3D du châssis complet assemblé, avec les 3 boules de pétanque montées sur leurs articulations respectives." />
+    <p class="caption">Châssis complet assemblé (rendu 3D)</p>
 
-    <h3 class="bom-group-title">Le contrôleur : une carte Pro Micro</h3>
-    <p class="section-lede">Le contrôleur est une carte <strong>Pro Micro</strong> (ATmega32U4 — la même puce qu'un Arduino Leonardo, dont elle reprend le brochage) : l'ordinateur la reconnaît comme un Leonardo. Le sketch qu'elle exécute est minimal : trois entrées numériques, une par cible, sont lues en boucle et retranscrites en pression/relâchement des touches <code>E</code>, <code>R</code>, <code>T</code> via la bibliothèque <code>Keyboard</code>.</p>
     <div class="part-grid">
       <div class="part-card">
-        <img class="thumb" src="hardware/renders/vendor/pro-micro-board.png" alt="Capture d'une fiche produit fournisseur pour une carte Pro Micro ATmega32U4, avec les variantes connecteur Micro-USB et USB-C." loading="lazy" />
-        <h4>Carte Pro Micro (ATmega32U4)</h4>
-        <p class="qty">1 / contrôleur</p>
-        <p class="files"><a href="hardware/fritzing/pro-micro-jeremylee-sparkfun.fzpz">Fritzing</a></p>
+        <img class="thumb" src="hardware/renders/chassis/plateau-v7.png" alt="Rendu 3D du plateau V7, base en tôle pliée." loading="lazy" />
+        <h4>Plateau V7 (base, tôle pliée)</h4>
+        <p class="qty">800×343×86&nbsp;mm · qté 1</p>
+        <p class="files"><a href="hardware/cad/plateau-v7.step">STEP</a></p>
       </div>
       <div class="part-card">
-        <img class="thumb" src="hardware/renders/enclosure/promicro-board.png" alt="Rendu 3D d'un petit boîtier de protection prototype pour la carte Pro Micro." loading="lazy" />
-        <h4>Boîtier de protection (prototype)</h4>
-        <p class="qty">1 / contrôleur</p>
-        <p class="files"><a href="hardware/enclosure/promicrousbcv1.FCStd">FCStd</a></p>
+        <img class="thumb" src="hardware/renders/chassis/equaire-v7.png" alt="Rendu 3D de l'équerre V7 reliant le plateau aux supports et articulations." loading="lazy" />
+        <h4>Équerre V7</h4>
+        <p class="qty">~38×30–48&nbsp;mm · qté 6</p>
+        <p class="files"><a href="hardware/cad/equaire-v7.step">STEP</a></p>
+      </div>
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/chassis/support-v7.png" alt="Rendu 3D du rail support V7." loading="lazy" />
+        <h4>Support V7 (rail)</h4>
+        <p class="qty">8×328,7×77,8&nbsp;mm · qté 2</p>
+        <p class="files"><a href="hardware/cad/support-v7.step">STEP</a></p>
       </div>
     </div>
-    <p class="bom-links">Sketch Arduino : <a href="hardware/firmware/littlepromicro.ino">littlepromicro.ino</a></p>
-    <pre class="code-block"><code>//programme pour jeu Arducible
-//auteur Jean-Baptiste GUIRAUD
-#include &lt;Keyboard.h&gt;
-const int b1 = 10;
-const int Cible1 = 15;
-const int Cible2 = 14;
-const int Cible3 = 16;
+    <p class="bom-links">Assemblage complet : <a href="hardware/cad/chassis-assemblage-v7.FCStd">chassis-assemblage-v7.FCStd</a>. Sous-assemblage articulation (×3, voir Partie 3) : <a href="hardware/cad/assemblage-articulation.FCStd">assemblage-articulation.FCStd</a>.</p>
 
-void setup() {
-  pinMode(b1, INPUT_PULLUP);
-  pinMode(Cible1,INPUT);
-  pinMode(Cible2,INPUT);
-  pinMode(Cible3,INPUT);
-  Keyboard.begin();
-  delay(3000);
-}
-
-void loop(){
-    if(digitalRead(b1)) {
-      Keyboard.release(KEY_RIGHT_ARROW);
-    } else {
-      Keyboard.press(KEY_RIGHT_ARROW);
-    }
-
-    if(digitalRead(Cible1)) {
-      Keyboard.press('e');
-    } else {
-      Keyboard.release('e');
-    }
-
-    if(digitalRead(Cible2)) {
-      Keyboard.press('r');
-    } else {
-      Keyboard.release('r');
-    }
-
-    if(digitalRead(Cible3)) {
-      Keyboard.press('t');
-    } else {
-      Keyboard.release('t');
-    }
-}</code></pre>
-
-    <h3 class="bom-group-title">Câblage</h3>
-    <p class="section-lede">Un câble réseau (RJ45, Cat5/6) par cible ramène le signal du capteur et l'alimentation jusqu'à la carte Pro Micro ; un câble Micro-USB relie ensuite la carte à l'ordinateur.</p>
-    <img class="hero-render" src="hardware/schematics/pro-micro-wiring.png" alt="Schéma de câblage Fritzing : les 3 cartes de détection v3 (une par cible) reliées à la carte Pro Micro, broches DATA/+/− vers les broches 14, 15, 16 et VCC/GND." />
-    <p class="caption">Schéma réalisé sous Fritzing — fichier source : <a href="hardware/fritzing/cablage-pro-micro.fzz">cablage-pro-micro.fzz</a>. Les 3 cartes détection v3 représentent les 3 cibles, câblées ici directement pour la lisibilité du schéma (en pratique, chaque liaison passe par un câble RJ45).</p>
-    <p class="bom-links">Ancien schéma (contrôleur Leonardo, boutons obsolètes) conservé pour référence : <a href="hardware/schematics/arduino-leonardo-rj45-wiring.png">arduino-leonardo-rj45-wiring.png</a>.</p>
+    <h3 class="bom-group-title">Contraintes mécaniques</h3>
+    <p class="section-lede">
+      Le plateau tôle pliée fait office de base rigide unique : ses plis lui donnent une raideur hors-plan suffisante pour porter les 3 articulations indépendantes et leurs rails support sans avoir besoin d'une tôle épaisse ou d'un renfort supplémentaire.
+    </p>
+    <p class="section-lede">
+      À chaque impact de boule, la rotule GE8C et le tampon ressort silicone CR60 (60&nbsp;SHA) absorbent le choc avant qu'il n'atteigne le châssis : au lieu d'un choc rigide transmis directement aux vis de fixation, l'énergie se dissipe dans la compression du tampon, et le bracket revient en position par rappel élastique.
+    </p>
+    <p class="section-lede">
+      L'axe principal (vis CHC M8×70) est le seul chemin mécanique entre « la boule est touchée » et « l'aimant s'écarte du capteur puis y revient » : sa longueur et la course de compression du tampon fixent l'amplitude de rotation nécessaire pour que ce désalignement soit net et déclenche la détection de façon fiable, sans réglage cible par cible.
+    </p>
   </section>
 
-  <section id="partie3" aria-label="Partie 3 — Le système de détection">
+  <section id="partie3" aria-label="Partie 3 — La cible et son articulation">
     <p class="eyebrow">Partie 3</p>
-    <h2 class="section-title">Le système de détection</h2>
-    <p class="section-lede">Chaque cible embarque un capteur à effet Hall qui détecte le passage d'un aimant, sans aucun contact électrique avec la boule elle-même.</p>
-    <img class="hero-render" src="hardware/pcb/pcb-detection-v3-breadboard-preview.png" alt="Plan du PCB de détection v3 : capteur à effet Hall OH37 en haut, résistance 10 kΩ au milieu, connecteur JST-XH 3 points (+/−/DATA) en bas." />
-    <p class="caption">PCB détection v3 (2 couches, connecteur JST-XH 3 points, connecteur en face arrière) — <a href="hardware/pcb/gerber-pcb-detection-v3.zip">Gerber</a> · <a href="hardware/pcb/bom-jlcpcb-v3.csv">BOM</a> · <a href="hardware/pcb/pick-and-place-v3.csv">Pick &amp; Place</a> · <a href="hardware/pcb/OBJ_arduciblesmdv3_2026-07-19.zip">Modèle 3D (OBJ)</a> · <a href="hardware/cad/detection-pcb-v3.FCStd">FCStd</a> · <a href="hardware/fritzing/PetanqueDetection_Board_v3.fzpz">Fritzing</a> — fichiers prêts à l'import JLCPCB.</p>
+    <h2 class="section-title">La cible et son articulation</h2>
+    <p class="section-lede">Chaque cible est une boule de pétanque montée sur un bracket articulé : au repos, un aimant fixé en bout d'axe reste aligné face à un capteur logé sous la plaque ; un coup sur la boule désaxe le bracket contre un tampon amortisseur, écartant l'aimant du capteur, puis le tampon le ramène en position nominale et l'aimant se réaligne, ce qui déclenche la détection.</p>
 
     <h3 class="bom-group-title">Articulation d'une cible (×3)</h3>
     <ol class="bom-steps">
       <li>Les plaques <strong>sup</strong>, <strong>milieu</strong> et <strong>inf</strong> forment un sandwich à 3 tôles, boulonné en 6 points : 4× vis M4×30 + écrou, et 2× vis M4×50 + écrou — ces deux dernières traversent aussi l'entretoise qui porte la carte électronique (capteur OH37) contre la plaque inf.</li>
       <li>Une rotule GE8C, montée sur la plaque milieu, sert de point de pivot rattachant le bracket au châssis.</li>
       <li>Dans l'axe du bracket : rondelle épaisse → tampon ressort silicone CR60 → rondelle fine → 2ᵉ rondelle épaisse, traversés par la vis CHC M8×70 (l'axe principal), serrée par un écrou M8.</li>
-      <li>Sur cet axe : la boule de pétanque, puis l'interface axe-aimant portant l'aimant néodyme en bout de course — un coup sur la boule fait pivoter l'axe contre le tampon ressort, ce qui déplace l'aimant devant le capteur Hall et déclenche la détection.</li>
+      <li>Sur cet axe : la boule de pétanque, puis l'interface axe-aimant portant l'aimant néodyme en bout de course — au repos, l'aimant est aligné face au capteur Hall ; un coup sur la boule désaxe le bracket contre le tampon ressort, écartant l'aimant du capteur, puis le tampon ramène l'axe en position nominale et l'aimant se réaligne, ce qui déclenche la détection.</li>
     </ol>
 
     <img class="hero-render" src="hardware/renders/articulation/assemblage-articulation.png" alt="Rendu 3D assemblé de l'articulation d'une cible : la boule de pétanque montée sur son bracket, rotule et axe visibles en dessous." />
@@ -1038,12 +982,6 @@ void loop(){
         <p class="files"><a href="hardware/cad/rotule-ge8c.FCStd">FCStd</a></p>
       </div>
       <div class="part-card">
-        <img class="thumb" src="hardware/renders/articulation/entretoise-h31.png" alt="Rendu 3D de l'entretoise carte électronique H31, sur-mesure." loading="lazy" />
-        <h4>Entretoise H31</h4>
-        <p class="qty">1 / cible · 3 au total</p>
-        <p class="files"><a href="hardware/cad/entretoise-h31.FCStd">FCStd</a></p>
-      </div>
-      <div class="part-card">
         <img class="thumb" src="hardware/renders/vendor/rondelle-epaisse-m8.jpg" alt="Photo de rondelle plate épaisse M8×21×4, série L, DIN 7349." loading="lazy" />
         <h4>Rondelle épaisse M8×21×4 (DIN 7349)</h4>
         <p class="qty">2 / cible · 6 au total</p>
@@ -1080,12 +1018,6 @@ void loop(){
         <p class="files"><a href="hardware/cad/boule-petanque-pleine.FCStd">FCStd</a></p>
       </div>
       <div class="part-card">
-        <img class="thumb" src="hardware/renders/articulation/interface-axe-aimant-4mm.png" alt="Rendu 3D de l'interface axe-aimant, sur-mesure, diamètre 4 mm." loading="lazy" />
-        <h4>Interface axe-aimant ∅4&nbsp;mm</h4>
-        <p class="qty">1 / cible · 3 au total</p>
-        <p class="files"><a href="hardware/cad/interface-axe-aimant-4mm.FCStd">FCStd</a></p>
-      </div>
-      <div class="part-card">
         <img class="thumb" src="hardware/renders/vendor/aimant-neodyme-4x2.jpg" alt="Photo d'aimant néodyme cylindrique diamètre 4×2 mm, N80." loading="lazy" />
         <h4>Aimant néodyme ∅4×2&nbsp;mm N80</h4>
         <p class="qty">1 / cible · 3 au total</p>
@@ -1095,46 +1027,127 @@ void loop(){
     <p class="bom-links">Sous-assemblage complet : <a href="hardware/cad/assemblage-articulation.FCStd">assemblage-articulation.FCStd</a>. Nomenclature complète : <a href="hardware/BOM.md">hardware/BOM.md</a>.</p>
   </section>
 
-  <section id="partie4" aria-label="Partie 4 — Le châssis">
+  <section id="partie4" aria-label="Partie 4 — Électronique">
     <p class="eyebrow">Partie 4</p>
-    <h2 class="section-title">Le châssis</h2>
-    <p class="section-lede">Le plateau V7 (tôle pliée) sert de base : 6 équerres viennent s'y fixer directement, en deux groupes de 3, chaque groupe portant un rail support ; les 3 articulations se fixent chacune directement sur le plateau, en vis-à-vis des rails support.</p>
+    <h2 class="section-title">Électronique</h2>
+    <p class="section-lede">Pas de souris, pas de manette : chaque cible touchée envoie un simple signal électrique, converti en touche clavier par un Arduino Leonardo.</p>
 
-    <img class="hero-render" src="hardware/renders/chassis/chassis-assemblage-v7.png" alt="Rendu 3D du châssis complet assemblé, avec les 3 boules de pétanque montées sur leurs articulations respectives." />
-    <p class="caption">Châssis complet assemblé (rendu 3D)</p>
+    <div class="schematic">
+      <div class="node">
+        <div class="icon icon-target"></div>
+        <h3>Cible à effet Hall</h3>
+        <p>Trois cibles physiques sur socle, une par voie (gauche / centre / droite).</p>
+      </div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="node">
+        <div class="icon icon-chip"><span class="pin" style="left:14px"></span><span class="pin" style="left:44px"></span></div>
+        <h3>Arduino Leonardo</h3>
+        <p>Reconnu par l'ordinateur comme un clavier USB standard.</p>
+      </div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="node">
+        <div class="icon icon-keys"><span>E</span><span>R</span><span>T</span></div>
+        <h3>Fanny Pétanque World Tour</h3>
+        <p>Le jeu reçoit de simples touches clavier, une par cible touchée.</p>
+      </div>
+      <p class="gate-note">
+        <span class="icon icon-cam" style="width:28px;height:28px;display:inline-block;vertical-align:middle;margin-right:0.5rem;"></span>
+        Une webcam couplée à un suivi de pose (<strong>MediaPipe</strong>) ne sert jamais à viser : elle vérifie seulement que le joueur reste dans la zone de tir désignée. S'il en sort, les trois cibles sont inhibées jusqu'à son retour.
+      </p>
+    </div>
+
+    <h3 class="bom-group-title">Le contrôleur : une carte Pro Micro</h3>
+    <p class="section-lede">Le contrôleur est une carte <strong>Pro Micro</strong> (ATmega32U4 — la même puce qu'un Arduino Leonardo, dont elle reprend le brochage) : l'ordinateur la reconnaît comme un Leonardo. Le sketch qu'elle exécute est minimal : trois entrées numériques, une par cible, sont lues en boucle et retranscrites en pression/relâchement des touches <code>E</code>, <code>R</code>, <code>T</code> via la bibliothèque <code>Keyboard</code>.</p>
+    <div class="part-grid">
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/vendor/pro-micro-board.png" alt="Capture d'une fiche produit fournisseur pour une carte Pro Micro ATmega32U4, avec les variantes connecteur Micro-USB et USB-C." loading="lazy" />
+        <h4>Carte Pro Micro (ATmega32U4)</h4>
+        <p class="qty">1 / contrôleur</p>
+        <p class="files"><a href="hardware/fritzing/pro-micro-jeremylee-sparkfun.fzpz">Fritzing</a></p>
+      </div>
+    </div>
+    <p class="bom-links">Sketch Arduino : <a href="hardware/firmware/littlepromicro.ino">littlepromicro.ino</a></p>
+    <pre class="code-block"><code>//programme pour jeu Arducible
+//auteur Jean-Baptiste GUIRAUD
+#include &lt;Keyboard.h&gt;
+const int b1 = 10;
+const int Cible1 = 15;
+const int Cible2 = 14;
+const int Cible3 = 16;
+
+void setup() {
+  pinMode(b1, INPUT_PULLUP);
+  pinMode(Cible1,INPUT);
+  pinMode(Cible2,INPUT);
+  pinMode(Cible3,INPUT);
+  Keyboard.begin();
+  delay(3000);
+}
+
+void loop(){
+    if(digitalRead(b1)) {
+      Keyboard.release(KEY_RIGHT_ARROW);
+    } else {
+      Keyboard.press(KEY_RIGHT_ARROW);
+    }
+
+    if(digitalRead(Cible1)) {
+      Keyboard.press('e');
+    } else {
+      Keyboard.release('e');
+    }
+
+    if(digitalRead(Cible2)) {
+      Keyboard.press('r');
+    } else {
+      Keyboard.release('r');
+    }
+
+    if(digitalRead(Cible3)) {
+      Keyboard.press('t');
+    } else {
+      Keyboard.release('t');
+    }
+}</code></pre>
+
+    <h3 class="bom-group-title">PCB de détection</h3>
+    <p class="section-lede">Chaque cible embarque un capteur à effet Hall qui détecte le passage d'un aimant, sans aucun contact électrique avec la boule elle-même.</p>
+    <img class="hero-render" src="hardware/pcb/pcb-detection-v3-breadboard-preview.png" alt="Plan du PCB de détection v3 : capteur à effet Hall OH37 en haut, résistance 10 kΩ au milieu, connecteur JST-XH 3 points (+/−/DATA) en bas." />
+    <p class="caption">PCB détection v3 (2 couches, connecteur JST-XH 3 points, connecteur en face arrière) — <a href="hardware/pcb/gerber-pcb-detection-v3.zip">Gerber</a> · <a href="hardware/pcb/bom-jlcpcb-v3.csv">BOM</a> · <a href="hardware/pcb/pick-and-place-v3.csv">Pick &amp; Place</a> · <a href="hardware/pcb/OBJ_arduciblesmdv3_2026-07-19.zip">Modèle 3D (OBJ)</a> · <a href="hardware/cad/detection-pcb-v3.FCStd">FCStd</a> · <a href="hardware/fritzing/PetanqueDetection_Board_v3.fzpz">Fritzing</a> — fichiers prêts à l'import JLCPCB.</p>
+
+    <h3 class="bom-group-title">Câblage</h3>
+    <p class="section-lede">Un câble réseau (RJ45, Cat5/6) par cible ramène le signal du capteur et l'alimentation jusqu'à la carte Pro Micro ; un câble Micro-USB relie ensuite la carte à l'ordinateur.</p>
+    <img class="hero-render" src="hardware/schematics/pro-micro-wiring.png" alt="Schéma de câblage Fritzing : les 3 cartes de détection v3 (une par cible) reliées à la carte Pro Micro, broches DATA/+/− vers les broches 14, 15, 16 et VCC/GND." />
+    <p class="caption">Schéma réalisé sous Fritzing — fichier source : <a href="hardware/fritzing/cablage-pro-micro.fzz">cablage-pro-micro.fzz</a>. Les 3 cartes détection v3 représentent les 3 cibles, câblées ici directement pour la lisibilité du schéma (en pratique, chaque liaison passe par un câble RJ45).</p>
+    <p class="bom-links">Ancien schéma (contrôleur Leonardo, boutons obsolètes) conservé pour référence : <a href="hardware/schematics/arduino-leonardo-rj45-wiring.png">arduino-leonardo-rj45-wiring.png</a>.</p>
+  </section>
+
+  <section id="partie5" aria-label="Partie 5 — Modélisation 3D : boîtiers, entretoises et interfaces">
+    <p class="eyebrow">Partie 5</p>
+    <h2 class="section-title">Modélisation 3D : boîtiers, entretoises et interfaces</h2>
+    <p class="section-lede">Au-delà des pièces découpées ou usinées, plusieurs éléments ont été modélisés sur mesure pour cette borne, chacun résolvant une interface précise entre deux pièces standard : un boîtier de protection pour le contrôleur, une entretoise dédiée à la carte de détection, et une interface reliant l'axe de l'articulation à l'aimant.</p>
 
     <div class="part-grid">
       <div class="part-card">
-        <img class="thumb" src="hardware/renders/chassis/plateau-v7.png" alt="Rendu 3D du plateau V7, base en tôle pliée." loading="lazy" />
-        <h4>Plateau V7 (base, tôle pliée)</h4>
-        <p class="qty">800×343×86&nbsp;mm · qté 1</p>
-        <p class="files"><a href="hardware/cad/plateau-v7.step">STEP</a></p>
+        <img class="thumb" src="hardware/renders/enclosure/promicro-board.png" alt="Rendu 3D d'un petit boîtier de protection prototype pour la carte Pro Micro." loading="lazy" />
+        <h4>Boîtier de protection Pro Micro (prototype)</h4>
+        <p class="qty">1 / contrôleur</p>
+        <p class="files"><a href="hardware/enclosure/promicrousbcv1.FCStd">FCStd</a></p>
       </div>
       <div class="part-card">
-        <img class="thumb" src="hardware/renders/chassis/equaire-v7.png" alt="Rendu 3D de l'équerre V7 reliant le plateau aux supports et articulations." loading="lazy" />
-        <h4>Équerre V7</h4>
-        <p class="qty">~38×30–48&nbsp;mm · qté 6</p>
-        <p class="files"><a href="hardware/cad/equaire-v7.step">STEP</a></p>
+        <img class="thumb" src="hardware/renders/articulation/entretoise-h31.png" alt="Rendu 3D de l'entretoise carte électronique H31, sur-mesure." loading="lazy" />
+        <h4>Entretoise H31</h4>
+        <p class="qty">1 / cible · 3 au total</p>
+        <p class="files"><a href="hardware/cad/entretoise-h31.FCStd">FCStd</a></p>
       </div>
       <div class="part-card">
-        <img class="thumb" src="hardware/renders/chassis/support-v7.png" alt="Rendu 3D du rail support V7." loading="lazy" />
-        <h4>Support V7 (rail)</h4>
-        <p class="qty">8×328,7×77,8&nbsp;mm · qté 2</p>
-        <p class="files"><a href="hardware/cad/support-v7.step">STEP</a></p>
+        <img class="thumb" src="hardware/renders/articulation/interface-axe-aimant-4mm.png" alt="Rendu 3D de l'interface axe-aimant, sur-mesure, diamètre 4 mm." loading="lazy" />
+        <h4>Interface axe-aimant ∅4&nbsp;mm</h4>
+        <p class="qty">1 / cible · 3 au total</p>
+        <p class="files"><a href="hardware/cad/interface-axe-aimant-4mm.FCStd">FCStd</a></p>
       </div>
     </div>
-    <p class="bom-links">Assemblage complet : <a href="hardware/cad/chassis-assemblage-v7.FCStd">chassis-assemblage-v7.FCStd</a>. Sous-assemblage articulation (×3, voir Partie 3) : <a href="hardware/cad/assemblage-articulation.FCStd">assemblage-articulation.FCStd</a>.</p>
-
-    <h3 class="bom-group-title">Contraintes mécaniques</h3>
-    <p class="section-lede">
-      Le plateau tôle pliée fait office de base rigide unique : ses plis lui donnent une raideur hors-plan suffisante pour porter les 3 articulations indépendantes et leurs rails support sans avoir besoin d'une tôle épaisse ou d'un renfort supplémentaire.
-    </p>
-    <p class="section-lede">
-      À chaque impact de boule, la rotule GE8C et le tampon ressort silicone CR60 (60&nbsp;SHA) absorbent le choc avant qu'il n'atteigne le châssis : au lieu d'un choc rigide transmis directement aux vis de fixation, l'énergie se dissipe dans la compression du tampon, et le bracket revient en position par rappel élastique.
-    </p>
-    <p class="section-lede">
-      L'axe principal (vis CHC M8×70) est le seul chemin mécanique entre « la boule est touchée » et « l'aimant passe devant le capteur » : sa longueur et la course de compression du tampon fixent l'amplitude de rotation nécessaire pour déclencher la détection de façon fiable, sans réglage cible par cible.
-    </p>
+    <p class="bom-links">Nomenclature complète : <a href="hardware/BOM.md">hardware/BOM.md</a>.</p>
   </section>
 
 </main>
