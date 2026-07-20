@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Blackjack — Pin-up Rétro</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Blackjack — Pin-up Rétro</h1>
+    <div class="controls">
+      <button id="btn-new-game">Nouvelle partie</button>
+      <span id="bankroll">Bankroll : 500</span>
+      <span id="status" role="status"></span>
+    </div>
+  </header>
+
+  <main id="table">
+    <section class="hand-area">
+      <div class="hand-label">Croupier <span id="dealer-total"></span></div>
+      <div id="dealer-hand" class="hand"></div>
+    </section>
+
+    <section class="hand-area">
+      <div class="hand-label">Joueur <span id="player-total"></span></div>
+      <div id="player-hand" class="hand"></div>
+    </section>
+
+    <section id="betting-area" class="betting-area">
+      <span class="bet-label">Mise : <span id="bet-amount">0</span></span>
+      <button class="chip" data-chip="10">+10</button>
+      <button class="chip" data-chip="25">+25</button>
+      <button class="chip" data-chip="50">+50</button>
+      <button class="chip" data-chip="100">+100</button>
+      <button id="btn-clear-bet">Effacer</button>
+      <button id="btn-deal">Distribuer</button>
+    </section>
+
+    <section id="action-area" class="action-area hidden">
+      <button id="btn-hit">Tirer</button>
+      <button id="btn-stand">Rester</button>
+      <button id="btn-double">Doubler</button>
+    </section>
+
+    <section id="round-over-area" class="round-over-area hidden">
+      <button id="btn-next-round">Manche suivante</button>
+    </section>
+  </main>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

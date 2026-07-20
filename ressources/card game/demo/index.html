@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Démo — Paquet de 54 cartes</title>
+  <link rel="stylesheet" href="demo.css" />
+</head>
+<body>
+  <header>
+    <h1>Paquet générique — 54 cartes</h1>
+    <div class="controls">
+      <button id="btn-reset">Réinitialiser</button>
+      <button id="btn-shuffle">Mélanger</button>
+      <button id="btn-draw">Piocher 1</button>
+      <button id="btn-deal">Distribuer 4 mains de 5</button>
+    </div>
+    <p id="status"></p>
+  </header>
+
+  <main>
+    <section>
+      <h2>Paquet (<span id="deck-count">0</span> cartes)</h2>
+      <div id="deck" class="card-row"></div>
+    </section>
+
+    <section>
+      <h2>Cartes piochées / mains distribuées</h2>
+      <div id="hands"></div>
+    </section>
+  </main>
+
+  <script type="module" src="demo.js"></script>
+</body>
+</html>

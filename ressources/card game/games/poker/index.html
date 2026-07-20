@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Video Poker — Pin-up Rétro</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Video Poker — Jacks or Better</h1>
+    <div class="controls">
+      <button id="btn-new-game">Nouvelle partie</button>
+      <span id="bankroll">Bankroll : 500</span>
+      <span id="status" role="status"></span>
+    </div>
+  </header>
+
+  <main id="table">
+    <table class="paytable" id="paytable">
+      <tbody>
+        <tr data-rank="royal-flush"><td>Quinte flush royale</td><td>250x</td></tr>
+        <tr data-rank="straight-flush"><td>Quinte flush</td><td>50x</td></tr>
+        <tr data-rank="four-of-a-kind"><td>Carré</td><td>25x</td></tr>
+        <tr data-rank="full-house"><td>Full</td><td>9x</td></tr>
+        <tr data-rank="flush"><td>Couleur</td><td>6x</td></tr>
+        <tr data-rank="straight"><td>Quinte</td><td>4x</td></tr>
+        <tr data-rank="three-of-a-kind"><td>Brelan</td><td>3x</td></tr>
+        <tr data-rank="two-pair"><td>Double paire</td><td>2x</td></tr>
+        <tr data-rank="jacks-or-better"><td>Paire de valets ou mieux</td><td>1x</td></tr>
+      </tbody>
+    </table>
+
+    <section id="hand-area" class="hand-area">
+      <div id="hand" class="hand"></div>
+    </section>
+
+    <div id="result-message" class="result-message"></div>
+
+    <section id="betting-area" class="action-row">
+      <span class="bet-label">Mise : <span id="bet-amount">0</span></span>
+      <button class="chip" data-chip="10">+10</button>
+      <button class="chip" data-chip="25">+25</button>
+      <button class="chip" data-chip="50">+50</button>
+      <button class="chip" data-chip="100">+100</button>
+      <button id="btn-clear-bet">Effacer</button>
+      <button id="btn-deal">Distribuer</button>
+    </section>
+
+    <section id="holding-area" class="action-row hidden">
+      <button id="btn-draw">Tirer</button>
+    </section>
+
+    <section id="result-area" class="action-row hidden">
+      <button id="btn-next-round">Manche suivante</button>
+    </section>
+  </main>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

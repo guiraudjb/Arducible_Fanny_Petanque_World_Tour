@@ -1,0 +1,126 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+  --card-w: 90px;
+  --card-h: 126px;
+}
+
+body {
+  margin: 0;
+  padding: 1.25rem;
+  background: #0b3d24;
+  background-image: radial-gradient(ellipse at top, #124d2f, #0b3d24 70%);
+  color: #f4f4f4;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+h1 {
+  font-size: 1.3rem;
+  margin: 0;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+button {
+  padding: 0.5rem 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+button:hover:not(:disabled) {
+  background: #eee;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+#bankroll {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffd54f;
+}
+
+#status {
+  font-size: 0.95rem;
+  min-height: 1.2em;
+  font-weight: 600;
+}
+
+main#table {
+  max-width: 720px;
+}
+
+.hand-area {
+  margin-bottom: 2rem;
+}
+
+.hand-label {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.hand-label span {
+  color: #ffd54f;
+  font-weight: 600;
+}
+
+.hand {
+  display: flex;
+  min-height: var(--card-h);
+}
+
+.hand img.card {
+  width: var(--card-w);
+  height: var(--card-h);
+  border-radius: 8px;
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.35);
+  margin-right: -30px;
+}
+
+.hand img.card:last-child {
+  margin-right: 0;
+}
+
+.betting-area,
+.action-area,
+.round-over-area {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.bet-label {
+  font-size: 1rem;
+  margin-right: 0.5rem;
+}
+
+#bet-amount {
+  color: #ffd54f;
+  font-weight: 700;
+}
+
+.hidden {
+  display: none;
+}

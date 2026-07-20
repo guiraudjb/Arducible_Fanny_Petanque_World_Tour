@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Solitaire — Pin-up Rétro</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Solitaire — Pin-up Rétro</h1>
+    <div class="controls">
+      <button id="btn-new-game">Nouvelle partie</button>
+      <span id="moves">Coups : 0</span>
+      <span id="status" role="status"></span>
+    </div>
+  </header>
+
+  <main id="board">
+    <div class="top-row">
+      <div class="pile stock" data-zone="stock" title="Piocher"></div>
+      <div class="pile waste" data-zone="waste" title="Défausse"></div>
+      <div class="spacer"></div>
+      <div class="pile foundation" data-zone="foundation" data-suit="hearts"></div>
+      <div class="pile foundation" data-zone="foundation" data-suit="diamonds"></div>
+      <div class="pile foundation" data-zone="foundation" data-suit="clubs"></div>
+      <div class="pile foundation" data-zone="foundation" data-suit="spades"></div>
+    </div>
+
+    <div class="tableau-row" id="tableau-row"></div>
+  </main>
+
+  <div id="win-banner" class="win-banner hidden">🎉 Bravo, partie gagnée ! 🎉</div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

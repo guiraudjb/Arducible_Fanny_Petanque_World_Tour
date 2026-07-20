@@ -1,0 +1,167 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+  --card-w: 100px;
+  --card-h: 140px;
+}
+
+body {
+  margin: 0;
+  padding: 1.25rem;
+  background: #2b0b45;
+  background-image: radial-gradient(ellipse at top, #3a1160, #2b0b45 70%);
+  color: #f4f4f4;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+h1 {
+  font-size: 1.3rem;
+  margin: 0;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+button {
+  padding: 0.5rem 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+button:hover:not(:disabled) {
+  background: #eee;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+#bankroll {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffd54f;
+}
+
+#status {
+  font-size: 0.95rem;
+  min-height: 1.2em;
+  font-weight: 600;
+}
+
+main#table {
+  max-width: 720px;
+}
+
+.paytable {
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.paytable td {
+  padding: 0.3rem 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.paytable td:last-child {
+  text-align: right;
+  color: #ffd54f;
+  font-weight: 600;
+}
+
+.paytable tr.achieved {
+  background: rgba(255, 213, 79, 0.25);
+}
+
+.hand-area {
+  margin-bottom: 1rem;
+  min-height: var(--card-h);
+}
+
+.hand {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.card-slot {
+  position: relative;
+  width: var(--card-w);
+}
+
+.card-slot img.card {
+  width: var(--card-w);
+  height: var(--card-h);
+  border-radius: 8px;
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  display: block;
+}
+
+.card-slot.held img.card {
+  outline: 4px solid #ffd54f;
+  outline-offset: -2px;
+  box-shadow: 0 0 14px 3px rgba(255, 213, 79, 0.8);
+}
+
+.hold-label {
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #ffd54f;
+  margin-top: 0.35rem;
+  visibility: hidden;
+}
+
+.card-slot.held .hold-label {
+  visibility: visible;
+}
+
+.result-message {
+  font-size: 1.1rem;
+  font-weight: 700;
+  min-height: 1.5em;
+  color: #ffd54f;
+  margin-bottom: 1rem;
+}
+
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.bet-label {
+  font-size: 1rem;
+  margin-right: 0.5rem;
+}
+
+#bet-amount {
+  color: #ffd54f;
+  font-weight: 700;
+}
+
+.hidden {
+  display: none;
+}
