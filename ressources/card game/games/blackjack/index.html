@@ -2,50 +2,73 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <title>Blackjack — Pin-up Rétro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Blackjack — Fanny Pétanque World Tour</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>Blackjack — Pin-up Rétro</h1>
-    <div class="controls">
-      <button id="btn-new-game">Nouvelle partie</button>
-      <span id="bankroll">Bankroll : 500</span>
-      <span id="status" role="status"></span>
+  <h1 class="sr-only">Blackjack — Fanny Pétanque World Tour</h1>
+
+  <div class="table" id="table">
+    <header class="hud">
+      <div class="hud-money">
+        <span class="hud-label">Bankroll</span>
+        <span class="hud-value" id="bankroll">500</span>
+      </div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+      <button type="button" class="btn btn-ghost" id="btn-new-game">Nouvelle&nbsp;partie</button>
+    </header>
+
+    <div class="scene">
+      <img class="scene-img" src="../../assets/table/fanny-dealer-scene.jpg" alt="Fanny, votre croupière, installée à la table de pétanque." />
+      <section class="dealer-cluster" data-owner="dealer" aria-label="Main du croupier">
+        <div class="hand-label">Croupier <span class="total" id="dealer-total"></span></div>
+        <div class="hand" id="dealer-hand"></div>
+      </section>
     </div>
-  </header>
 
-  <main id="table">
-    <section class="hand-area">
-      <div class="hand-label">Croupier <span id="dealer-total"></span></div>
-      <div id="dealer-hand" class="hand"></div>
+    <div class="felt-center" id="felt-center" aria-hidden="true">
+      <canvas id="fx-canvas"></canvas>
+    </div>
+
+    <section class="hand-zone" data-owner="player" aria-label="Main du joueur">
+      <div class="hand" id="player-hand"></div>
+      <div class="hand-label">Joueur <span class="total" id="player-total"></span></div>
     </section>
 
-    <section class="hand-area">
-      <div class="hand-label">Joueur <span id="player-total"></span></div>
-      <div id="player-hand" class="hand"></div>
-    </section>
+    <footer class="dock">
+      <div class="dock-panel" id="betting-area">
+        <div class="bet-readout">
+          <span class="bet-label">Mise</span>
+          <span class="bet-amount" id="bet-amount">0</span>
+        </div>
+        <div class="chips" role="group" aria-label="Jetons de mise">
+          <button type="button" class="chip" data-chip="10"><span>10</span></button>
+          <button type="button" class="chip" data-chip="25"><span>25</span></button>
+          <button type="button" class="chip" data-chip="50"><span>50</span></button>
+          <button type="button" class="chip" data-chip="100"><span>100</span></button>
+        </div>
+        <div class="dock-buttons">
+          <button type="button" class="btn btn-ghost" id="btn-clear-bet">Effacer</button>
+          <button type="button" class="btn btn-primary" id="btn-deal">Distribuer</button>
+        </div>
+      </div>
 
-    <section id="betting-area" class="betting-area">
-      <span class="bet-label">Mise : <span id="bet-amount">0</span></span>
-      <button class="chip" data-chip="10">+10</button>
-      <button class="chip" data-chip="25">+25</button>
-      <button class="chip" data-chip="50">+50</button>
-      <button class="chip" data-chip="100">+100</button>
-      <button id="btn-clear-bet">Effacer</button>
-      <button id="btn-deal">Distribuer</button>
-    </section>
+      <div class="dock-panel hidden" id="action-area">
+        <div class="dock-buttons dock-buttons--wide">
+          <button type="button" class="btn" id="btn-hit">Tirer</button>
+          <button type="button" class="btn" id="btn-stand">Rester</button>
+          <button type="button" class="btn" id="btn-double">Doubler</button>
+        </div>
+      </div>
 
-    <section id="action-area" class="action-area hidden">
-      <button id="btn-hit">Tirer</button>
-      <button id="btn-stand">Rester</button>
-      <button id="btn-double">Doubler</button>
-    </section>
-
-    <section id="round-over-area" class="round-over-area hidden">
-      <button id="btn-next-round">Manche suivante</button>
-    </section>
-  </main>
+      <div class="dock-panel hidden" id="round-over-area">
+        <div class="dock-buttons">
+          <button type="button" class="btn btn-primary" id="btn-next-round">Manche&nbsp;suivante</button>
+        </div>
+      </div>
+    </footer>
+  </div>
 
   <script type="module" src="main.js"></script>
 </body>
