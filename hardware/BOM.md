@@ -14,7 +14,7 @@ estimées.
 | R1 | Résistance **10 kΩ** (CMS 0603) | 1 | 3 | [BOM JLCPCB](pcb/bom-jlcpcb-v3.csv) |
 | J1 | Connecteur **JST-XH 3 points** (DATA/-/+, LCSC C2316) | 1 | 3 | [BOM JLCPCB](pcb/bom-jlcpcb-v3.csv) |
 | — | PCB détection v3 (Gerber `arduciblesmdv3`, 2 couches) | 1 | 3 | [Gerber](pcb/gerber-pcb-detection-v3.zip) · [BOM](pcb/bom-jlcpcb-v3.csv) · [Pick & Place](pcb/pick-and-place-v3.csv) · [modèle 3D](pcb/OBJ_arduciblesmdv3_2026-07-19.zip) · [FCStd](cad/detection-pcb-v3.FCStd) · [Fritzing](fritzing/PetanqueDetection_Board_v3.fzpz) |
-| — | Aimant néodyme cylindrique **∅4×2 mm, N80** (solidaire de la boule, déclenche le capteur) | 1 | 3 | [FCStd](cad/aimant-neodyme-4x2.FCStd) |
+| — | Aimant néodyme cylindrique **∅4×2 mm, grade indiqué N80** (solidaire de la boule, déclenche le capteur) | 1 | 3 | [FCStd](cad/aimant-neodyme-4x2.FCStd) · [Fournisseur](https://www.supermagnete.fr/aimants-disques-neodyme/disque-magnetique-diametre-4mm-hauteur-2mm-neodyme-n45-nickele_S-04-02-N) — voir note grade N80 en section Mécanique — articulation |
 
 *Fichiers de commande JLCPCB (Gerber/BOM/Pick & Place, prêts à l'import)
 générés le 2026-07-17, à jour dans `pcb/*-v3.*`. Connecteur JST-XH replacé en
@@ -47,19 +47,19 @@ Nomenclature exacte de `assemblageArticulation.FCStd` :
 | Plaque d'articulation milieu (découpe laser 140×40×5 mm) | 1 | 3 | [STEP](cad/plaque-milieu.step) · [FCStd](cad/plaque-milieu.FCStd) · [Plan coté](plans/plaque-milieu.pdf) |
 | Plaque d'articulation sup (idem) | 1 | 3 | [STEP](cad/plaque-sup.step) · [FCStd](cad/plaque-sup.FCStd) · [Plan coté](plans/plaque-sup.pdf) |
 | Plaque d'articulation inf (idem) | 1 | 3 | [STEP](cad/plaque-inf.step) · [FCStd](cad/plaque-inf.FCStd) · [Plan coté](plans/plaque-inf.pdf) |
-| Vis métaux tête fraisée TF Pozi M4×50, acier zingué blanc | 2 | 6 | [FCStd](cad/vis-m4x50-tf-pozi.FCStd) |
-| Écrou frein M4 | 6 | 18 | [FCStd](cad/ecrou-frein-m4.FCStd) |
-| Vis métaux M4×30 | 4 | 12 | [FCStd](cad/vis-m4x30.FCStd) |
-| Rotule radiale **GE8C** (rotule à rotule, alésage 8 mm) | 1 | 3 | [FCStd](cad/rotule-ge8c.FCStd) · variante articulée (chape + bille réelles, utilisée dans l'assemblage) : [FCStd](cad/rotule-ge8-articulee.FCStd) |
+| Vis métaux tête fraisée TF Pozi M4×50, acier zingué blanc | 2 | 6 | [FCStd](cad/vis-m4x50-tf-pozi.FCStd) · [Fournisseur](https://www.vis-express.fr/vis-metaux-tete-fraisee-tf-pozi-din-965/26698-vis-metaux-tete-fraisee-tf-pozi-2-m4x50-acier-zingue.html) |
+| Écrou frein M4 (nylstop, DIN 985, acier zingué blanc) | 6 | 18 | [FCStd](cad/ecrou-frein-m4.FCStd) · [Fournisseur](https://www.vis-express.fr/ecrou-frein-din-985-din-985vs4325/31291-ecrou-frein-m4-acier-zingue.html) |
+| Vis métaux M4×30 (tête fraisée Pozi n°2, DIN 965, acier zingué blanc) | 4 | 12 | [FCStd](cad/vis-m4x30.FCStd) · [Fournisseur](https://www.vis-express.fr/vis-metaux-tete-fraisee-tf-pozi-din-965/26679-vis-metaux-tete-fraisee-tf-pozi-n2-m4x30-acier-zingue.html) |
+| Rotule radiale **GE8C** (rotule à rotule, alésage 8 mm) | 1 | 3 | [FCStd](cad/rotule-ge8c.FCStd) · variante articulée (chape + bille réelles, utilisée dans l'assemblage) : [FCStd](cad/rotule-ge8-articulee.FCStd) · [Fournisseur](https://www.lebonroulement.com/rotule-serie-ge-gek-gedo-geuk/147702-rotule-radiale-ge8c-kml.html) |
 | Entretoise carte électronique (H31, sur-mesure) | 1 | 3 | [FCStd](cad/entretoise-h31.FCStd) |
-| Rondelle plate épaisse M8×21×4 série L (DIN 7349) | 2 | 6 | [FCStd](cad/rondelle-epaisse-din7349-m8.FCStd) |
-| Rondelle 8×22×1,5 mm | 1 | 3 | *(non modélisée séparément)* |
+| Rondelle plate épaisse M8×21×4 série L (DIN 7349) | 2 | 6 | [FCStd](cad/rondelle-epaisse-din7349-m8.FCStd) · [Fournisseur](https://www.vis-express.fr/rondelle-plate-serie-l-large-din-7349/5153-rondelle-plate-m8x21x4-serie-l-large-acier-zingue-blanc.html) |
+| Rondelle 8×22×1,5 mm | 1 | 3 | [FCStd](cad/rondelle-8x22x1-5.FCStd) · [Fournisseur](https://www.vis-express.fr/rondelle-plate-l-nfe-25513-nfe-25513vs-nfe25513-grade-c/29545-rondelle-plate-m8x22x15-l-acier-zingue.html) |
 | Tampon ressort **polychloroprène (CR) 60 SHA, ∅20, 8,5×15 mm** (amortisseur de rebond) | 1 | 3 | [FCStd](cad/tampon-ressort-cr60.FCStd) · [STL](cad/tampon-ressort-cr60.stl) · variante déformable (utilisée dans l'assemblage) : [FCStd](cad/tampon-ressort-cr60-deformable.FCStd) |
-| Vis métaux CHC BTR (clé de 6) M8×70, filetée sur 22, classe 12.9, acier brut | 1 | 3 | [FCStd](cad/vis-chc-m8x70.FCStd) |
-| Écrou frein M8 | 1 | 3 | [FCStd](cad/ecrou-frein-m8.FCStd) |
-| Boule de pétanque (pleine, ∅70 mm) | 1 | 3 | [FCStd](cad/boule-petanque-pleine.FCStd) |
+| Vis métaux CHC BTR (clé de 6) M8×70, filetée sur 28, classe 12.9, acier brut | 1 | 3 | [FCStd](cad/vis-chc-m8x70.FCStd) · [Fournisseur](https://www.vis-express.fr/vis-metaux-chc-btr-filetage-total-classe-129-hexagonal-creux-din-912-din-912-iso-4762/14889-vis-metaux-chc-btr-cle-de-6-hc6-m8x70-filetee-sur-28-classe-129-acier-brut.html) |
+| Écrou frein M8 (nylstop, DIN 985, acier zingué blanc) | 1 | 3 | [FCStd](cad/ecrou-frein-m8.FCStd) · [Fournisseur](https://www.vis-express.fr/ecrou-frein-din-985-din-985vs4325/31317-ecrou-frein-m8-acier-zingue.html) |
+| Boule de pétanque (∅70 mm — modélisée pleine par simplification CAO ; une vraie boule est toujours une coque creuse) | 1 | 3 | [FCStd](cad/boule-petanque-pleine.FCStd) · [Ébauche testée (Décathlon)](https://www.decathlon.fr/p/jeu-de-3-boules-de-petanque-100-loisir-lisses/324055/c231c5m8579726) — perçage/taraudage M8 validé malgré la coque fine ; remplissage terre/gravier → corrosion de l'axe, graissage recommandé ; piste non résolue pour une meilleure coque perçable/taraudable : [boule inox ∅60×2 mm insert M8](https://www.metalenstock.fr/boules-et-bagues-en-inox/542-boule-decorative-inox-creuse-diametre-60-epaisseur-2-mm-insert-m8.html) · [boule inox ∅80×2 mm insert M8](https://www.metalenstock.fr/boules-et-bagues-en-inox/543-boule-decorative-inox-creuse-diametre-80-epaisseur-2-mm-insert-m8.html) (non testées) ; recherche d'un ∅70 mm prêt-à-l'emploi (percé+taraudé M8) infructueuse chez les fournisseurs inox spécialisés (Metalenstock, Esse, Oxynov — gamme standard 60→80 mm, rien à 70 mm) ; piste la plus proche : [boule acier brut ∅70×3 mm non taraudée (decoferforge.com)](https://www.decoferforge.com/rubrique/boules-acier/boules-creuses), à percer/tarauder soi-même et non inox (anticorrosion à ajouter) ; Metalenstock propose sinon un devis sur mesure |
 | Interface axe-aimant (sur-mesure, ∅4 mm) | 1 | 3 | [FCStd](cad/interface-axe-aimant-4mm.FCStd) |
-| Aimant néodyme ∅4×2 mm N80 | 1 | 3 | *(doublon avec la ligne électronique ci-dessus — même aimant, à ne compter qu'une fois)* |
+| Aimant néodyme ∅4×2 mm, grade indiqué N80 | 1 | 3 | *(doublon avec la ligne électronique ci-dessus — même aimant, à ne compter qu'une fois)* · [Fournisseur](https://www.supermagnete.fr/aimants-disques-neodyme/disque-magnetique-diametre-4mm-hauteur-2mm-neodyme-n45-nickele_S-04-02-N) — **N80 n'est pas un grade néodyme standard** (grades réels : N35 à N52), probable confusion avec la température de fonctionnement max. (80 °C) ; la référence la plus proche en ∅4×2 mm est un grade N45 |
 
 Sous-assemblage complet : [assemblage-articulation.FCStd](cad/assemblage-articulation.FCStd).
 

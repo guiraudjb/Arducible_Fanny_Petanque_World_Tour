@@ -626,6 +626,12 @@
     font-size: 0.76rem;
     color: var(--ink-soft);
   }
+  .part-card .dims {
+    font-family: "Courier New", ui-monospace, "SFMono-Regular", monospace;
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    margin-top: 0.2rem;
+  }
   .part-card .files {
     margin-top: 0.5rem;
     font-size: 0.76rem;
@@ -635,6 +641,16 @@
     color: var(--neon-blue);
     text-decoration: underline;
     margin-right: 0.6rem;
+  }
+  .part-card .files a.vendor {
+    color: var(--rust);
+    font-weight: 700;
+  }
+  .part-card .note {
+    font-size: 0.72rem;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-top: 0.4rem;
   }
   .hero-render {
     width: 100%;
@@ -1090,6 +1106,34 @@
       <li>Sur cet axe : la boule de pétanque, puis l'interface axe-aimant portant l'aimant néodyme en bout de course — au repos, l'aimant est aligné face au capteur Hall ; un coup sur la boule désaxe le bracket contre le tampon ressort, écartant l'aimant du capteur, puis le tampon ramène l'axe en position nominale et l'aimant se réaligne, ce qui déclenche la détection.</li>
     </ol>
 
+    <img class="hero-render" src="hardware/renders/articulation/assemblage-articulation-mouvement.gif" alt="Rendu 3D animé de l'articulation en mouvement : un coup sur la boule fait basculer le bracket sur sa rotule GE8, l'axe remonte légèrement et le tampon ressort se comprime en coin avant de tout ramener en position nominale." />
+    <p class="caption">Simulation du mouvement réel — la rotule GE8 (chape fixe + bille solidaire de l'axe), le tampon ressort qui se comprime en coin et les rondelles qui glissent sont modélisés individuellement, pas juste texturés (rendu 3D, amplitudes de bascule et de remontée illustratives)</p>
+
+    <h3 class="bom-group-title">Le mouvement sous 4 angles</h3>
+    <p class="section-lede">Même simulation, poussée plus loin pour vérifier le mécanisme dans toutes les directions : 4 frappes cardinales (avant/arrière/gauche/droite) puis un balayage continu à 360°, vue depuis 4 caméras fixes différentes.</p>
+    <div class="part-grid">
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/articulation/assemblage-articulation-sweep-iso.gif" alt="Simulation animée de l'articulation vue en isométrique : 4 frappes cardinales puis un balayage continu à 360°." loading="lazy" />
+        <h4>Isométrique</h4>
+        <p class="dims">La vue la plus complète — les 4 frappes et le balayage restent lisibles en continu.</p>
+      </div>
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/articulation/assemblage-articulation-sweep-top.gif" alt="Simulation animée de l'articulation vue de dessus : 4 frappes cardinales puis un balayage continu à 360°." loading="lazy" />
+        <h4>Dessus</h4>
+        <p class="dims">La direction de bascule tourne en cercle pendant le balayage, comme un joystick vu d'en haut.</p>
+      </div>
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/articulation/assemblage-articulation-sweep-front.gif" alt="Simulation animée de l'articulation vue de face : 4 frappes cardinales puis un balayage continu à 360°." loading="lazy" />
+        <h4>Face</h4>
+        <p class="dims">Bonne vue pour les frappes avant/arrière ; celles de gauche/droite s'y voient moins bien.</p>
+      </div>
+      <div class="part-card">
+        <img class="thumb" src="hardware/renders/articulation/assemblage-articulation-sweep-right.gif" alt="Simulation animée de l'articulation vue de droite : 4 frappes cardinales puis un balayage continu à 360°." loading="lazy" />
+        <h4>Droite</h4>
+        <p class="dims">Symétrique de la vue de face, décalée de 90° — bonne pour les frappes gauche/droite.</p>
+      </div>
+    </div>
+
     <img class="hero-render" src="hardware/renders/articulation/assemblage-articulation-turntable.gif" alt="Rendu 3D animé de l'articulation d'une cible, tournant à 360° : la boule de pétanque montée sur son bracket, rotule et axe visibles en dessous." />
     <p class="caption">Articulation assemblée — rotation à 360° (rendu 3D, aucune photo de l'exemplaire réel monté n'est disponible pour l'instant)</p>
 
@@ -1134,67 +1178,78 @@
         <img class="thumb" src="hardware/renders/vendor/vis-m4x50-tf-pozi.jpg" alt="Photo de vis métaux tête fraisée TF Pozi M4×50, acier zingué blanc." loading="lazy" />
         <h4>Vis TF Pozi M4×50</h4>
         <p class="qty">2 / cible · 6 au total</p>
-        <p class="files"><a href="hardware/cad/vis-m4x50-tf-pozi.FCStd">FCStd</a></p>
+        <p class="dims">M4 × 50&nbsp;mm · tête fraisée Pozi n°2 · DIN&nbsp;965 · acier zingué blanc</p>
+        <p class="files"><a href="hardware/cad/vis-m4x50-tf-pozi.FCStd">FCStd</a><a class="vendor" href="https://www.vis-express.fr/vis-metaux-tete-fraisee-tf-pozi-din-965/26698-vis-metaux-tete-fraisee-tf-pozi-2-m4x50-acier-zingue.html" target="_blank" rel="noopener">Fournisseur ↗</a></p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/vendor/ecrou-frein-m4.jpg" alt="Photo d'écrou frein M4, acier zingué blanc." loading="lazy" />
         <h4>Écrou frein M4</h4>
         <p class="qty">6 / cible · 18 au total</p>
-        <p class="files"><a href="hardware/cad/ecrou-frein-m4.FCStd">FCStd</a></p>
+        <p class="dims">M4 · nylstop · DIN&nbsp;985 · acier zingué blanc</p>
+        <p class="files"><a href="hardware/cad/ecrou-frein-m4.FCStd">FCStd</a><a class="vendor" href="https://www.vis-express.fr/ecrou-frein-din-985-din-985vs4325/31291-ecrou-frein-m4-acier-zingue.html" target="_blank" rel="noopener">Fournisseur ↗</a></p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/articulation/vis-m4x30.png" alt="Rendu 3D de vis métaux M4×30." loading="lazy" />
         <h4>Vis métaux M4×30</h4>
         <p class="qty">4 / cible · 12 au total</p>
-        <p class="files"><a href="hardware/cad/vis-m4x30.FCStd">FCStd</a></p>
+        <p class="dims">M4 × 30&nbsp;mm · tête fraisée Pozi n°2 · DIN&nbsp;965 · acier zingué blanc</p>
+        <p class="files"><a href="hardware/cad/vis-m4x30.FCStd">FCStd</a><a class="vendor" href="https://www.vis-express.fr/vis-metaux-tete-fraisee-tf-pozi-din-965/26679-vis-metaux-tete-fraisee-tf-pozi-n2-m4x30-acier-zingue.html" target="_blank" rel="noopener">Fournisseur ↗</a></p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/vendor/rotule-ge8c.jpg" alt="Photo de rotule radiale GE8C, alésage 8 mm." loading="lazy" />
         <h4>Rotule radiale GE8C</h4>
         <p class="qty">1 / cible · 3 au total</p>
-        <p class="files"><a href="hardware/cad/rotule-ge8c.FCStd">FCStd</a><a href="hardware/cad/rotule-ge8-articulee.FCStd">FCStd articulée</a></p>
+        <p class="files"><a href="hardware/cad/rotule-ge8c.FCStd">FCStd</a><a href="hardware/cad/rotule-ge8-articulee.FCStd">FCStd articulée</a><a class="vendor" href="https://www.lebonroulement.com/rotule-serie-ge-gek-gedo-geuk/147702-rotule-radiale-ge8c-kml.html" target="_blank" rel="noopener">Fournisseur ↗</a></p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/vendor/rondelle-epaisse-m8.jpg" alt="Photo de rondelle plate épaisse M8×21×4, série L, DIN 7349." loading="lazy" />
         <h4>Rondelle épaisse M8×21×4 (DIN 7349)</h4>
         <p class="qty">2 / cible · 6 au total</p>
-        <p class="files"><a href="hardware/cad/rondelle-epaisse-din7349-m8.FCStd">FCStd</a></p>
+        <p class="dims">M8 × ∅ext 21&nbsp;mm × 4&nbsp;mm · série L (large) · DIN&nbsp;7349 · acier zingué blanc</p>
+        <p class="files"><a href="hardware/cad/rondelle-epaisse-din7349-m8.FCStd">FCStd</a><a class="vendor" href="https://www.vis-express.fr/rondelle-plate-serie-l-large-din-7349/5153-rondelle-plate-m8x21x4-serie-l-large-acier-zingue-blanc.html" target="_blank" rel="noopener">Fournisseur ↗</a></p>
       </div>
       <div class="part-card">
-        <div class="thumb none">Non modélisée séparément</div>
+        <img class="thumb" src="hardware/renders/articulation/rondelle-8x22x1-5.png" alt="Rendu 3D de la rondelle plate M8×22×1,5, série L." loading="lazy" />
         <h4>Rondelle 8×22×1,5&nbsp;mm</h4>
         <p class="qty">1 / cible · 3 au total</p>
-        <p class="files"><span class="none">—</span></p>
+        <p class="dims">M8 × ∅ext 22&nbsp;mm × 1,5&nbsp;mm · série L · acier zingué</p>
+        <p class="files"><a href="hardware/cad/rondelle-8x22x1-5.FCStd">FCStd</a><a class="vendor" href="https://www.vis-express.fr/rondelle-plate-l-nfe-25513-nfe-25513vs-nfe25513-grade-c/29545-rondelle-plate-m8x22x15-l-acier-zingue.html" target="_blank" rel="noopener">Fournisseur ↗</a></p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/articulation/tampon-ressort-cr60.png" alt="Rendu 3D du tampon ressort polychloroprène CR60, amortisseur de rebond." loading="lazy" />
         <h4>Tampon ressort polychloroprène CR60 ∅20, 60&nbsp;SHA</h4>
         <p class="qty">1 / cible · 3 au total</p>
-        <p class="files"><a href="hardware/cad/tampon-ressort-cr60.FCStd">FCStd</a><a href="hardware/cad/tampon-ressort-cr60.stl">STL</a><a href="hardware/cad/tampon-ressort-cr60-deformable.FCStd">FCStd déformable</a></p>
+        <p class="dims">∅ext 20&nbsp;mm · alésage 8,5&nbsp;mm · hauteur 15&nbsp;mm</p>
+        <p class="files"><a href="hardware/cad/tampon-ressort-cr60.FCStd">FCStd</a><a href="hardware/cad/tampon-ressort-cr60.stl">STL</a><a href="hardware/cad/tampon-ressort-cr60-deformable.FCStd">FCStd déformable</a><a class="vendor" href="https://directcaoutchouc.com/tampons-ressorts-caoutchouc-cr/210-tampon-ressort-cr60-2085x15mm-60sha-0638097414334.html" target="_blank" rel="noopener">Fournisseur ↗</a></p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/vendor/vis-chc-m8x70.jpg" alt="Photo de vis métaux CHC BTR M8×70 classe 12.9, acier brut." loading="lazy" />
         <h4>Vis CHC BTR M8×70 classe 12.9 (axe principal)</h4>
         <p class="qty">1 / cible · 3 au total</p>
-        <p class="files"><a href="hardware/cad/vis-chc-m8x70.FCStd">FCStd</a></p>
+        <p class="dims">M8 × 70&nbsp;mm · filetée sur 28&nbsp;mm · clé de 6 · DIN&nbsp;912 · classe 12.9 · acier brut</p>
+        <p class="files"><a href="hardware/cad/vis-chc-m8x70.FCStd">FCStd</a><a class="vendor" href="https://www.vis-express.fr/vis-metaux-chc-btr-filetage-total-classe-129-hexagonal-creux-din-912-din-912-iso-4762/14889-vis-metaux-chc-btr-cle-de-6-hc6-m8x70-filetee-sur-28-classe-129-acier-brut.html" target="_blank" rel="noopener">Fournisseur ↗</a></p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/vendor/ecrou-frein-m8.jpg" alt="Photo d'écrou frein M8, acier zingué blanc." loading="lazy" />
         <h4>Écrou frein M8</h4>
         <p class="qty">1 / cible · 3 au total</p>
-        <p class="files"><a href="hardware/cad/ecrou-frein-m8.FCStd">FCStd</a></p>
+        <p class="dims">M8 · nylstop · DIN&nbsp;985 · acier zingué blanc</p>
+        <p class="files"><a href="hardware/cad/ecrou-frein-m8.FCStd">FCStd</a><a class="vendor" href="https://www.vis-express.fr/ecrou-frein-din-985-din-985vs4325/31317-ecrou-frein-m8-acier-zingue.html" target="_blank" rel="noopener">Fournisseur ↗</a></p>
       </div>
       <div class="part-card">
-        <img class="thumb" src="hardware/renders/articulation/boule-petanque-pleine.png" alt="Rendu 3D de la boule de pétanque pleine, diamètre 70 mm, avec le perçage pour l'axe." loading="lazy" />
-        <h4>Boule de pétanque pleine ∅70&nbsp;mm</h4>
+        <img class="thumb" src="hardware/renders/articulation/boule-petanque-pleine.png" alt="Rendu 3D de la boule de pétanque, modélisée pleine par simplification, diamètre 70 mm, avec le perçage pour l'axe." loading="lazy" />
+        <h4>Boule de pétanque ∅70&nbsp;mm</h4>
         <p class="qty">1 / cible · 3 au total</p>
-        <p class="files"><a href="hardware/cad/boule-petanque-pleine.FCStd">FCStd</a></p>
+        <p class="dims">Modélisée pleine par simplification CAO (clash-detection/encombrement) — une vraie boule de pétanque n'est jamais pleine, toujours une coque creuse</p>
+        <p class="files"><a href="hardware/cad/boule-petanque-pleine.FCStd">FCStd</a><a class="vendor" href="https://www.decathlon.fr/p/jeu-de-3-boules-de-petanque-100-loisir-lisses/324055/c231c5m8579726" target="_blank" rel="noopener">Ébauche testée (Décathlon) ↗</a></p>
+        <p class="note">Retour d'atelier : le perçage + taraudage M8 tient malgré la faible épaisseur de la coque des boules « loisir » (validé en pratique). Point noir : ces boules sont remplies de terre et de gravier pour le poids, ce qui favorise la corrosion de l'axe — un graissage de l'axe et du filetage est recommandé pour la retarder. Reste non résolu : trouver une boule creuse de meilleure qualité, perçable/taraudable proprement. Piste à explorer côté boules décoratives inox avec insert M8 déjà prévu en fabrication : <a class="vendor" href="https://www.metalenstock.fr/boules-et-bagues-en-inox/542-boule-decorative-inox-creuse-diametre-60-epaisseur-2-mm-insert-m8.html" target="_blank" rel="noopener">∅60&nbsp;mm, épaisseur 2&nbsp;mm ↗</a> (plus petite que les ∅70&nbsp;mm visées) et <a class="vendor" href="https://www.metalenstock.fr/boules-et-bagues-en-inox/543-boule-decorative-inox-creuse-diametre-80-epaisseur-2-mm-insert-m8.html" target="_blank" rel="noopener">∅80&nbsp;mm, épaisseur 2&nbsp;mm ↗</a> — non encore testées. Recherche d'un ∅70&nbsp;mm prêt-à-l'emploi (percé + taraudé M8) sans résultat chez les fournisseurs inox spécialisés (Metalenstock, Esse, Oxynov) : leur gamme saute directement de 60 à 80&nbsp;mm, et 70&nbsp;mm ne fait tout simplement pas partie des diamètres standards de quincaillerie décorative. Piste la plus proche trouvée : <a class="vendor" href="https://www.decoferforge.com/rubrique/boules-acier/boules-creuses" target="_blank" rel="noopener">boule acier brut ∅70&nbsp;mm, épaisseur 3&nbsp;mm (decoferforge.com) ↗</a> — non taraudée d'origine (à percer/tarauder soi-même) et non inox (protection anticorrosion à ajouter). Sinon, Metalenstock propose des devis sur mesure pour une taille hors catalogue.</p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/vendor/aimant-neodyme-4x2.jpg" alt="Photo d'aimant néodyme cylindrique diamètre 4×2 mm, N80." loading="lazy" />
         <h4>Aimant néodyme ∅4×2&nbsp;mm N80</h4>
         <p class="qty">1 / cible · 3 au total</p>
-        <p class="files"><a href="hardware/cad/aimant-neodyme-4x2.FCStd">FCStd</a></p>
+        <p class="dims">∅4 × 2&nbsp;mm · nickelé · « N80 » n'est pas un grade néodyme standard (probable confusion avec la température max. 80&nbsp;°C) — référence la plus proche : N45</p>
+        <p class="files"><a href="hardware/cad/aimant-neodyme-4x2.FCStd">FCStd</a><a class="vendor" href="https://www.supermagnete.fr/aimants-disques-neodyme/disque-magnetique-diametre-4mm-hauteur-2mm-neodyme-n45-nickele_S-04-02-N" target="_blank" rel="noopener">Fournisseur ↗</a></p>
       </div>
     </div>
     <p class="bom-links">Sous-assemblage complet : <a href="hardware/cad/assemblage-articulation.FCStd">assemblage-articulation.FCStd</a>. Nomenclature complète : <a href="hardware/BOM.md">hardware/BOM.md</a>.</p>
@@ -1216,7 +1271,7 @@
     </div>
 
     <h3 class="bom-group-title">Boules alternatives pour jouer en intérieur</h3>
-    <p class="section-lede">Une boule de pétanque acier pleine (∅70&nbsp;mm, ~680&nbsp;g) peut abîmer un sol ou du mobilier en intérieur. Deux alternatives plus douces existent, avec des implications différentes sur le montage.</p>
+    <p class="section-lede">Une boule de pétanque acier (∅70&nbsp;mm, ~680&nbsp;g) peut abîmer un sol ou du mobilier en intérieur. Deux alternatives plus douces existent, avec des implications différentes sur le montage.</p>
     <div class="part-grid">
       <div class="part-card">
         <img class="thumb" src="hardware/renders/vendor/boule-souple-alcomm.jpg" alt="Lot de boules souples Al'Comm pétanque, noires avec cochonnet bois, sur mousse de calage." loading="lazy" />

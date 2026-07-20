@@ -5,7 +5,7 @@ used on index.html (Partie 3 -- La cible et son articulation):
     assemblage-articulation-face.png      (viewFront,  1800x1350)
     assemblage-articulation-droite.png    (viewRight,  1800x1350)
     assemblage-articulation-dessous.png   (viewBottom, 1800x1350)
-    assemblage-articulation-turntable.gif (isometric, 36 frames / 10deg, 640x480, 10fps)
+    assemblage-articulation-turntable.gif (side/profile view (viewRight), 36 frames / 10deg, 640x480, 10fps)
 
 Run headlessly via the freecad-headless skill (~/.claude/skills/freecad-headless):
 
@@ -20,16 +20,21 @@ the turntable frames temporarily rotate every object's Placement in memory
 only, never persisted back to the file.
 
 The turntable is built by rotating every visible part's Placement about the
-vertical (Z) axis through the origin, camera held fixed at isometric --
-*not* by moving the Coin3D camera around the object. This reuses the same
+vertical (Z) axis through the origin, camera held fixed at a level side
+(viewRight) angle -- *not* isometric, and *not* by moving the Coin3D camera
+around the object. This reuses the same
 rotate_about() rigid-transform helper validated across the GE8 articulation
 animation work (see hardware/cad/rotule-ge8-articulee.FCStd and the project
 memory on that work) instead of hand-rolling camera look-at math.
 
-After running, assemble the turntable GIF with ffmpeg, e.g.:
+After running, assemble the turntable GIF with ffmpeg. Use a two-pass
+palettegen/paletteuse, not a plain scale+pad -- ffmpeg's default GIF
+palette allocation gives light grey/white CAD renders a visible yellow
+tint (confirmed by the user on a first version of this GIF built without
+palette optimization):
 
     ffmpeg -y -framerate 10 -i turntable_frames/frame_%03d.png \
-      -vf "fps=10,scale=640:480:force_original_aspect_ratio=decrease,pad=640:480:-1:-1:color=white" \
+      -vf "fps=10,scale=640:480:force_original_aspect_ratio=decrease,pad=640:480:-1:-1:color=white,split[a][b];[a]palettegen=max_colors=200[p];[b][p]paletteuse=dither=bayer" \
       -loop 0 assemblage-articulation-turntable.gif
 """
 import FreeCAD, FreeCADGui
@@ -84,7 +89,8 @@ for obj in doc.Objects:
 
 print("Turntable: rotating", len(turntable_objs), "visible objects")
 
-view.viewIsometric()
+view.viewRight()  # side/profile view, level with the object -- not isometric
+                  # (matches the existing "vue de profil droit" static thumbnail)
 FreeCADGui.SendMsgToActiveView("ViewFit")
 # The assembly isn't rotationally symmetric (140mm-long plates), so a fit at
 # one azimuth can clip at another -- pad the fit with extra margin.
