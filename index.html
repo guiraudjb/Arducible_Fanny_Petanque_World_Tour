@@ -252,6 +252,55 @@
     margin-top: 1rem;
   }
 
+  /* ---------- Intro : texte + illustrations à droite ---------- */
+  .intro-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+    gap: 2.5rem;
+    align-items: start;
+  }
+  .intro-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: sticky;
+    top: 6rem;
+  }
+  .intro-gallery figure {
+    margin: 0;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    padding: 0.5rem 0.5rem 0.8rem;
+    box-shadow: 0 10px 26px var(--shadow);
+  }
+  .intro-gallery img {
+    width: 100%;
+    display: block;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    border: 1px solid var(--line);
+  }
+  .intro-gallery figcaption {
+    margin-top: 0.5rem;
+    font-family: "Rockwell", "Roboto Slab", Georgia, serif;
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    text-align: center;
+  }
+  @media (max-width: 860px) {
+    .intro-layout { grid-template-columns: 1fr; }
+    .intro-gallery {
+      position: static;
+      flex-direction: row;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+    .intro-gallery figure { flex: 0 0 220px; }
+  }
+
   /* ---------- Postcard rail ---------- */
   .rail-scroll {
     display: flex;
@@ -879,6 +928,7 @@
 
 <nav class="floating-nav" aria-label="Navigation rapide entre sections">
   <a href="#intro" data-section="intro"><span aria-hidden="true">⌂</span><span class="fn-label">Accueil</span></a>
+  <a href="#laboratoire" data-section="laboratoire"><span aria-hidden="true">⚙</span><span class="fn-label">Le labo</span></a>
   <a href="#partie1" data-section="partie1"><span aria-hidden="true">1</span><span class="fn-label">Le jeu vidéo</span></a>
   <a href="#partie2" data-section="partie2"><span aria-hidden="true">2</span><span class="fn-label">Le châssis</span></a>
   <a href="#partie3" data-section="partie3"><span aria-hidden="true">3</span><span class="fn-label">La cible</span></a>
@@ -896,17 +946,75 @@
 <main>
 
   <section id="intro" aria-label="Introduction">
-    <p class="eyebrow">Le projet</p>
-    <h2 class="section-title">Un jeu électromécanique, de la vision par ordinateur, et un jeu vidéo</h2>
-    <p class="section-lede">Fanny Pétanque World Tour, c'est la rencontre de trois choses : un <strong>jeu électromécanique</strong> — trois cibles physiques à capteurs à effet Hall, montées sur un châssis en tôle pliée ; de la <strong>vision par ordinateur</strong> — une webcam et un suivi de pose (MediaPipe) qui vérifient, sans jamais viser à la place du joueur, qu'il reste dans la zone de tir désignée ; et un <strong>jeu vidéo</strong> — écrit en Python/Pygame, qui fait défiler un tour du monde à travers 115 pays.</p>
-    <p class="section-lede">Ce guide documente la conception complète de la borne, pièce par pièce, en cinq parties : le jeu vidéo, le châssis, la cible et son articulation, l'électronique, puis la modélisation 3D des boîtiers, entretoises et interfaces sur mesure.</p>
-    <p class="section-lede" style="font-size:0.85rem;">Code, documentation, schémas et modèles 3D sont distribués sous licence <a href="LICENSE">Creative Commons BY 4.0</a> : réutilisation libre, y compris commerciale, à condition de créditer l'auteur.</p>
+    <p class="eyebrow">Le jeu</p>
+    <div class="intro-layout">
+      <div class="intro-text">
+        <h2 class="section-title">Tapez la boule. Partez pour le tour du monde.</h2>
+        <p class="section-lede">Posez-vous devant la borne, prenez la boule en main, et lancez. C'est ça, Fanny Pétanque World Tour : les vraies sensations de la pétanque, sur une vraie borne d'arcade — trois cibles physiques à toucher, pas un écran tactile à effleurer.</p>
+        <p class="section-lede">Chaque tir réussi vous fait avancer un peu plus loin sur la carte. Le décor change, l'hymne national retentit, et Fanny — votre partenaire de route — troque sa tenue pour celle du pays suivant. Un tir, un pays. 115 pays à parcourir, de la France au Japon en passant par Madagascar et les Fidji.</p>
+
+        <h3 class="bom-group-title">Une vraie borne, de vraies sensations</h3>
+        <p class="section-lede">Oubliez la manette. Ici, on joue avec de vraies boules — des boules souples Al'Comm, imaginées par Jean-Pierre Albertini pour la pétanque d'intérieur : même poids, même diamètre qu'une boule de compétition, mais douces pour vos sols et vos meubles. Sur de vraies cibles montées sur ressort, chaque impact est encaissé, amorti, et transformé en score à l'écran. Le geste est le même que sur le boulodrome — la précision, la force, le petit ajustement du poignet au dernier moment.</p>
+
+        <h3 class="bom-group-title">115 pays, un seul jeu</h3>
+        <p class="section-lede">À chaque série de tirs gagnée, le monde défile sous vos yeux. Nouveau décor, nouvel hymne, nouveau portrait de Fanny — et un petit mot d'histoire sur la pétanque locale, glissé au passage. On dit <em>petanca</em> en Espagne, <em>petong</em> en Thaïlande : le jeu se souvient de tout.</p>
+
+        <h3 class="bom-group-title">Un arbitre numérique toujours à l'œil</h3>
+        <p class="section-lede">Une caméra veille discrètement pendant la partie. Son seul rôle : vérifier que vous restez bien dans votre zone de tir, comme le ferait un arbitre sur un vrai terrain. Sortez de la zone, et le jeu patiente sagement que vous reveniez — jamais de triche possible.</p>
+
+        <h3 class="bom-group-title">Les bonus du voyage</h3>
+        <p class="section-lede">Le tour du monde laisse des souvenirs : une collection de cartes postales illustrées pour chacun des 115 pays, un jeu de cartes à l'effigie de Fanny en tenue traditionnelle, et trois petits classiques — solitaire, poker, blackjack — jouables directement dans le navigateur pour patienter entre deux parties.</p>
+      </div>
+
+      <aside class="intro-gallery">
+        <figure>
+          <img src="videos/poster-demo-evenement.jpg" alt="Un joueur de dos, en pleine action face à la borne, aux Apéros de la Pétanque." loading="lazy" />
+          <figcaption>En situation, aux Apéros de la Pétanque</figcaption>
+        </figure>
+        <figure>
+          <img src="screenshots/gameplay-2.jpg" alt="Capture d'un pays du tour en pleine partie, avec le score, la réplique de Fanny et un petit mot d'histoire sur la pétanque locale." loading="lazy" />
+          <figcaption>Une étape du tour, en pleine partie</figcaption>
+        </figure>
+      </aside>
+    </div>
+  </section>
+
+  <section id="transition" aria-label="Transition vers la partie technique">
+    <p class="eyebrow">Pour les makers</p>
+    <h2 class="section-title">Sous le capot : construire sa propre borne</h2>
+    <p class="section-lede">Vous avez aimé jouer ? Vous pouvez construire la vôtre. Fanny Pétanque World Tour est un projet <strong>100&nbsp;% open source</strong>, publié sous licence <a href="LICENSE">Creative Commons BY&nbsp;4.0</a> : plans de découpe, modèles 3D, schémas électroniques et code source, tout est en libre accès — réutilisation libre, y compris commerciale, à condition de citer l'auteur.</p>
+    <p class="section-lede">La suite de cette page s'adresse aux makers, ingénieurs et bricoleurs curieux de savoir ce qui se cache derrière chaque tir détecté. On y descend d'un cran technique.</p>
+  </section>
+
+  <section id="laboratoire" aria-label="Le laboratoire — aperçu technique">
+    <p class="eyebrow">Le laboratoire</p>
+    <h2 class="section-title">Trois grands domaines d'ingénierie</h2>
+    <p class="section-lede">Ce guide documente la conception complète de la borne, organisée en cinq parties détaillées plus bas. Avant d'entrer dans le détail pièce par pièce, voici un aperçu des trois domaines d'ingénierie qui la composent.</p>
+
+    <h3 class="bom-group-title">Architecture matérielle</h3>
+    <p class="section-lede">Toute la borne repose sur un châssis en tôle pliée : les plis de la tôle lui donnent, à eux seuls, la rigidité nécessaire pour porter les trois articulations sans renfort supplémentaire ni surépaisseur.</p>
+    <p class="section-lede">Chaque cible encaisse l'impact grâce à une chaîne mécanique pensée pour absorber le choc avant qu'il n'atteigne le châssis :</p>
+    <ul class="bom-steps">
+      <li><strong>L'axe principal</strong> — une vis à tête creuse M8×70 — porte l'ensemble du mécanisme et fixe l'amplitude de bascule au moment de l'impact.</li>
+      <li><strong>La rotule GE8C</strong> sert de point de pivot : elle permet au support de basculer librement dans toutes les directions autour d'un seul point fixe.</li>
+      <li><strong>Le tampon en caoutchouc</strong> (polychloroprène, dureté 60&nbsp;SHA) encaisse l'essentiel du choc par compression, puis restitue l'énergie pour ramener le mécanisme en position — c'est ce va-et-vient qui écarte puis réaligne l'aimant face au capteur, déclenchant la détection.</li>
+    </ul>
+    <p class="section-lede" style="font-size:0.85rem;"><strong>Notes d'atelier — le choix de la boule :</strong> deux alternatives à la boule en acier standard (∅70&nbsp;mm, ~680&nbsp;g) ont été testées pour un usage en intérieur. La boule souple Al'Comm (PVC rempli de microbilles d'acier) reprend exactement le poids et le diamètre d'une boule traditionnelle : elle s'installe sans rien changer au montage. La boule La Schmolle (plastique léger, 280&nbsp;g) transmet un impact nettement plus faible à l'axe — un tampon de dureté SHA inférieure au 60 standard est recommandé pour conserver une détection fiable avec ce modèle.</p>
+
+    <h3 class="bom-group-title">Électronique</h3>
+    <p class="section-lede">Le signal de chaque cible remonte à une carte <strong>Pro Micro</strong> (puce ATmega32U4, brochage compatible Arduino Leonardo — reconnue nativement comme un clavier USB par l'ordinateur). Le firmware embarqué est volontairement minimal : trois entrées numériques lues en boucle, retranscrites en pression/relâchement de touches via la bibliothèque <code>Keyboard</code>.</p>
+    <p class="section-lede">La détection elle-même repose sur un réseau de <strong>capteurs à effet Hall</strong> : chaque cible embarque son propre capteur magnétique, qui détecte le passage d'un aimant sans aucun contact électrique avec la boule. Le câblage suit une topologie simple et robuste : un câble réseau RJ45 (Cat5/6) par cible ramène signal et alimentation jusqu'à la carte contrôleur, avant une liaison Micro-USB unique vers l'ordinateur.</p>
+
+    <h3 class="bom-group-title">Logiciel &amp; vision</h3>
+    <p class="section-lede">Le moteur de jeu est écrit en <strong>Python</strong>, avec Pygame pour la boucle de jeu et l'affichage. L'ensemble des paramètres — résolution, plein écran, durées, bonus de temps, nombre de tirs par pays — se règle dans un unique fichier <code>config.ini</code>, sans toucher au code.</p>
+    <p class="section-lede">Le suivi du joueur s'appuie sur OpenCV et <strong>MediaPipe</strong> Pose Landmarker : un suivi de posture en temps réel via webcam, utilisé exclusivement pour valider la position du joueur dans sa zone de tir désignée.</p>
+    <p class="section-lede">Le code source complet est disponible sur un dépôt Git public. Sa gestion reste volontairement manuelle : pas de pipeline de mise à jour ou de déploiement automatisé — chaque évolution est relue et poussée à la main, au fil des sessions d'atelier.</p>
   </section>
 
   <section id="partie1" aria-label="Partie 1 — Le jeu vidéo et son installation">
     <p class="eyebrow">Partie 1</p>
     <h2 class="section-title">Le jeu vidéo et son installation</h2>
-    <p class="section-lede">115 pays, un seul plateau de jeu : le teaser parcourt le tour du monde pays par pays, décor, hymne national et portrait de Fanny changeant à chaque étape.</p>
+    <p class="section-lede">Le jeu fait voyager le joueur à travers 115 pays sur un seul plateau de jeu. À chaque étape du tour, le décor, l'hymne national et le portrait de Fanny changent. La vidéo ci-dessous montre un aperçu de ce voyage.</p>
     <div class="video-frame">
       <video id="teaser-video" controls preload="none" poster="videos/poster-teaser.jpg" playsinline>
         <source src="videos/teaser-fr.mp4" type="video/mp4" />
@@ -941,8 +1049,8 @@
     </div>
 
     <h3 class="bom-group-title">Un tour du monde en cent quinze pays</h3>
-    <p class="section-lede">Chaque série de tirs réussis fait passer au pays suivant : décor, hymne national, portrait et réplique de Fanny changent ensemble, dans l'ordre du tour.</p>
-    <p class="section-lede" style="font-size:0.85rem;">La pétanque se joue sous d'autres noms locaux selon les pays du tour : <em>petanque</em> dans les pays anglophones, <em>petanca</em> en Espagne et en Amérique latine, <em>เปตอง</em> (« petong ») en Thaïlande et au Laos, <em>петанк</em> dans les pays slavophones.</p>
+    <p class="section-lede">Dès que le joueur réussit sa série de tirs, le jeu passe au pays suivant : le décor, l'hymne national, le portrait de Fanny et sa réplique parlée changent tous ensemble.</p>
+    <p class="section-lede" style="font-size:0.85rem;">Le mot « pétanque » change selon les pays du tour : on dit <em>petanque</em> dans les pays anglophones, <em>petanca</em> en Espagne et en Amérique latine, <em>เปตอง</em> (« petong ») en Thaïlande et au Laos, <em>петанк</em> dans les pays slaves.</p>
     <div class="tour-meta">
       <div><span class="stat-value neon" data-text="115">115</span><span class="stat-label">Pays</span></div>
       <div><span class="stat-value neon" data-text="3">3</span><span class="stat-label">Cibles</span></div>
@@ -967,27 +1075,27 @@
         <p>« Le territoire a accueilli les Océania 2025, où les Futuniennes ont décroché l'or en triplette dames. »</p>
       </div>
     </div>
-    <p class="section-lede" style="margin-top:1.5rem;font-size:0.85rem;">¹ Valeur par défaut, réglable dans <code>config.ini</code> (<code>hits_per_country</code>).</p>
+    <p class="section-lede" style="margin-top:1.5rem;font-size:0.85rem;">¹ Ce nombre de tirs par pays se règle dans le fichier <code>config.ini</code> (option <code>hits_per_country</code>).</p>
 
     <h3 class="bom-group-title">Fiche technique</h3>
     <div class="manual">
       <div>
-        <h3>Contrôles clavier</h3>
+        <h3>Touches du clavier</h3>
         <dl>
-          <dt>E / R / T</dt><dd>cible gauche / centre / droite</dd>
-          <dt>C</dt><dd>ajoute un crédit</dd>
-          <dt>M</dt><dd>coupe / relance la musique</dd>
-          <dt>S</dt><dd>active / coupe les effets</dd>
+          <dt>E / R / T</dt><dd>simule un tir sur la cible gauche / centre / droite (utile pour tester sans les vraies cibles)</dd>
+          <dt>C</dt><dd>ajoute un crédit, comme une pièce insérée dans une borne d'arcade</dd>
+          <dt>M</dt><dd>coupe ou relance la musique</dd>
+          <dt>S</dt><dd>active ou coupe les effets sonores</dd>
           <dt>Échap</dt><dd>quitte le jeu</dd>
         </dl>
       </div>
       <div>
-        <h3>Sous le capot</h3>
+        <h3>Avec quoi c'est fait</h3>
         <ul>
-          <li>Python + Pygame pour la boucle de jeu et l'affichage</li>
-          <li>OpenCV + MediaPipe Pose Landmarker pour le suivi de pose</li>
-          <li>Configuration entière via <code>config.ini</code> (résolution, plein écran, effet CRT, durées, bonus de temps)</li>
-          <li>Meilleur score sauvegardé automatiquement</li>
+          <li>Python et la bibliothèque Pygame pour faire tourner le jeu et afficher les images</li>
+          <li>OpenCV et MediaPipe (deux bibliothèques de vision par ordinateur) pour suivre la posture du joueur via la webcam</li>
+          <li>Un seul fichier, <code>config.ini</code>, regroupe tous les réglages : résolution d'écran, plein écran ou non, effet visuel « vieille télé » (CRT), durées, bonus de temps</li>
+          <li>Le meilleur score est sauvegardé automatiquement, pas besoin d'y penser</li>
         </ul>
       </div>
     </div>
@@ -997,22 +1105,22 @@
       <div>
         <h3>Lancer le jeu</h3>
         <dl>
-          <dt>1.</dt><dd><code>pip install -r requirements.txt</code></dd>
-          <dt>2.</dt><dd><code>python main.py</code></dd>
+          <dt>1.</dt><dd><code>pip install -r requirements.txt</code> (installe les bibliothèques Python nécessaires)</dd>
+          <dt>2.</dt><dd><code>python main.py</code> (lance le jeu)</dd>
         </dl>
       </div>
       <div>
-        <h3>Détails</h3>
+        <h3>Bon à savoir</h3>
         <ul>
-          <li>Un <code>config.ini</code> est généré automatiquement au premier lancement s'il n'existe pas.</li>
-          <li>Le jeu reste jouable sans webcam ni cibles physiques (mode clavier seul).</li>
-          <li>Documentation complète : <a href="README.md">README.md</a>.</li>
+          <li>Si le fichier <code>config.ini</code> n'existe pas encore, le jeu le crée tout seul au premier lancement.</li>
+          <li>Pas de webcam ni de cibles physiques sous la main ? Le jeu reste jouable au clavier seul.</li>
+          <li>Toutes les explications détaillées sont dans le <a href="README.md">README.md</a>.</li>
         </ul>
       </div>
     </div>
 
     <h3 class="bom-group-title">Une vraie borne, de vraies cibles</h3>
-    <p class="section-lede">Trois extraits pris sur le vif : la cible de près, la borne en plein concours, et un reportage sur un prototype antérieur.</p>
+    <p class="section-lede">Trois vidéos tournées sur le vif : la cible vue de près, la borne en plein concours de pétanque, et un reportage sur un prototype plus ancien.</p>
     <div class="video-row">
       <figure class="video-tile">
         <video controls preload="none" poster="videos/poster-demo-cible.jpg" playsinline>
@@ -1044,7 +1152,7 @@
   <section id="partie2" aria-label="Partie 2 — Le châssis">
     <p class="eyebrow">Partie 2</p>
     <h2 class="section-title">Le châssis</h2>
-    <p class="section-lede">Le plateau V7 (tôle pliée) sert de base : 6 équerres viennent s'y fixer directement, en deux groupes de 3, chaque groupe portant un rail support ; les 3 articulations se fixent chacune directement sur le plateau, en vis-à-vis des rails support.</p>
+    <p class="section-lede">Tout repose sur un grand plateau en tôle pliée (une plaque de métal pliée pour lui donner sa forme, sans soudure). Six équerres métalliques viennent s'y visser, réparties en deux groupes de trois, chaque groupe portant un rail de support. Les trois articulations (les mécanismes qui portent les cibles) se fixent directement sur le plateau, juste en face de ces rails.</p>
 
     <img class="hero-render" src="hardware/renders/chassis/chassis-assemblage-v7-turntable.gif" alt="Rendu 3D animé du châssis complet assemblé, tournant à 360° : plateau V7, équerres, rails support et les 3 boules de pétanque montées sur leurs articulations respectives." />
     <p class="caption">Châssis complet assemblé — rotation à 360° (rendu 3D)</p>
@@ -1071,15 +1179,15 @@
     </div>
     <p class="bom-links">Assemblage complet : <a href="hardware/cad/chassis-assemblage-v7.FCStd">chassis-assemblage-v7.FCStd</a>. Sous-assemblage articulation (×3, voir Partie 3) : <a href="hardware/cad/assemblage-articulation.FCStd">assemblage-articulation.FCStd</a>.</p>
 
-    <h3 class="bom-group-title">Contraintes mécaniques</h3>
+    <h3 class="bom-group-title">Pourquoi c'est construit comme ça</h3>
     <p class="section-lede">
-      Le plateau tôle pliée fait office de base rigide unique : ses plis lui donnent une raideur hors-plan suffisante pour porter les 3 articulations indépendantes et leurs rails support sans avoir besoin d'une tôle épaisse ou d'un renfort supplémentaire.
+      Le plateau en tôle pliée sert de base unique et rigide pour toute la borne. Les plis dans la tôle la rendent assez solide pour porter les trois articulations et leurs rails, sans avoir besoin d'une tôle plus épaisse ni de renforts en plus.
     </p>
     <p class="section-lede">
-      À chaque impact de boule, la rotule GE8C et le tampon ressort polychloroprène CR60 (60&nbsp;SHA) absorbent le choc avant qu'il n'atteigne le châssis : au lieu d'un choc rigide transmis directement aux vis de fixation, l'énergie se dissipe dans la compression du tampon, et le bracket revient en position par rappel élastique.
+      À chaque coup de boule, deux pièces amortissent le choc avant qu'il n'arrive jusqu'au châssis : une rotule (un genre d'articulation à bille, référence GE8C) et un tampon en caoutchouc souple (« tampon ressort », dureté 60 SHA — une échelle qui mesure la souplesse du caoutchouc). Au lieu de transmettre le choc directement aux vis de fixation, l'énergie est absorbée par la compression de ce tampon, qui ramène ensuite tout en place comme un ressort.
     </p>
     <p class="section-lede">
-      L'axe principal (vis CHC M8×70) est le seul chemin mécanique entre « la boule est touchée » et « l'aimant s'écarte du capteur puis y revient » : sa longueur et la course de compression du tampon fixent l'amplitude de rotation nécessaire pour que ce désalignement soit net et déclenche la détection de façon fiable, sans réglage cible par cible.
+      Une seule vis fait tout le travail : l'axe principal (une vis à tête creuse M8×70). Sa longueur, combinée à la course du tampon en caoutchouc, détermine à quel point le mécanisme bascule quand on tape dans la boule. C'est ce basculement qui écarte l'aimant du capteur puis l'y ramène — le signal qui dit au jeu « touché ! ». Bien réglé, ça marche pareil sur les trois cibles sans réglage au cas par cas.
     </p>
 
     <h3 class="bom-group-title">Montage en atelier</h3>
@@ -1096,26 +1204,26 @@
   <section id="partie3" aria-label="Partie 3 — La cible et son articulation">
     <p class="eyebrow">Partie 3</p>
     <h2 class="section-title">La cible et son articulation</h2>
-    <p class="section-lede">Chaque cible est une boule de pétanque montée sur un bracket articulé : au repos, un aimant fixé en bout d'axe reste aligné face à un capteur logé sous la plaque ; un coup sur la boule désaxe le bracket contre un tampon amortisseur, écartant l'aimant du capteur, puis le tampon le ramène en position nominale et l'aimant se réaligne, ce qui déclenche la détection.</p>
+    <p class="section-lede">Chaque cible, c'est une boule de pétanque montée sur un support articulé (le « bracket »). Au repos, un petit aimant fixé au bout de l'axe reste juste en face d'un capteur magnétique caché sous la plaque. Quand on tape dans la boule, le support bascule contre un tampon en caoutchouc qui absorbe le choc : ça écarte l'aimant du capteur. Puis le tampon ramène tout en place, l'aimant repasse en face du capteur, et c'est ce passage qui déclenche la détection du tir.</p>
 
-    <h3 class="bom-group-title">Articulation d'une cible (×3)</h3>
+    <h3 class="bom-group-title">Comment une cible est montée (il y en a 3 identiques)</h3>
     <ol class="bom-steps">
-      <li>Les plaques <strong>sup</strong>, <strong>milieu</strong> et <strong>inf</strong> forment un sandwich à 3 tôles, boulonné en 6 points : 4× vis M4×30 + écrou, et 2× vis M4×50 + écrou — ces deux dernières traversent aussi l'entretoise qui porte la carte électronique (capteur OH37) contre la plaque inf.</li>
-      <li>Une rotule GE8C, montée sur la plaque milieu, sert de point de pivot rattachant le bracket au châssis.</li>
-      <li>Dans l'axe du bracket : rondelle épaisse → tampon ressort polychloroprène (CR) 60&nbsp;SHA → rondelle fine → 2ᵉ rondelle épaisse, traversés par la vis CHC M8×70 (l'axe principal), serrée par un écrou M8.</li>
-      <li>Sur cet axe : la boule de pétanque, puis l'interface axe-aimant portant l'aimant néodyme en bout de course — au repos, l'aimant est aligné face au capteur Hall ; un coup sur la boule désaxe le bracket contre le tampon ressort, écartant l'aimant du capteur, puis le tampon ramène l'axe en position nominale et l'aimant se réaligne, ce qui déclenche la détection.</li>
+      <li>Trois plaques de métal — <strong>sup</strong>(érieure), <strong>milieu</strong> et <strong>inf</strong>(érieure) — sont empilées et boulonnées ensemble en 6 points : 4 vis M4×30 avec écrou, et 2 vis M4×50 avec écrou. Ces deux dernières traversent aussi l'entretoise (une pièce d'écartement) qui porte la carte électronique du capteur, contre la plaque du bas.</li>
+      <li>Une rotule GE8C (une articulation à bille, comme une rotule d'épaule en miniature) est fixée sur la plaque du milieu : c'est le point autour duquel tout le support va pivoter.</li>
+      <li>Sur l'axe du support s'empilent, dans l'ordre : une rondelle épaisse, un tampon en caoutchouc souple (« tampon ressort », référence CR60), une rondelle fine, puis une deuxième rondelle épaisse. Une longue vis à tête creuse (M8×70) traverse le tout et sert d'axe principal, serrée par un écrou au bout.</li>
+      <li>Sur cet axe viennent enfin la boule de pétanque, puis une petite pièce qui tient l'aimant en bout de course. Au repos, l'aimant fait face au capteur magnétique. Un coup sur la boule fait basculer le support contre le tampon en caoutchouc, ce qui écarte l'aimant du capteur ; le tampon ramène ensuite tout en position, l'aimant se réaligne, et le tir est détecté.</li>
     </ol>
 
     <img class="hero-render" src="hardware/renders/articulation/assemblage-articulation-mouvement.gif" alt="Rendu 3D animé de l'articulation en mouvement : un coup sur la boule fait basculer le bracket sur sa rotule GE8, l'axe remonte légèrement et le tampon ressort se comprime en coin avant de tout ramener en position nominale." />
-    <p class="caption">Simulation du mouvement réel — la rotule GE8 (chape fixe + bille solidaire de l'axe), le tampon ressort qui se comprime en coin et les rondelles qui glissent sont modélisés individuellement, pas juste texturés (rendu 3D, amplitudes de bascule et de remontée illustratives)</p>
+    <p class="caption">Simulation du mouvement réel : la rotule GE8 (partie fixe + bille solidaire de l'axe), le tampon en caoutchouc qui se comprime, et les rondelles qui glissent, sont chacun animés individuellement — ce n'est pas juste une image qui bouge (rendu 3D ; l'amplitude du mouvement est volontairement exagérée pour bien voir).</p>
 
-    <h3 class="bom-group-title">Le mouvement sous 4 angles</h3>
-    <p class="section-lede">Même simulation, poussée plus loin pour vérifier le mécanisme dans toutes les directions : 4 frappes cardinales (avant/arrière/gauche/droite) puis un balayage continu à 360°, vue depuis 4 caméras fixes différentes.</p>
+    <h3 class="bom-group-title">Le mouvement vu sous 4 angles</h3>
+    <p class="section-lede">Même simulation, mais poussée plus loin pour vérifier que le mécanisme fonctionne dans toutes les directions : 4 coups portés dans les 4 directions (avant, arrière, gauche, droite), puis un mouvement continu à 360°, filmé depuis 4 caméras fixes différentes.</p>
     <div class="part-grid">
       <div class="part-card">
         <img class="thumb" src="hardware/renders/articulation/assemblage-articulation-sweep-iso.gif" alt="Simulation animée de l'articulation vue en isométrique : 4 frappes cardinales puis un balayage continu à 360°." loading="lazy" />
-        <h4>Isométrique</h4>
-        <p class="dims">La vue la plus complète — les 4 frappes et le balayage restent lisibles en continu.</p>
+        <h4>Vue en perspective (dite « isométrique »)</h4>
+        <p class="dims">La vue la plus complète : les 4 coups et le mouvement à 360° restent bien visibles tout du long.</p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/articulation/assemblage-articulation-sweep-top.gif" alt="Simulation animée de l'articulation vue de dessus : 4 frappes cardinales puis un balayage continu à 360°." loading="lazy" />
@@ -1135,124 +1243,124 @@
     </div>
 
     <img class="hero-render" src="hardware/renders/articulation/assemblage-articulation-turntable.gif" alt="Rendu 3D animé de l'articulation d'une cible, tournant à 360° : la boule de pétanque montée sur son bracket, rotule et axe visibles en dessous." />
-    <p class="caption">Articulation assemblée — rotation à 360° (rendu 3D, aucune photo de l'exemplaire réel monté n'est disponible pour l'instant)</p>
+    <p class="caption">L'articulation une fois assemblée, vue à 360° (rendu 3D — il n'y a pas encore de photo de l'exemplaire réel monté).</p>
 
     <div class="part-grid">
       <div class="part-card">
         <img class="thumb" src="hardware/renders/articulation/assemblage-articulation-dessous.png" alt="Vue de dessous de l'articulation assemblée, montrant l'entretoise carte électronique et son perçage à 2 trous." loading="lazy" />
         <h4>Vue de dessous</h4>
-        <p class="qty">Entretoise carte électronique visible</p>
+        <p class="qty">On voit bien l'entretoise qui porte la carte électronique.</p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/articulation/assemblage-articulation-face.png" alt="Vue de face de l'articulation assemblée." loading="lazy" />
         <h4>Vue de face</h4>
-        <p class="qty">Empilement boule / rotule / entretoise</p>
+        <p class="qty">L'empilement boule / rotule / entretoise, vu de face.</p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/articulation/assemblage-articulation-droite.png" alt="Vue de profil droit de l'articulation assemblée." loading="lazy" />
         <h4>Vue de profil</h4>
-        <p class="qty">Empilement complet, de la boule au support de carte</p>
+        <p class="qty">Tout l'empilement, de la boule jusqu'au support de la carte électronique.</p>
       </div>
     </div>
 
     <div class="part-grid">
       <div class="part-card">
         <img class="thumb" src="hardware/renders/articulation/plaque-milieu.png" alt="Rendu 3D de la plaque d'articulation milieu." loading="lazy" />
-        <h4>Plaque milieu (découpe laser 140×40×5&nbsp;mm)</h4>
-        <p class="qty">1 / cible · 3 au total</p>
+        <h4>Plaque du milieu (découpée au laser, 140×40×5&nbsp;mm)</h4>
+        <p class="qty">C'est elle qui porte la rotule. 1 par cible, 3 au total.</p>
         <p class="files"><a href="hardware/cad/plaque-milieu.step">STEP</a><a href="hardware/cad/plaque-milieu.FCStd">FCStd</a><a href="hardware/plans/plaque-milieu.pdf">Plan coté</a></p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/articulation/plaque-sup.png" alt="Rendu 3D de la plaque d'articulation sup." loading="lazy" />
-        <h4>Plaque sup</h4>
-        <p class="qty">1 / cible · 3 au total</p>
+        <h4>Plaque du dessus</h4>
+        <p class="qty">1 par cible, 3 au total.</p>
         <p class="files"><a href="hardware/cad/plaque-sup.step">STEP</a><a href="hardware/cad/plaque-sup.FCStd">FCStd</a><a href="hardware/plans/plaque-sup.pdf">Plan coté</a></p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/articulation/plaque-inf.png" alt="Rendu 3D de la plaque d'articulation inf." loading="lazy" />
-        <h4>Plaque inf</h4>
-        <p class="qty">1 / cible · 3 au total</p>
+        <h4>Plaque du dessous</h4>
+        <p class="qty">1 par cible, 3 au total.</p>
         <p class="files"><a href="hardware/cad/plaque-inf.step">STEP</a><a href="hardware/cad/plaque-inf.FCStd">FCStd</a><a href="hardware/plans/plaque-inf.pdf">Plan coté</a></p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/vendor/vis-m4x50-tf-pozi.jpg" alt="Photo de vis métaux tête fraisée TF Pozi M4×50, acier zingué blanc." loading="lazy" />
-        <h4>Vis TF Pozi M4×50</h4>
-        <p class="qty">2 / cible · 6 au total</p>
-        <p class="dims">M4 × 50&nbsp;mm · tête fraisée Pozi n°2 · DIN&nbsp;965 · acier zingué blanc</p>
+        <h4>Vis à tête fraisée M4×50</h4>
+        <p class="qty">2 par cible, 6 au total.</p>
+        <p class="dims">M4 × 50&nbsp;mm · tête plate qui s'encastre dans la plaque, empreinte cruciforme Pozidriv n°2 · référence standard DIN&nbsp;965 · acier zingué blanc (traité contre la rouille)</p>
         <p class="files"><a href="hardware/cad/vis-m4x50-tf-pozi.FCStd">FCStd</a><a class="vendor" href="https://www.vis-express.fr/vis-metaux-tete-fraisee-tf-pozi-din-965/26698-vis-metaux-tete-fraisee-tf-pozi-2-m4x50-acier-zingue.html" target="_blank" rel="noopener">Fournisseur ↗</a></p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/vendor/ecrou-frein-m4.jpg" alt="Photo d'écrou frein M4, acier zingué blanc." loading="lazy" />
         <h4>Écrou frein M4</h4>
-        <p class="qty">6 / cible · 18 au total</p>
-        <p class="dims">M4 · nylstop · DIN&nbsp;985 · acier zingué blanc</p>
+        <p class="qty">6 par cible, 18 au total.</p>
+        <p class="dims">M4 · un écrou « frein » a un insert en nylon qui empêche qu'il se desserre tout seul avec les vibrations · référence standard DIN&nbsp;985 · acier zingué blanc</p>
         <p class="files"><a href="hardware/cad/ecrou-frein-m4.FCStd">FCStd</a><a class="vendor" href="https://www.vis-express.fr/ecrou-frein-din-985-din-985vs4325/31291-ecrou-frein-m4-acier-zingue.html" target="_blank" rel="noopener">Fournisseur ↗</a></p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/articulation/vis-m4x30.png" alt="Rendu 3D de vis métaux M4×30." loading="lazy" />
-        <h4>Vis métaux M4×30</h4>
-        <p class="qty">4 / cible · 12 au total</p>
-        <p class="dims">M4 × 30&nbsp;mm · tête fraisée Pozi n°2 · DIN&nbsp;965 · acier zingué blanc</p>
+        <h4>Vis à tête fraisée M4×30</h4>
+        <p class="qty">4 par cible, 12 au total.</p>
+        <p class="dims">M4 × 30&nbsp;mm · même type de tête et de finition que la vis M4×50 ci-dessus · DIN&nbsp;965 · acier zingué blanc</p>
         <p class="files"><a href="hardware/cad/vis-m4x30.FCStd">FCStd</a><a class="vendor" href="https://www.vis-express.fr/vis-metaux-tete-fraisee-tf-pozi-din-965/26679-vis-metaux-tete-fraisee-tf-pozi-n2-m4x30-acier-zingue.html" target="_blank" rel="noopener">Fournisseur ↗</a></p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/vendor/rotule-ge8c.jpg" alt="Photo de rotule radiale GE8C, alésage 8 mm." loading="lazy" />
-        <h4>Rotule radiale GE8C</h4>
-        <p class="qty">1 / cible · 3 au total</p>
+        <h4>Rotule GE8C (l'articulation à bille)</h4>
+        <p class="qty">C'est le point de pivot du mécanisme, un peu comme une rotule d'épaule. 1 par cible, 3 au total. Perçage central de 8&nbsp;mm pour l'axe.</p>
         <p class="files"><a href="hardware/cad/rotule-ge8c.FCStd">FCStd</a><a href="hardware/cad/rotule-ge8-articulee.FCStd">FCStd articulée</a><a class="vendor" href="https://www.lebonroulement.com/rotule-serie-ge-gek-gedo-geuk/147702-rotule-radiale-ge8c-kml.html" target="_blank" rel="noopener">Fournisseur ↗</a></p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/vendor/rondelle-epaisse-m8.jpg" alt="Photo de rondelle plate épaisse M8×21×4, série L, DIN 7349." loading="lazy" />
-        <h4>Rondelle épaisse M8×21×4 (DIN 7349)</h4>
-        <p class="qty">2 / cible · 6 au total</p>
-        <p class="dims">M8 × ∅ext 21&nbsp;mm × 4&nbsp;mm · série L (large) · DIN&nbsp;7349 · acier zingué blanc</p>
+        <h4>Rondelle épaisse M8 (∅21×4&nbsp;mm)</h4>
+        <p class="qty">2 par cible, 6 au total. Sert à répartir la pression sur l'axe.</p>
+        <p class="dims">Pour vis M8, diamètre extérieur 21&nbsp;mm, épaisse de 4&nbsp;mm · dite « série L » (large) · référence standard DIN&nbsp;7349 · acier zingué blanc</p>
         <p class="files"><a href="hardware/cad/rondelle-epaisse-din7349-m8.FCStd">FCStd</a><a class="vendor" href="https://www.vis-express.fr/rondelle-plate-serie-l-large-din-7349/5153-rondelle-plate-m8x21x4-serie-l-large-acier-zingue-blanc.html" target="_blank" rel="noopener">Fournisseur ↗</a></p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/articulation/rondelle-8x22x1-5.png" alt="Rendu 3D de la rondelle plate M8×22×1,5, série L." loading="lazy" />
-        <h4>Rondelle 8×22×1,5&nbsp;mm</h4>
-        <p class="qty">1 / cible · 3 au total</p>
-        <p class="dims">M8 × ∅ext 22&nbsp;mm × 1,5&nbsp;mm · série L · acier zingué</p>
+        <h4>Rondelle fine M8 (∅22×1,5&nbsp;mm)</h4>
+        <p class="qty">1 par cible, 3 au total.</p>
+        <p class="dims">Pour vis M8, diamètre extérieur 22&nbsp;mm, épaisse de 1,5&nbsp;mm seulement · série L · acier zingué</p>
         <p class="files"><a href="hardware/cad/rondelle-8x22x1-5.FCStd">FCStd</a><a class="vendor" href="https://www.vis-express.fr/rondelle-plate-l-nfe-25513-nfe-25513vs-nfe25513-grade-c/29545-rondelle-plate-m8x22x15-l-acier-zingue.html" target="_blank" rel="noopener">Fournisseur ↗</a></p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/articulation/tampon-ressort-cr60.png" alt="Rendu 3D du tampon ressort polychloroprène CR60, amortisseur de rebond." loading="lazy" />
-        <h4>Tampon ressort polychloroprène CR60 ∅20, 60&nbsp;SHA</h4>
-        <p class="qty">1 / cible · 3 au total</p>
-        <p class="dims">∅ext 20&nbsp;mm · alésage 8,5&nbsp;mm · hauteur 15&nbsp;mm</p>
+        <h4>Tampon en caoutchouc (« tampon ressort »), ∅20&nbsp;mm</h4>
+        <p class="qty">C'est l'amortisseur qui encaisse le choc à chaque tir et ramène tout en place. 1 par cible, 3 au total.</p>
+        <p class="dims">Diamètre extérieur 20&nbsp;mm · trou central de 8,5&nbsp;mm · hauteur 15&nbsp;mm · matière polychloroprène (proche du néoprène) · dureté 60&nbsp;SHA (l'échelle Shore, qui mesure la souplesse d'un caoutchouc)</p>
         <p class="files"><a href="hardware/cad/tampon-ressort-cr60.FCStd">FCStd</a><a href="hardware/cad/tampon-ressort-cr60.stl">STL</a><a href="hardware/cad/tampon-ressort-cr60-deformable.FCStd">FCStd déformable</a><a class="vendor" href="https://directcaoutchouc.com/tampons-ressorts-caoutchouc-cr/210-tampon-ressort-cr60-2085x15mm-60sha-0638097414334.html" target="_blank" rel="noopener">Fournisseur ↗</a></p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/vendor/vis-chc-m8x70.jpg" alt="Photo de vis métaux CHC BTR M8×70 classe 12.9, acier brut." loading="lazy" />
-        <h4>Vis CHC BTR M8×70 classe 12.9 (axe principal)</h4>
-        <p class="qty">1 / cible · 3 au total</p>
-        <p class="dims">M8 × 70&nbsp;mm · filetée sur 28&nbsp;mm · clé de 6 · DIN&nbsp;912 · classe 12.9 · acier brut</p>
+        <h4>Vis à tête creuse M8×70 (l'axe principal)</h4>
+        <p class="qty">C'est l'axe autour duquel tout le mécanisme bascule. 1 par cible, 3 au total.</p>
+        <p class="dims">M8 × 70&nbsp;mm, filetée sur 28&nbsp;mm · tête hexagonale creuse, se serre avec une clé Allen (clé de 6) · référence standard DIN&nbsp;912 · acier classe 12.9 (un acier à haute résistance) brut</p>
         <p class="files"><a href="hardware/cad/vis-chc-m8x70.FCStd">FCStd</a><a class="vendor" href="https://www.vis-express.fr/vis-metaux-chc-btr-filetage-total-classe-129-hexagonal-creux-din-912-din-912-iso-4762/14889-vis-metaux-chc-btr-cle-de-6-hc6-m8x70-filetee-sur-28-classe-129-acier-brut.html" target="_blank" rel="noopener">Fournisseur ↗</a></p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/vendor/ecrou-frein-m8.jpg" alt="Photo d'écrou frein M8, acier zingué blanc." loading="lazy" />
         <h4>Écrou frein M8</h4>
-        <p class="qty">1 / cible · 3 au total</p>
-        <p class="dims">M8 · nylstop · DIN&nbsp;985 · acier zingué blanc</p>
+        <p class="qty">Il serre l'axe principal au bout. 1 par cible, 3 au total.</p>
+        <p class="dims">M8 · insert nylon anti-desserrage (voir l'écrou M4 plus haut) · DIN&nbsp;985 · acier zingué blanc</p>
         <p class="files"><a href="hardware/cad/ecrou-frein-m8.FCStd">FCStd</a><a class="vendor" href="https://www.vis-express.fr/ecrou-frein-din-985-din-985vs4325/31317-ecrou-frein-m8-acier-zingue.html" target="_blank" rel="noopener">Fournisseur ↗</a></p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/articulation/boule-petanque-pleine.png" alt="Rendu 3D de la boule de pétanque, modélisée pleine par simplification, diamètre 70 mm, avec le perçage pour l'axe." loading="lazy" />
-        <h4>Boule de pétanque ∅70&nbsp;mm</h4>
-        <p class="qty">1 / cible · 3 au total</p>
-        <p class="dims">Modélisée pleine par simplification CAO (clash-detection/encombrement) — une vraie boule de pétanque n'est jamais pleine, toujours une coque creuse</p>
-        <p class="files"><a href="hardware/cad/boule-petanque-pleine.FCStd">FCStd</a><a class="vendor" href="https://www.decathlon.fr/p/jeu-de-3-boules-de-petanque-100-loisir-lisses/324055/c231c5m8579726" target="_blank" rel="noopener">Ébauche testée (Décathlon) ↗</a></p>
-        <p class="note">Retour d'atelier : le perçage + taraudage M8 tient malgré la faible épaisseur de la coque des boules « loisir » (validé en pratique). Point noir : ces boules sont remplies de terre et de gravier pour le poids, ce qui favorise la corrosion de l'axe — un graissage de l'axe et du filetage est recommandé pour la retarder. Reste non résolu : trouver une boule creuse de meilleure qualité, perçable/taraudable proprement. Piste à explorer côté boules décoratives inox avec insert M8 déjà prévu en fabrication : <a class="vendor" href="https://www.metalenstock.fr/boules-et-bagues-en-inox/542-boule-decorative-inox-creuse-diametre-60-epaisseur-2-mm-insert-m8.html" target="_blank" rel="noopener">∅60&nbsp;mm, épaisseur 2&nbsp;mm ↗</a> (plus petite que les ∅70&nbsp;mm visées) et <a class="vendor" href="https://www.metalenstock.fr/boules-et-bagues-en-inox/543-boule-decorative-inox-creuse-diametre-80-epaisseur-2-mm-insert-m8.html" target="_blank" rel="noopener">∅80&nbsp;mm, épaisseur 2&nbsp;mm ↗</a> — non encore testées. Recherche d'un ∅70&nbsp;mm prêt-à-l'emploi (percé + taraudé M8) sans résultat chez les fournisseurs inox spécialisés (Metalenstock, Esse, Oxynov) : leur gamme saute directement de 60 à 80&nbsp;mm, et 70&nbsp;mm ne fait tout simplement pas partie des diamètres standards de quincaillerie décorative. Piste la plus proche trouvée : <a class="vendor" href="https://www.decoferforge.com/rubrique/boules-acier/boules-creuses" target="_blank" rel="noopener">boule acier brut ∅70&nbsp;mm, épaisseur 3&nbsp;mm (decoferforge.com) ↗</a> — non taraudée d'origine (à percer/tarauder soi-même) et non inox (protection anticorrosion à ajouter). Sinon, Metalenstock propose des devis sur mesure pour une taille hors catalogue.</p>
+        <h4>Boule de pétanque, ∅70&nbsp;mm</h4>
+        <p class="qty">1 par cible, 3 au total.</p>
+        <p class="dims">Dans le modèle 3D, elle est représentée pleine — c'est juste plus simple à dessiner et ça suffit pour vérifier que les pièces s'emboîtent bien. Une vraie boule de pétanque n'est jamais pleine : c'est toujours une coque creuse.</p>
+        <p class="files"><a href="hardware/cad/boule-petanque-pleine.FCStd">FCStd</a><a class="vendor" href="https://www.decathlon.fr/p/jeu-de-3-boules-de-petanque-100-loisir-lisses/324055/c231c5m8579726" target="_blank" rel="noopener">Boule d'origine testée (Décathlon) ↗</a></p>
+        <p class="note">Retour d'expérience de l'atelier : percer puis tarauder un filetage M8 dans ces boules « loisir » fonctionne bien, malgré leur coque fine. Le problème, c'est qu'elles sont remplies de terre et de gravier pour faire du poids, ce qui fait rouiller l'axe petit à petit — mettre un peu de graisse sur l'axe et le filetage aide à ralentir cette rouille. Reste à trouver une boule creuse de meilleure qualité, plus facile à percer et tarauder proprement. Piste à explorer : des boules décoratives en inox, déjà percées et taraudées en usine pour du M8, en <a class="vendor" href="https://www.metalenstock.fr/boules-et-bagues-en-inox/542-boule-decorative-inox-creuse-diametre-60-epaisseur-2-mm-insert-m8.html" target="_blank" rel="noopener">∅60&nbsp;mm ↗</a> (un peu petite par rapport aux 70&nbsp;mm visés) ou en <a class="vendor" href="https://www.metalenstock.fr/boules-et-bagues-en-inox/543-boule-decorative-inox-creuse-diametre-80-epaisseur-2-mm-insert-m8.html" target="_blank" rel="noopener">∅80&nbsp;mm ↗</a> — pas encore testées. Une recherche pour trouver un ∅70&nbsp;mm tout prêt (percé et taraudé M8) n'a rien donné chez les fournisseurs inox spécialisés (Metalenstock, Esse, Oxynov) : leur gamme passe directement de 60 à 80&nbsp;mm, sans rien à 70. La piste la plus proche trouvée est une <a class="vendor" href="https://www.decoferforge.com/rubrique/boules-acier/boules-creuses" target="_blank" rel="noopener">boule en acier brut ∅70&nbsp;mm (decoferforge.com) ↗</a> — mais elle n'est pas taraudée d'origine (à faire soi-même) ni en inox (il faudrait la protéger contre la rouille). Sinon, Metalenstock propose des devis sur mesure pour une taille hors catalogue.</p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/vendor/aimant-neodyme-4x2.jpg" alt="Photo d'aimant néodyme cylindrique diamètre 4×2 mm, N80." loading="lazy" />
-        <h4>Aimant néodyme ∅4×2&nbsp;mm N80</h4>
-        <p class="qty">1 / cible · 3 au total</p>
-        <p class="dims">∅4 × 2&nbsp;mm · nickelé · « N80 » n'est pas un grade néodyme standard (probable confusion avec la température max. 80&nbsp;°C) — référence la plus proche : N45</p>
+        <h4>Aimant néodyme, ∅4×2&nbsp;mm</h4>
+        <p class="qty">C'est ce petit aimant qui déclenche la détection en passant devant le capteur. 1 par cible, 3 au total.</p>
+        <p class="dims">Diamètre 4&nbsp;mm, épaisseur 2&nbsp;mm · finition nickelée · marqué « N80 » sur la fiche produit, mais ce n'est pas un grade néodyme qui existe réellement (probablement confondu avec la température maximale de 80&nbsp;°C) — la référence la plus proche est un grade N45</p>
         <p class="files"><a href="hardware/cad/aimant-neodyme-4x2.FCStd">FCStd</a><a class="vendor" href="https://www.supermagnete.fr/aimants-disques-neodyme/disque-magnetique-diametre-4mm-hauteur-2mm-neodyme-n45-nickele_S-04-02-N" target="_blank" rel="noopener">Fournisseur ↗</a></p>
       </div>
     </div>
-    <p class="bom-links">Sous-assemblage complet : <a href="hardware/cad/assemblage-articulation.FCStd">assemblage-articulation.FCStd</a>. Nomenclature complète : <a href="hardware/BOM.md">hardware/BOM.md</a>.</p>
+    <p class="bom-links">Le fichier de l'assemblage complet : <a href="hardware/cad/assemblage-articulation.FCStd">assemblage-articulation.FCStd</a>. La liste complète des pièces (nomenclature) : <a href="hardware/BOM.md">hardware/BOM.md</a>.</p>
 
     <h3 class="bom-group-title">Montage en atelier</h3>
     <div class="video-row">
@@ -1270,65 +1378,65 @@
       </figure>
     </div>
 
-    <h3 class="bom-group-title">Boules alternatives pour jouer en intérieur</h3>
-    <p class="section-lede">Une boule de pétanque acier (∅70&nbsp;mm, ~680&nbsp;g) peut abîmer un sol ou du mobilier en intérieur. Deux alternatives plus douces existent, avec des implications différentes sur le montage.</p>
+    <h3 class="bom-group-title">Des boules plus douces pour jouer à l'intérieur</h3>
+    <p class="section-lede">Une boule de pétanque en acier (∅70&nbsp;mm, environ 680&nbsp;g) peut abîmer un sol ou un meuble si on joue à l'intérieur. Il existe deux alternatives plus douces, mais chacune a ses conséquences sur le montage.</p>
     <div class="part-grid">
       <div class="part-card">
         <img class="thumb" src="hardware/renders/vendor/boule-souple-alcomm.jpg" alt="Lot de boules souples Al'Comm pétanque, noires avec cochonnet bois, sur mousse de calage." loading="lazy" />
-        <h4>Boule souple Al'Comm pétanque</h4>
-        <p class="qty">∅72&nbsp;mm · ~680&nbsp;g (mêmes cotes qu'une boule acier)</p>
+        <h4>Boule souple Al'Comm</h4>
+        <p class="qty">∅72&nbsp;mm, environ 680&nbsp;g — mêmes dimensions et le même poids qu'une boule en acier.</p>
         <p class="files"><a href="https://www.alcommpetanque.fr/">alcommpetanque.fr</a></p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/vendor/boule-la-schmolle.jpg" alt="Coffret de 6 boules La Schmolle colorées et un cochonnet tricolore, vus de dessus dans leur emballage." loading="lazy" />
         <h4>Boule La Schmolle</h4>
-        <p class="qty">∅70&nbsp;mm · 280&nbsp;g — alternative légère, pour les enfants</p>
+        <p class="qty">∅70&nbsp;mm, 280&nbsp;g — une alternative bien plus légère, adaptée aux enfants.</p>
         <p class="files"><a href="https://www.laschmolle.com/">laschmolle.com</a></p>
       </div>
     </div>
-    <p class="section-lede" style="font-size:0.85rem;">La boule Al'Comm (PVC rempli de microbilles d'acier) reprend le poids et le diamètre d'une boule traditionnelle : elle s'utilise sans rien changer au montage, tampon ressort CR60 inclus. La boule La Schmolle (plastique souple, 280&nbsp;g) est nettement plus légère — l'impact qu'elle transmet à l'axe est plus faible, donc un tampon ressort de dureté (SHA) inférieure au CR60 standard est recommandé pour garder une détection fiable avec ces boules.</p>
+    <p class="section-lede" style="font-size:0.85rem;">La boule Al'Comm (du PVC rempli de petites billes d'acier) a le même poids et le même diamètre qu'une boule traditionnelle : elle s'utilise sans rien changer au montage, avec le tampon en caoutchouc CR60 d'origine. La boule La Schmolle (en plastique souple, 280&nbsp;g) est nettement plus légère : elle tape moins fort sur l'axe, donc pour garder une détection fiable, mieux vaut installer un tampon en caoutchouc plus souple que le CR60 standard.</p>
   </section>
 
   <section id="partie4" aria-label="Partie 4 — Électronique">
     <p class="eyebrow">Partie 4</p>
     <h2 class="section-title">Électronique</h2>
-    <p class="section-lede">Pas de souris, pas de manette : chaque cible touchée envoie un simple signal électrique, converti en touche clavier par un Arduino Leonardo.</p>
+    <p class="section-lede">Pas de souris, pas de manette : chaque cible touchée envoie un simple signal électrique, qu'une petite carte (compatible Arduino Leonardo) transforme en une touche de clavier.</p>
 
     <div class="schematic">
       <div class="node">
         <div class="icon icon-target"></div>
-        <h3>Cible à effet Hall</h3>
-        <p>Trois cibles physiques sur socle, une par voie (gauche / centre / droite).</p>
+        <h3>Cible avec capteur magnétique</h3>
+        <p>Trois cibles physiques montées sur socle, une par emplacement (gauche / centre / droite).</p>
       </div>
       <div class="arrow" aria-hidden="true">→</div>
       <div class="node">
         <div class="icon icon-chip"><span class="pin" style="left:14px"></span><span class="pin" style="left:44px"></span></div>
-        <h3>Arduino Leonardo</h3>
-        <p>Reconnu par l'ordinateur comme un clavier USB standard.</p>
+        <h3>Carte contrôleur (type Arduino Leonardo)</h3>
+        <p>L'ordinateur la reconnaît simplement comme un clavier USB.</p>
       </div>
       <div class="arrow" aria-hidden="true">→</div>
       <div class="node">
         <div class="icon icon-keys"><span>E</span><span>R</span><span>T</span></div>
         <h3>Fanny Pétanque World Tour</h3>
-        <p>Le jeu reçoit de simples touches clavier, une par cible touchée.</p>
+        <p>Le jeu reçoit simplement une touche de clavier à chaque cible touchée.</p>
       </div>
       <p class="gate-note">
         <span class="icon icon-cam" style="width:28px;height:28px;display:inline-block;vertical-align:middle;margin-right:0.5rem;"></span>
-        Une webcam couplée à un suivi de pose (<strong>MediaPipe</strong>) ne sert jamais à viser : elle vérifie seulement que le joueur reste dans la zone de tir désignée. S'il en sort, les trois cibles sont inhibées jusqu'à son retour.
+        Une webcam, couplée à un outil de suivi de posture (<strong>MediaPipe</strong>), ne sert jamais à viser à la place du joueur : elle vérifie juste qu'il reste dans sa zone de tir. S'il en sort, les trois cibles sont désactivées jusqu'à ce qu'il y revienne.
       </p>
     </div>
 
-    <h3 class="bom-group-title">Le contrôleur : une carte Pro Micro</h3>
-    <p class="section-lede">Le contrôleur est une carte <strong>Pro Micro</strong> (ATmega32U4 — la même puce qu'un Arduino Leonardo, dont elle reprend le brochage) : l'ordinateur la reconnaît comme un Leonardo. Le sketch qu'elle exécute est minimal : trois entrées numériques, une par cible, sont lues en boucle et retranscrites en pression/relâchement des touches <code>E</code>, <code>R</code>, <code>T</code> via la bibliothèque <code>Keyboard</code>.</p>
+    <h3 class="bom-group-title">Le contrôleur : une petite carte Pro Micro</h3>
+    <p class="section-lede">Le contrôleur, c'est une carte <strong>Pro Micro</strong>. Elle utilise la même puce (l'ATmega32U4) et le même brochage qu'un Arduino Leonardo, donc l'ordinateur la reconnaît comme tel. Le programme qu'elle fait tourner est tout simple : il lit en boucle trois entrées, une par cible, et les transforme en appui/relâchement des touches <code>E</code>, <code>R</code>, <code>T</code> du clavier, grâce à une bibliothèque appelée <code>Keyboard</code>.</p>
     <div class="part-grid">
       <div class="part-card">
         <img class="thumb" src="hardware/renders/vendor/pro-micro-board.png" alt="Capture d'une fiche produit fournisseur pour une carte Pro Micro ATmega32U4, avec les variantes connecteur Micro-USB et USB-C." loading="lazy" />
-        <h4>Carte Pro Micro (ATmega32U4)</h4>
-        <p class="qty">1 / contrôleur</p>
+        <h4>Carte Pro Micro (puce ATmega32U4)</h4>
+        <p class="qty">1 par borne.</p>
         <p class="files"><a href="hardware/fritzing/pro-micro-jeremylee-sparkfun.fzpz">Fritzing</a></p>
       </div>
     </div>
-    <p class="bom-links">Sketch Arduino : <a href="hardware/firmware/littlepromicro.ino">littlepromicro.ino</a></p>
+    <p class="bom-links">Le programme (« sketch ») Arduino à charger sur la carte : <a href="hardware/firmware/littlepromicro.ino">littlepromicro.ino</a></p>
     <pre class="code-block"><code>//programme pour jeu Arducible
 //auteur Jean-Baptiste GUIRAUD
 #include &lt;Keyboard.h&gt;
@@ -1372,16 +1480,16 @@ void loop(){
     }
 }</code></pre>
 
-    <h3 class="bom-group-title">PCB de détection</h3>
-    <p class="section-lede">Chaque cible embarque un capteur à effet Hall qui détecte le passage d'un aimant, sans aucun contact électrique avec la boule elle-même.</p>
+    <h3 class="bom-group-title">La carte électronique de détection</h3>
+    <p class="section-lede">Chaque cible a sa propre petite carte électronique, avec un capteur qui détecte le passage d'un aimant grâce au champ magnétique — sans jamais toucher électriquement la boule elle-même.</p>
     <img class="hero-render" src="hardware/pcb/pcb-detection-v3-breadboard-preview.png" alt="Plan du PCB de détection v3 : capteur à effet Hall OH37 en haut, résistance 10 kΩ au milieu, connecteur JST-XH 3 points (+/−/DATA) en bas." />
-    <p class="caption">PCB détection v3 (2 couches, connecteur JST-XH 3 points, connecteur en face arrière) — <a href="hardware/pcb/gerber-pcb-detection-v3.zip">Gerber</a> · <a href="hardware/pcb/bom-jlcpcb-v3.csv">BOM</a> · <a href="hardware/pcb/pick-and-place-v3.csv">Pick &amp; Place</a> · <a href="hardware/pcb/OBJ_arduciblesmdv3_2026-07-19.zip">Modèle 3D (OBJ)</a> · <a href="hardware/cad/detection-pcb-v3.FCStd">FCStd</a> · <a href="hardware/fritzing/PetanqueDetection_Board_v3.fzpz">Fritzing</a> — fichiers prêts à l'import JLCPCB.</p>
+    <p class="caption">La carte de détection, version 3 (un circuit imprimé à 2 couches, avec un petit connecteur à 3 broches à l'arrière) — <a href="hardware/pcb/gerber-pcb-detection-v3.zip">fichiers de fabrication (Gerber)</a> · <a href="hardware/pcb/bom-jlcpcb-v3.csv">liste des composants (BOM)</a> · <a href="hardware/pcb/pick-and-place-v3.csv">position des composants (Pick &amp; Place)</a> · <a href="hardware/pcb/OBJ_arduciblesmdv3_2026-07-19.zip">modèle 3D (OBJ)</a> · <a href="hardware/cad/detection-pcb-v3.FCStd">FCStd</a> · <a href="hardware/fritzing/PetanqueDetection_Board_v3.fzpz">Fritzing</a> — ces fichiers sont prêts à envoyer chez un fabricant de circuits imprimés comme JLCPCB.</p>
 
-    <h3 class="bom-group-title">Câblage</h3>
-    <p class="section-lede">Un câble réseau (RJ45, Cat5/6) par cible ramène le signal du capteur et l'alimentation jusqu'à la carte Pro Micro ; un câble Micro-USB relie ensuite la carte à l'ordinateur.</p>
+    <h3 class="bom-group-title">Comment tout est relié</h3>
+    <p class="section-lede">Un câble réseau (le même type que pour brancher un ordinateur, RJ45, catégorie 5 ou 6) part de chaque cible et ramène le signal du capteur jusqu'à la carte Pro Micro. Un câble Micro-USB relie ensuite cette carte à l'ordinateur.</p>
     <img class="hero-render" src="hardware/schematics/pro-micro-wiring.png" alt="Schéma de câblage Fritzing : les 3 cartes de détection v3 (une par cible) reliées à la carte Pro Micro, broches DATA/+/− vers les broches 14, 15, 16 et VCC/GND." />
-    <p class="caption">Schéma réalisé sous Fritzing — fichier source : <a href="hardware/fritzing/cablage-pro-micro.fzz">cablage-pro-micro.fzz</a>. Les 3 cartes détection v3 représentent les 3 cibles, câblées ici directement pour la lisibilité du schéma (en pratique, chaque liaison passe par un câble RJ45).</p>
-    <p class="bom-links">Ancien schéma (contrôleur Leonardo, boutons obsolètes) conservé pour référence : <a href="hardware/schematics/arduino-leonardo-rj45-wiring.png">arduino-leonardo-rj45-wiring.png</a>.</p>
+    <p class="caption">Schéma de câblage réalisé avec le logiciel Fritzing — fichier source : <a href="hardware/fritzing/cablage-pro-micro.fzz">cablage-pro-micro.fzz</a>. Les 3 cartes de détection représentent les 3 cibles ; elles sont dessinées reliées directement pour que le schéma reste lisible, mais dans la vraie borne, chaque liaison passe par un câble réseau.</p>
+    <p class="bom-links">Un ancien schéma (avec le contrôleur Leonardo et des boutons qui ne sont plus utilisés) est gardé pour référence : <a href="hardware/schematics/arduino-leonardo-rj45-wiring.png">arduino-leonardo-rj45-wiring.png</a>.</p>
 
     <h3 class="bom-group-title">Montage en atelier</h3>
     <div class="video-row">
@@ -1396,36 +1504,59 @@ void loop(){
 
   <section id="partie5" aria-label="Partie 5 — Modélisation 3D : boîtiers, entretoises et interfaces">
     <p class="eyebrow">Partie 5</p>
-    <h2 class="section-title">Modélisation 3D : boîtiers, entretoises et interfaces</h2>
-    <p class="section-lede">Au-delà des pièces découpées ou usinées, plusieurs éléments ont été modélisés sur mesure pour cette borne, chacun résolvant une interface précise entre deux pièces standard : un boîtier de protection pour le contrôleur, une entretoise dédiée à la carte de détection, et une interface reliant l'axe de l'articulation à l'aimant.</p>
+    <h2 class="section-title">Les pièces dessinées sur mesure</h2>
+    <p class="section-lede">En plus des pièces découpées au laser ou achetées dans le commerce, quelques éléments ont été dessinés spécialement pour cette borne, en 3D, pour faire le lien entre deux pièces standards : un boîtier de protection pour le contrôleur, une pièce d'écartement pour la carte de détection, et une petite pièce qui relie l'axe de l'articulation à l'aimant.</p>
 
     <div class="part-grid">
       <div class="part-card">
         <img class="thumb" src="hardware/renders/enclosure/promicro-board.png" alt="Rendu 3D d'un petit boîtier de protection prototype pour la carte Pro Micro." loading="lazy" />
-        <h4>Boîtier de protection Pro Micro (prototype)</h4>
-        <p class="qty">1 / contrôleur</p>
+        <h4>Boîtier de protection pour la carte Pro Micro (prototype)</h4>
+        <p class="qty">1 par borne.</p>
         <p class="files"><a href="hardware/enclosure/promicrousbcv1.FCStd">FCStd</a></p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/articulation/entretoise-h31.png" alt="Rendu 3D de l'entretoise carte électronique H31, sur-mesure." loading="lazy" />
-        <h4>Entretoise H31</h4>
-        <p class="qty">1 / cible · 3 au total</p>
+        <h4>Pièce d'écartement pour la carte électronique</h4>
+        <p class="qty">1 par cible, 3 au total. Elle maintient la carte à la bonne hauteur (31&nbsp;mm) sous la plaque.</p>
         <p class="files"><a href="hardware/cad/entretoise-h31.FCStd">FCStd</a></p>
       </div>
       <div class="part-card">
         <img class="thumb" src="hardware/renders/articulation/interface-axe-aimant-4mm.png" alt="Rendu 3D de l'interface axe-aimant, sur-mesure, diamètre 4 mm." loading="lazy" />
-        <h4>Interface axe-aimant ∅4&nbsp;mm</h4>
-        <p class="qty">1 / cible · 3 au total</p>
+        <h4>Pièce de liaison entre l'axe et l'aimant, ∅4&nbsp;mm</h4>
+        <p class="qty">1 par cible, 3 au total.</p>
         <p class="files"><a href="hardware/cad/interface-axe-aimant-4mm.FCStd">FCStd</a></p>
       </div>
     </div>
-    <p class="bom-links">Nomenclature complète : <a href="hardware/BOM.md">hardware/BOM.md</a>.</p>
+    <p class="bom-links">La liste complète des pièces (nomenclature) : <a href="hardware/BOM.md">hardware/BOM.md</a>.</p>
   </section>
 
   <section id="goodies" aria-label="Goodies">
     <p class="eyebrow">Goodies</p>
     <h2 class="section-title">Cartes postales, jeu de cartes et Fanny en tenue locale</h2>
-    <p class="section-lede">Le tour du monde a aussi produit son lot de souvenirs : 112 cartes postales illustrées (les 3 derniers pays ajoutés n'ont pas encore leur portrait), deux jeux de cartes à l'effigie de Fanny, et ses tenues traditionnelles pays par pays. À venir : des jeux de cartes jouables directement sur cette page — solitaire, vidéo poker, blackjack.</p>
+    <p class="section-lede">Ce tour du monde a aussi donné quelques souvenirs sympas : 112 cartes postales illustrées (les 3 derniers pays ajoutés n'ont pas encore leur portrait), deux jeux de cartes à l'effigie de Fanny, ses tenues traditionnelles pays par pays, et trois petits jeux de cartes jouables directement dans le navigateur.</p>
+
+    <h3 class="bom-group-title">Jeux de cartes jouables</h3>
+    <p class="section-lede">Trois jeux de cartes classiques, habillés aux couleurs de Fanny, jouables directement dans le navigateur.</p>
+    <div class="part-grid">
+      <div class="part-card">
+        <div class="thumb none">🂡</div>
+        <h4>Solitaire</h4>
+        <p class="qty">Le solitaire classique (Klondike), en version pin-up rétro.</p>
+        <p class="files"><a href="ressources/card%20game/games/solitaire/index.html">Jouer ↗</a></p>
+      </div>
+      <div class="part-card">
+        <div class="thumb none">🂡</div>
+        <h4>Vidéo poker</h4>
+        <p class="qty">Un poker à cinq cartes, façon machine d'arcade.</p>
+        <p class="files"><a href="ressources/card%20game/games/poker/index.html">Jouer ↗</a></p>
+      </div>
+      <div class="part-card">
+        <div class="thumb none">🂡</div>
+        <h4>Blackjack</h4>
+        <p class="qty">Le 21, face au croupier virtuel.</p>
+        <p class="files"><a href="ressources/card%20game/games/blackjack/index.html">Jouer ↗</a></p>
+      </div>
+    </div>
 
     <h3 class="bom-group-title">Cartes postales du tour</h3>
     <div class="diaporama">
