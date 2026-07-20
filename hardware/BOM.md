@@ -50,11 +50,11 @@ Nomenclature exacte de `assemblageArticulation.FCStd` :
 | Vis métaux tête fraisée TF Pozi M4×50, acier zingué blanc | 2 | 6 | [FCStd](cad/vis-m4x50-tf-pozi.FCStd) |
 | Écrou frein M4 | 6 | 18 | [FCStd](cad/ecrou-frein-m4.FCStd) |
 | Vis métaux M4×30 | 4 | 12 | [FCStd](cad/vis-m4x30.FCStd) |
-| Rotule radiale **GE8C** (rotule à rotule, alésage 8 mm) | 1 | 3 | [FCStd](cad/rotule-ge8c.FCStd) |
+| Rotule radiale **GE8C** (rotule à rotule, alésage 8 mm) | 1 | 3 | [FCStd](cad/rotule-ge8c.FCStd) · variante articulée (chape + bille réelles, utilisée dans l'assemblage) : [FCStd](cad/rotule-ge8-articulee.FCStd) |
 | Entretoise carte électronique (H31, sur-mesure) | 1 | 3 | [FCStd](cad/entretoise-h31.FCStd) |
 | Rondelle plate épaisse M8×21×4 série L (DIN 7349) | 2 | 6 | [FCStd](cad/rondelle-epaisse-din7349-m8.FCStd) |
 | Rondelle 8×22×1,5 mm | 1 | 3 | *(non modélisée séparément)* |
-| Tampon ressort silicone **CR60, ∅20, 8,5×15 mm, 60 SHA** (amortisseur de rebond) | 1 | 3 | [FCStd](cad/tampon-ressort-cr60.FCStd) · [STL](cad/tampon-ressort-cr60.stl) |
+| Tampon ressort **polychloroprène (CR) 60 SHA, ∅20, 8,5×15 mm** (amortisseur de rebond) | 1 | 3 | [FCStd](cad/tampon-ressort-cr60.FCStd) · [STL](cad/tampon-ressort-cr60.stl) · variante déformable (utilisée dans l'assemblage) : [FCStd](cad/tampon-ressort-cr60-deformable.FCStd) |
 | Vis métaux CHC BTR (clé de 6) M8×70, filetée sur 22, classe 12.9, acier brut | 1 | 3 | [FCStd](cad/vis-chc-m8x70.FCStd) |
 | Écrou frein M8 | 1 | 3 | [FCStd](cad/ecrou-frein-m8.FCStd) |
 | Boule de pétanque (pleine, ∅70 mm) | 1 | 3 | [FCStd](cad/boule-petanque-pleine.FCStd) |
@@ -62,6 +62,15 @@ Nomenclature exacte de `assemblageArticulation.FCStd` :
 | Aimant néodyme ∅4×2 mm N80 | 1 | 3 | *(doublon avec la ligne électronique ci-dessus — même aimant, à ne compter qu'une fois)* |
 
 Sous-assemblage complet : [assemblage-articulation.FCStd](cad/assemblage-articulation.FCStd).
+
+*Depuis le 2026-07-20, `assemblage-articulation.FCStd` affiche les variantes
+articulée/déformable de la rotule GE8 et du tampon ressort (géométrie réelle
+en deux corps pour la rotule — chape fixe + bille solidaire de l'axe — et
+profil de révolution pour le tampon) au lieu des pièces figées d'origine.
+Les objets d'origine (`RotuleGE8_001`, `tamponressort_001`) sont conservés
+dans le fichier mais masqués, pour ne pas casser les contraintes A2plus qui
+s'y réfèrent. Achat/nomenclature inchangés — même rotule GE8C, même tampon
+CR60 du commerce ; seule la représentation CAD change.*
 
 ## Mécanique — châssis (×1, non dupliqué)
 
