@@ -2,58 +2,81 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <title>Video Poker — Pin-up Rétro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Vidéo Poker — Fanny Pétanque World Tour</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>Video Poker — Jacks or Better</h1>
-    <div class="controls">
-      <button id="btn-new-game">Nouvelle partie</button>
-      <span id="bankroll">Bankroll : 500</span>
-      <span id="status" role="status"></span>
+  <h1 class="sr-only">Vidéo Poker (Jacks or Better) — Fanny Pétanque World Tour</h1>
+
+  <div class="table" id="table">
+    <header class="hud">
+      <div class="hud-money">
+        <span class="hud-label">Bankroll</span>
+        <span class="hud-value" id="bankroll">500</span>
+      </div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+      <button type="button" class="btn btn-ghost" id="btn-new-game">Nouvelle&nbsp;partie</button>
+    </header>
+
+    <div class="paytable" id="paytable" role="table" aria-label="Table des gains (Jacks or Better)">
+      <div class="pay-row" data-rank="royal-flush"><span class="pay-name">Quinte royale</span><span class="pay-mult">250x</span></div>
+      <div class="pay-row" data-rank="straight-flush"><span class="pay-name">Quinte couleur</span><span class="pay-mult">50x</span></div>
+      <div class="pay-row" data-rank="four-of-a-kind"><span class="pay-name">Carré</span><span class="pay-mult">25x</span></div>
+      <div class="pay-row" data-rank="full-house"><span class="pay-name">Full</span><span class="pay-mult">9x</span></div>
+      <div class="pay-row" data-rank="flush"><span class="pay-name">Couleur</span><span class="pay-mult">6x</span></div>
+      <div class="pay-row" data-rank="straight"><span class="pay-name">Suite</span><span class="pay-mult">4x</span></div>
+      <div class="pay-row" data-rank="three-of-a-kind"><span class="pay-name">Brelan</span><span class="pay-mult">3x</span></div>
+      <div class="pay-row" data-rank="two-pair"><span class="pay-name">Double paire</span><span class="pay-mult">2x</span></div>
+      <div class="pay-row" data-rank="jacks-or-better"><span class="pay-name">Valets ou mieux</span><span class="pay-mult">1x</span></div>
     </div>
-  </header>
 
-  <main id="table">
-    <table class="paytable" id="paytable">
-      <tbody>
-        <tr data-rank="royal-flush"><td>Quinte flush royale</td><td>250x</td></tr>
-        <tr data-rank="straight-flush"><td>Quinte flush</td><td>50x</td></tr>
-        <tr data-rank="four-of-a-kind"><td>Carré</td><td>25x</td></tr>
-        <tr data-rank="full-house"><td>Full</td><td>9x</td></tr>
-        <tr data-rank="flush"><td>Couleur</td><td>6x</td></tr>
-        <tr data-rank="straight"><td>Quinte</td><td>4x</td></tr>
-        <tr data-rank="three-of-a-kind"><td>Brelan</td><td>3x</td></tr>
-        <tr data-rank="two-pair"><td>Double paire</td><td>2x</td></tr>
-        <tr data-rank="jacks-or-better"><td>Paire de valets ou mieux</td><td>1x</td></tr>
-      </tbody>
-    </table>
+    <div class="scene">
+      <img class="scene-img" src="../../assets/table/fanny-dealer-scene.jpg" alt="Fanny vous accueille à la table de vidéo poker." />
+    </div>
 
-    <section id="hand-area" class="hand-area">
-      <div id="hand" class="hand"></div>
+    <div class="felt-center" id="felt-center">
+      <div class="throw-circle" aria-hidden="true"></div>
+      <p class="result-message" id="result-message"></p>
+      <canvas id="fx-canvas"></canvas>
+    </div>
+
+    <section class="hand-zone" aria-label="Votre main">
+      <div class="hand" id="hand"></div>
     </section>
 
-    <div id="result-message" class="result-message"></div>
+    <footer class="dock">
+      <div class="dock-panel" id="betting-area">
+        <div class="bet-readout">
+          <span class="bet-label">Mise</span>
+          <span class="bet-amount" id="bet-amount">0</span>
+        </div>
+        <div class="chips" role="group" aria-label="Jetons de mise">
+          <button type="button" class="chip" data-chip="10"><span>10</span></button>
+          <button type="button" class="chip" data-chip="25"><span>25</span></button>
+          <button type="button" class="chip" data-chip="50"><span>50</span></button>
+          <button type="button" class="chip" data-chip="100"><span>100</span></button>
+        </div>
+        <div class="dock-buttons">
+          <button type="button" class="btn btn-ghost" id="btn-clear-bet">Effacer</button>
+          <button type="button" class="btn btn-primary" id="btn-deal">Distribuer</button>
+        </div>
+      </div>
 
-    <section id="betting-area" class="action-row">
-      <span class="bet-label">Mise : <span id="bet-amount">0</span></span>
-      <button class="chip" data-chip="10">+10</button>
-      <button class="chip" data-chip="25">+25</button>
-      <button class="chip" data-chip="50">+50</button>
-      <button class="chip" data-chip="100">+100</button>
-      <button id="btn-clear-bet">Effacer</button>
-      <button id="btn-deal">Distribuer</button>
-    </section>
+      <div class="dock-panel hidden" id="holding-area">
+        <p class="hint">Touchez les cartes à garder, puis tirez.</p>
+        <div class="dock-buttons">
+          <button type="button" class="btn btn-primary" id="btn-draw">Tirer</button>
+        </div>
+      </div>
 
-    <section id="holding-area" class="action-row hidden">
-      <button id="btn-draw">Tirer</button>
-    </section>
-
-    <section id="result-area" class="action-row hidden">
-      <button id="btn-next-round">Manche suivante</button>
-    </section>
-  </main>
+      <div class="dock-panel hidden" id="result-area">
+        <div class="dock-buttons">
+          <button type="button" class="btn btn-primary" id="btn-next-round">Manche&nbsp;suivante</button>
+        </div>
+      </div>
+    </footer>
+  </div>
 
   <script type="module" src="main.js"></script>
 </body>

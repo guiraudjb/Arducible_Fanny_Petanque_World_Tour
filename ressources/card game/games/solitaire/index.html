@@ -2,34 +2,42 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <title>Solitaire — Pin-up Rétro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Solitaire — Fanny Pétanque World Tour</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>Solitaire — Pin-up Rétro</h1>
-    <div class="controls">
-      <button id="btn-new-game">Nouvelle partie</button>
-      <span id="moves">Coups : 0</span>
-      <span id="status" role="status"></span>
-    </div>
-  </header>
+  <h1 class="sr-only">Solitaire (Klondike) — Fanny Pétanque World Tour</h1>
 
-  <main id="board">
+  <div class="table" id="table">
+    <header class="hud">
+      <span class="hud-moves" id="moves">Coups : 0</span>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+      <button type="button" class="btn btn-ghost" id="btn-new-game">Nouvelle&nbsp;partie</button>
+    </header>
+
+    <div class="scene-mini">
+      <img src="../../assets/table/fanny-face-banner.jpg" alt="Fanny vous accompagne pour cette partie de solitaire." />
+    </div>
+
     <div class="top-row">
       <div class="pile stock" data-zone="stock" title="Piocher"></div>
       <div class="pile waste" data-zone="waste" title="Défausse"></div>
       <div class="spacer"></div>
-      <div class="pile foundation" data-zone="foundation" data-suit="hearts"></div>
-      <div class="pile foundation" data-zone="foundation" data-suit="diamonds"></div>
-      <div class="pile foundation" data-zone="foundation" data-suit="clubs"></div>
-      <div class="pile foundation" data-zone="foundation" data-suit="spades"></div>
+      <div class="pile foundation" data-zone="foundation" data-suit="hearts" title="Fondation cœur"></div>
+      <div class="pile foundation" data-zone="foundation" data-suit="diamonds" title="Fondation carreau"></div>
+      <div class="pile foundation" data-zone="foundation" data-suit="clubs" title="Fondation trèfle"></div>
+      <div class="pile foundation" data-zone="foundation" data-suit="spades" title="Fondation pique"></div>
     </div>
 
     <div class="tableau-row" id="tableau-row"></div>
-  </main>
+  </div>
 
-  <div id="win-banner" class="win-banner hidden">🎉 Bravo, partie gagnée ! 🎉</div>
+  <div id="win-banner" class="win-banner hidden">
+    <canvas id="fx-canvas"></canvas>
+    <p>🎉 Bravo, partie gagnée&nbsp;! 🎉</p>
+    <button type="button" class="btn btn-primary" id="btn-win-again">Rejouer</button>
+  </div>
 
   <script type="module" src="main.js"></script>
 </body>
