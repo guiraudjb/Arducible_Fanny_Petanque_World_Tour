@@ -68,5 +68,63 @@
     "bankruptcy": [
       "Plus un jeton, la maison vous attend pour une revanche."
     ]
+  },
+  "slots": {
+    "greeting": [
+      "Trois symboles alignés, et la fortune sourit ! Misez et lancez.",
+      "Bienvenue au bandit manchot ! Tirez sur le levier quand vous voulez."
+    ],
+    "spinning": [
+      "Ça tourne, ça tourne...",
+      "Les rouleaux s'emballent, on retient son souffle !"
+    ],
+    "win_small": [
+      "Une petite combinaison, c'est toujours ça de pris !",
+      "Trois symboles alignés, bravo !"
+    ],
+    "win_big": [
+      "Superbe combinaison, la machine a été généreuse !",
+      "Voilà qui fait sonner les cloches !"
+    ],
+    "win_jackpot": [
+      "JACKPOT ! Je n'en reviens pas moi-même !",
+      "Trois symboles royaux, c'est du jamais-vu !"
+    ],
+    "lose": [
+      "Pas cette fois, les rouleaux restent silencieux.",
+      "On retente sa chance ?"
+    ],
+    "bankruptcy": [
+      "Le bandit a eu raison de votre bankroll. On recommence ?"
+    ]
+  },
+  "roulette": {
+    "greeting": [
+      "Faites vos jeux ! La roulette n'attend que vous.",
+      "Bienvenue à la roulette ! Rouge, noir, ou un numéro plein ?"
+    ],
+    "spinning": [
+      "Rien ne va plus !",
+      "La bille tourne, les paris sont clos !"
+    ],
+    "win_small": [
+      "Bien joué, la bille était de votre côté !",
+      "Une mise simple qui paie, c'est déjà ça !"
+    ],
+    "win_big": [
+      "Une belle mise groupée qui rapporte gros !",
+      "Voilà un joli coup, félicitations !"
+    ],
+    "win_jackpot": [
+      "Numéro plein ! Vous avez visé juste, chapeau bas !",
+      "Trente-cinq fois la mise, quel coup magnifique !"
+    ],
+    "lose": [
+      "La bille n'était pas de votre côté cette fois.",
+      "Pas de chance, on retente ?"
+    ],
+    "bankruptcy": [
+      "La banque a gagné cette manche-là. Une revanche ?"
+    ]
   }
 }

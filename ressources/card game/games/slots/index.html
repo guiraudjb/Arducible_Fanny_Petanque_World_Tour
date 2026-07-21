@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Bandit manchot — Fanny Pétanque World Tour</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1 class="sr-only">Bandit manchot — Fanny Pétanque World Tour</h1>
+
+  <div class="table" id="table">
+    <header class="hud">
+      <div class="hud-money">
+        <span class="hud-label">Bankroll</span>
+        <span class="hud-value" id="bankroll">500</span>
+      </div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+      <button type="button" class="icon-btn" id="btn-mute" aria-pressed="false" aria-label="Couper la voix de la croupière">🔊</button>
+      <button type="button" class="btn btn-ghost" id="btn-new-game">Nouvelle&nbsp;partie</button>
+    </header>
+
+    <div class="paytable" id="paytable" role="table" aria-label="Table des gains">
+      <div class="pay-row" data-symbol="crown"><span class="pay-name">👑👑👑</span><span class="pay-mult">100x</span></div>
+      <div class="pay-row" data-symbol="seven"><span class="pay-name pay-name--seven">7 7 7</span><span class="pay-mult">50x</span></div>
+      <div class="pay-row" data-symbol="star"><span class="pay-name">⭐⭐⭐</span><span class="pay-mult">20x</span></div>
+      <div class="pay-row" data-symbol="diamond"><span class="pay-name">💎💎💎</span><span class="pay-mult">10x</span></div>
+      <div class="pay-row" data-symbol="bell"><span class="pay-name">🔔🔔🔔</span><span class="pay-mult">6x</span></div>
+      <div class="pay-row" data-symbol="lemon"><span class="pay-name">🍋🍋🍋</span><span class="pay-mult">4x</span></div>
+      <div class="pay-row" data-symbol="cherry"><span class="pay-name">🍒🍒🍒</span><span class="pay-mult">3x</span></div>
+      <div class="pay-row" data-symbol="cherry2"><span class="pay-name">🍒🍒</span><span class="pay-mult">2x</span></div>
+    </div>
+
+    <div class="scene">
+      <img class="scene-img" src="../../assets/table/fanny-dealer-scene.jpg" alt="Fanny vous accueille devant le bandit manchot." />
+      <div class="dealer-bubble" id="dealer-bubble" aria-live="polite">
+        <p id="dealer-bubble-text"></p>
+      </div>
+    </div>
+
+    <section class="reels-zone" aria-label="Rouleaux du bandit manchot">
+      <div class="reels" id="reels">
+        <div class="reel" id="reel-0"><span class="reel-symbol">🍒</span></div>
+        <div class="reel" id="reel-1"><span class="reel-symbol">🍒</span></div>
+        <div class="reel" id="reel-2"><span class="reel-symbol">🍒</span></div>
+      </div>
+      <p class="result-message" id="result-message"></p>
+      <canvas id="fx-canvas"></canvas>
+    </section>
+
+    <footer class="dock">
+      <div class="dock-panel" id="betting-area">
+        <div class="bet-readout">
+          <span class="bet-label">Mise</span>
+          <span class="bet-amount" id="bet-amount">0</span>
+        </div>
+        <div class="chips" role="group" aria-label="Jetons de mise">
+          <button type="button" class="chip" data-chip="10"><span>10</span></button>
+          <button type="button" class="chip" data-chip="25"><span>25</span></button>
+          <button type="button" class="chip" data-chip="50"><span>50</span></button>
+          <button type="button" class="chip" data-chip="100"><span>100</span></button>
+        </div>
+        <div class="dock-buttons">
+          <button type="button" class="btn btn-ghost" id="btn-clear-bet">Effacer</button>
+          <button type="button" class="btn btn-primary" id="btn-spin">Lancer</button>
+        </div>
+      </div>
+
+      <div class="dock-panel hidden" id="result-area">
+        <div class="dock-buttons">
+          <button type="button" class="btn btn-primary" id="btn-next-round">Relancer</button>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

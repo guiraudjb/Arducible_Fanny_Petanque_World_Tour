@@ -1,0 +1,398 @@
+:root {
+  color-scheme: dark;
+
+  --paper-raised: #f6ecd4;
+  --ink: #241c13;
+  --ink-soft: #cabb9f;
+  --gold: #ffd54f;
+  --line: rgba(241, 231, 210, 0.16);
+
+  --table-bg: #1c130b;
+  --felt-1: #2f6e3f;
+  --felt-2: #1c4e28;
+
+  --reel-w: clamp(70px, min(22vw, 26dvh), 170px);
+}
+
+@media (min-width: 768px) {
+  :root { --reel-w: clamp(120px, min(15vw, 30dvh), 200px); }
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  overscroll-behavior: none;
+}
+
+body {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--table-bg);
+  color: var(--paper-raised);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  display: flex;
+  justify-content: center;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.hidden { display: none !important; }
+
+/* ---------- Grille principale : jamais de scroll ---------- */
+.table {
+  position: relative;
+  width: 100%;
+  max-width: 760px;
+  height: 100vh;
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+  padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
+  background: radial-gradient(ellipse at 50% 0%, var(--felt-1) 0%, var(--felt-2) 85%);
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
+}
+
+/* ---------- HUD ---------- */
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.8rem;
+  padding: 0.45rem 0.9rem;
+  background: rgba(28, 19, 11, 0.55);
+  border-bottom: 1px solid var(--line);
+}
+.hud-money { display: flex; align-items: baseline; gap: 0.4rem; }
+.hud-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.hud-value {
+  font-family: "Rockwell", "Roboto Slab", Georgia, serif;
+  font-weight: 700;
+  color: var(--gold);
+  font-size: clamp(0.9rem, 2.4vw, 1.1rem);
+}
+.hud-value.is-bump { animation: bump 320ms ease; }
+@keyframes bump { 30% { transform: scale(1.18); } 100% { transform: scale(1); } }
+
+.status {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 8ch;
+  text-align: center;
+  font-family: "Rockwell", "Roboto Slab", Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(0.75rem, 2.4vw, 1rem);
+}
+
+/* ---------- Table des gains ---------- */
+.paytable {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem 0.4rem;
+  padding: 0.35rem 0.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid var(--line);
+}
+.pay-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(246, 236, 212, 0.06);
+  font-size: clamp(0.6rem, 1.8vw, 0.72rem);
+  white-space: nowrap;
+  transition: background 200ms ease, box-shadow 200ms ease;
+}
+.pay-name { color: var(--ink-soft); }
+.pay-name--seven { font-weight: 900; font-style: italic; letter-spacing: 0.05em; }
+.pay-mult { color: var(--gold); font-weight: 700; }
+.pay-row.achieved {
+  background: rgba(255, 213, 79, 0.28);
+  box-shadow: 0 0 10px rgba(255, 213, 79, 0.5);
+}
+
+/* ---------- Bannière : Fanny ---------- */
+.scene {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2752 / 1270;
+  max-height: 28dvh;
+  overflow: hidden;
+}
+.scene-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+/* ---------- Bulle de dialogue de la croupière ---------- */
+.dealer-bubble {
+  position: absolute;
+  top: 5%;
+  right: 3%;
+  max-width: min(60%, 320px);
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid rgba(40, 40, 40, 0.9);
+  border-radius: 14px;
+  padding: 0.55rem 0.75rem;
+  opacity: 0;
+  transform: translateY(-6px) scale(0.96);
+  transform-origin: top right;
+  transition: opacity 200ms ease, transform 200ms ease;
+  pointer-events: none;
+}
+.dealer-bubble.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.dealer-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -9px;
+  right: 28px;
+  width: 16px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  border-right: 2px solid rgba(40, 40, 40, 0.9);
+  border-bottom: 2px solid rgba(40, 40, 40, 0.9);
+  transform: rotate(45deg) translateY(-50%);
+}
+.dealer-bubble p {
+  margin: 0;
+  color: #1a1a1a;
+  font-size: clamp(0.68rem, 2.1vw, 0.82rem);
+  line-height: 1.35;
+  font-weight: 600;
+}
+
+/* ---------- Bouton icône (mute) ---------- */
+.icon-btn {
+  appearance: none;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  width: 2.2rem;
+  height: 2.2rem;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(246, 236, 212, 0.08);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 120ms ease, background 150ms ease;
+}
+.icon-btn:hover { background: rgba(246, 236, 212, 0.16); }
+.icon-btn:active { transform: scale(0.92); }
+.icon-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+/* ---------- Zone des rouleaux : occupe tout l'espace disponible ---------- */
+.reels-zone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 0;
+  padding: 0.4rem 0.6rem;
+}
+
+.reels {
+  display: flex;
+  gap: clamp(0.5rem, 2.5vw, 1.2rem);
+  padding: clamp(0.5rem, 2vw, 1rem);
+  background: rgba(0, 0, 0, 0.35);
+  border: 3px solid rgba(255, 213, 79, 0.4);
+  border-radius: 16px;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.reel {
+  width: var(--reel-w);
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--paper-raised);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.25);
+}
+
+.reel-symbol {
+  font-size: clamp(2.2rem, 11vw, 5.5rem);
+  line-height: 1;
+  display: block;
+}
+/* Le symbole "seven" est du texte simple ('7'), pas un emoji (voir
+   engine.js) : ce style le fait quand même lire comme un symbole de
+   bandit manchot ("lucky seven") plutôt qu'un chiffre nu. Volontairement
+   sans -webkit-text-stroke (constaté invisible sous rendu logiciel/
+   headless malgré des styles calculés corrects - trop fragile pour un
+   élément de résultat central) : gras + italique + couleur suffisent. */
+.reel-symbol.is-seven {
+  font-family: "Rockwell", "Roboto Slab", Georgia, serif;
+  font-weight: 900;
+  font-style: italic;
+  color: var(--gold);
+}
+
+.reel.is-spinning .reel-symbol {
+  animation: reel-cycle 90ms steps(1) infinite;
+}
+@keyframes reel-cycle {
+  from { transform: translateY(0); }
+  to { transform: translateY(-4px); }
+}
+
+.reel.is-winning {
+  animation: reel-win-glow 900ms ease-in-out infinite;
+}
+@keyframes reel-win-glow {
+  0%, 100% { box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.25), 0 0 0 rgba(255, 213, 79, 0); }
+  50% { box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.25), 0 0 24px 6px rgba(255, 213, 79, 0.8); }
+}
+
+.result-message {
+  position: relative;
+  margin: 0;
+  text-align: center;
+  font-family: "Rockwell", "Roboto Slab", Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(0.85rem, 3vw, 1.3rem);
+  color: var(--gold);
+  min-height: 1.4em;
+}
+.result-message:empty { opacity: 0; }
+.result-message.is-lose { color: #ff8a75; }
+.result-message.pop { animation: status-pop 320ms ease; }
+@keyframes status-pop {
+  0% { transform: scale(0.85); opacity: 0; }
+  60% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+#fx-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.table.is-win-flash { animation: felt-flash-win 900ms ease; }
+@keyframes felt-flash-win {
+  0% { box-shadow: inset 0 0 0 0 rgba(255, 213, 79, 0); }
+  30% { box-shadow: inset 0 0 90px 14px rgba(255, 213, 79, 0.45); }
+  100% { box-shadow: inset 0 0 0 0 rgba(255, 213, 79, 0); }
+}
+.table.is-lose-flash { animation: felt-flash-lose 700ms ease; }
+@keyframes felt-flash-lose {
+  0% { box-shadow: inset 0 0 0 0 rgba(200, 40, 30, 0); }
+  30% { box-shadow: inset 0 0 90px 14px rgba(200, 40, 30, 0.4); }
+  100% { box-shadow: inset 0 0 0 0 rgba(200, 40, 30, 0); }
+}
+
+/* ---------- Dock ---------- */
+.dock {
+  padding: 0.5rem 0.7rem calc(0.5rem + env(safe-area-inset-bottom, 0));
+  background: rgba(28, 19, 11, 0.55);
+  border-top: 1px solid var(--line);
+}
+.dock-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.bet-readout { display: flex; align-items: baseline; gap: 0.35rem; font-family: "Rockwell", "Roboto Slab", Georgia, serif; }
+.bet-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); }
+.bet-amount { font-weight: 700; color: var(--gold); font-size: clamp(0.95rem, 2.6vw, 1.1rem); }
+
+.chips { display: flex; gap: 0.4rem; }
+.chip {
+  width: clamp(2.4rem, 8vw, 3rem);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  border: 2px dashed rgba(246, 236, 212, 0.65);
+  background: radial-gradient(circle at 35% 30%, #d94f4f, #8f2323 70%);
+  color: #fff2df;
+  font-family: "Rockwell", "Roboto Slab", Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(0.65rem, 2.2vw, 0.8rem);
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+  transition: transform 120ms ease, filter 150ms ease;
+}
+.chip:hover:not(:disabled) { transform: translateY(-2px); }
+.chip:active:not(:disabled) { transform: scale(0.92); }
+.chip:disabled { filter: grayscale(0.6) brightness(0.6); cursor: not-allowed; }
+
+.dock-buttons { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
+
+.btn {
+  appearance: none;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.55rem 1.1rem;
+  min-height: 44px;
+  background: rgba(246, 236, 212, 0.08);
+  color: var(--paper-raised);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 120ms ease, background 150ms ease, box-shadow 150ms ease;
+}
+.btn:hover:not(:disabled) { background: rgba(246, 236, 212, 0.16); }
+.btn:active:not(:disabled) { transform: scale(0.95); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-primary {
+  background: linear-gradient(180deg, #ffdd7a, var(--gold));
+  color: #241c13;
+  border-color: transparent;
+  font-weight: 700;
+}
+.btn-primary:hover:not(:disabled) { background: linear-gradient(180deg, #ffe58f, #ffcf3d); }
+.btn-ghost { background: transparent; color: var(--ink-soft); border-color: var(--line); }
+
+.btn:focus-visible, .chip:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hud-value.is-bump,
+  .result-message.pop,
+  .table.is-win-flash,
+  .table.is-lose-flash,
+  .reel.is-spinning .reel-symbol,
+  .reel.is-winning {
+    animation: none !important;
+  }
+  .dealer-bubble { transition: opacity 120ms ease; transform: none; }
+}

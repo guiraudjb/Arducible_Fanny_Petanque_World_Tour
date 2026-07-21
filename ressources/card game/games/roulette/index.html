@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Roulette — Fanny Pétanque World Tour</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1 class="sr-only">Roulette européenne — Fanny Pétanque World Tour</h1>
+
+  <div class="table" id="table">
+    <header class="hud">
+      <div class="hud-money">
+        <span class="hud-label">Bankroll</span>
+        <span class="hud-value" id="bankroll">500</span>
+      </div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+      <button type="button" class="icon-btn" id="btn-mute" aria-pressed="false" aria-label="Couper la voix de la croupière">🔊</button>
+      <button type="button" class="btn btn-ghost" id="btn-new-game">Nouvelle&nbsp;partie</button>
+    </header>
+
+    <div class="scene">
+      <img class="scene-img" src="../../assets/table/fanny-dealer-scene.jpg" alt="Fanny vous accueille à la table de roulette." />
+      <div class="dealer-bubble" id="dealer-bubble" aria-live="polite">
+        <p id="dealer-bubble-text"></p>
+      </div>
+    </div>
+
+    <section class="play-zone" aria-label="Roulette">
+      <div class="wheel-result" id="wheel-result">
+        <div class="wheel-number" id="wheel-number">?</div>
+        <div class="history" id="history" aria-label="Derniers numéros sortis"></div>
+      </div>
+      <p class="result-message" id="result-message"></p>
+      <canvas id="fx-canvas"></canvas>
+
+      <div class="bet-tabs" role="tablist" aria-label="Type de mise">
+        <button type="button" class="bet-tab is-active" id="tab-numbers" role="tab" aria-selected="true">Numéros</button>
+        <button type="button" class="bet-tab" id="tab-outside" role="tab" aria-selected="false">Mises extérieures</button>
+      </div>
+
+      <div class="bet-panel" id="panel-numbers">
+        <div class="number-grid" id="number-grid"></div>
+      </div>
+
+      <div class="bet-panel hidden" id="panel-outside">
+        <div class="outside-grid">
+          <button type="button" class="outside-bet color-red" data-kind="red">Rouge <span class="odds">1:1</span></button>
+          <button type="button" class="outside-bet color-black" data-kind="black">Noir <span class="odds">1:1</span></button>
+          <button type="button" class="outside-bet" data-kind="even">Pair <span class="odds">1:1</span></button>
+          <button type="button" class="outside-bet" data-kind="odd">Impair <span class="odds">1:1</span></button>
+          <button type="button" class="outside-bet" data-kind="low">1-18 <span class="odds">1:1</span></button>
+          <button type="button" class="outside-bet" data-kind="high">19-36 <span class="odds">1:1</span></button>
+          <button type="button" class="outside-bet" data-kind="dozen1">1ʳᵉ douz. <span class="odds">2:1</span></button>
+          <button type="button" class="outside-bet" data-kind="dozen2">2ᵉ douz. <span class="odds">2:1</span></button>
+          <button type="button" class="outside-bet" data-kind="dozen3">3ᵉ douz. <span class="odds">2:1</span></button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="dock">
+      <div class="dock-panel" id="betting-area">
+        <div class="bet-readout">
+          <span class="bet-label" id="bet-selection-label">Choisissez une mise</span>
+          <span class="bet-amount" id="bet-amount">0</span>
+        </div>
+        <div class="chips" role="group" aria-label="Jetons de mise">
+          <button type="button" class="chip" data-chip="10"><span>10</span></button>
+          <button type="button" class="chip" data-chip="25"><span>25</span></button>
+          <button type="button" class="chip" data-chip="50"><span>50</span></button>
+          <button type="button" class="chip" data-chip="100"><span>100</span></button>
+        </div>
+        <div class="dock-buttons">
+          <button type="button" class="btn btn-ghost" id="btn-clear-bet">Effacer</button>
+          <button type="button" class="btn btn-primary" id="btn-spin">Lancer</button>
+        </div>
+      </div>
+
+      <div class="dock-panel hidden" id="result-area">
+        <div class="dock-buttons">
+          <button type="button" class="btn btn-primary" id="btn-next-round">Manche&nbsp;suivante</button>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
