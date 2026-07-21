@@ -1,13 +1,35 @@
 import { VideoPoker } from '../../src/games/poker/engine.js';
+import { createDealerVoice } from '../../src/dealer/dealerVoice.js';
 
 const SPRITE_DIR = '../../assets/cards/';
 
 const prefersReducedMotion = () =>
   window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+const HAND_RANK_TO_DEALER_EVENT = {
+  'royal-flush': 'win_jackpot',
+  'straight-flush': 'win_jackpot',
+  'four-of-a-kind': 'win_jackpot',
+  'full-house': 'win_big',
+  flush: 'win_big',
+  straight: 'win_big',
+  'three-of-a-kind': 'win_small',
+  'two-pair': 'win_small',
+  'jacks-or-better': 'win_small',
+  nothing: 'lose',
+};
+
 const game = new VideoPoker({ startingBankroll: 500 });
 let pendingBet = 0;
 let lastBankrollShown = null;
+let bankruptcyAnnounced = false;
+
+const dealerVoice = createDealerVoice({
+  game: 'poker',
+  bubbleEl: document.getElementById('dealer-bubble'),
+  textEl: document.getElementById('dealer-bubble-text'),
+  muteBtn: document.getElementById('btn-mute'),
+});
 
 const tableEl = document.getElementById('table');
 const bankrollEl = document.getElementById('bankroll');
@@ -208,6 +230,8 @@ function render() {
     resultMessageEl.classList.add('pop');
     if (handKey !== lastHandKey) {
       if (won) { flashTable('win'); burstConfetti(); } else { flashTable('lose'); }
+      const dealerEvent = HAND_RANK_TO_DEALER_EVENT[state.handRank];
+      if (dealerEvent) dealerVoice.say(dealerEvent);
     }
   } else {
     resultMessageEl.textContent = '';
@@ -218,6 +242,10 @@ function render() {
   statusEl.textContent = state.isGameOver
     ? 'Banqueroute. Cliquez sur « Nouvelle partie » pour recommencer.'
     : '';
+  if (state.isGameOver && !bankruptcyAnnounced) {
+    bankruptcyAnnounced = true;
+    dealerVoice.say('bankruptcy');
+  }
 }
 
 document.querySelectorAll('.chip').forEach((btn) => {
@@ -234,7 +262,10 @@ document.getElementById('btn-clear-bet').addEventListener('click', () => {
 
 btnDeal.addEventListener('click', () => {
   const result = game.startRound(pendingBet);
-  if (result.ok) pendingBet = 0;
+  if (result.ok) {
+    pendingBet = 0;
+    dealerVoice.say('dealing');
+  }
   render();
 });
 
@@ -257,7 +288,10 @@ document.getElementById('btn-new-game').addEventListener('click', () => {
   pendingBet = 0;
   lastBankrollShown = null;
   lastHandKey = null;
+  bankruptcyAnnounced = false;
   render();
+  dealerVoice.say('greeting');
 });
 
 render();
+dealerVoice.say('greeting');

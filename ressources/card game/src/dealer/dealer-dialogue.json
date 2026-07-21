@@ -1,0 +1,72 @@
+{
+  "blackjack": {
+    "greeting": [
+      "Installez-vous, la table est à vous ! Misez quand vous êtes prête.",
+      "Bienvenue à ma table ! On y va doucement, mais sûrement."
+    ],
+    "dealing": [
+      "Et voilà, les cartes sont sur le tapis !",
+      "À vous de jouer, beau joueur."
+    ],
+    "player_blackjack": [
+      "Un blackjack ! Vous ne perdez pas de temps, dites donc.",
+      "Vingt et un du premier coup, chapeau !"
+    ],
+    "dealer_blackjack": [
+      "Blackjack pour la maison, désolée pour vous !",
+      "Cette fois, c'est moi qui rafle la mise."
+    ],
+    "player_bust": [
+      "Aïe, vous avez dépassé 21 ! Ça arrive aux meilleurs.",
+      "Trop gourmand cette fois-ci !"
+    ],
+    "dealer_bust": [
+      "Je dépasse 21 moi-même, la victoire est pour vous !",
+      "Et voilà, la maison craque la première !"
+    ],
+    "win": [
+      "Bien joué, vous l'emportez !",
+      "Cette manche est pour vous, félicitations !"
+    ],
+    "lose": [
+      "Cette fois, la maison garde la main.",
+      "Pas de chance, on retente ?"
+    ],
+    "push": [
+      "Égalité parfaite, la mise vous revient.",
+      "Match nul, personne n'y perd rien."
+    ],
+    "bankruptcy": [
+      "Ah, la caisse est vide ! Une nouvelle partie vous tente ?"
+    ]
+  },
+  "poker": {
+    "greeting": [
+      "Prenez vos jetons, la partie commence quand vous voulez !",
+      "Installez-vous, on va voir ce que le sort vous réserve."
+    ],
+    "dealing": [
+      "Voici votre main, choisissez bien vos cartes !",
+      "À vous de décider ce que vous gardez."
+    ],
+    "win_small": [
+      "Une petite main gagnante, ça compte double au moral !",
+      "Voilà qui remplit un peu la bankroll."
+    ],
+    "win_big": [
+      "Oh là là, quelle main ! Bien joué !",
+      "Ça, c'est une main dont on se souvient."
+    ],
+    "win_jackpot": [
+      "Une main royale, rien que ça ! Je suis impressionnée.",
+      "Alerte jackpot, vous méritez une ovation !"
+    ],
+    "lose": [
+      "Presque rien cette fois, on retente sa chance ?",
+      "La main ne paie pas, mais la prochaine peut-être !"
+    ],
+    "bankruptcy": [
+      "Plus un jeton, la maison vous attend pour une revanche."
+    ]
+  }
+}

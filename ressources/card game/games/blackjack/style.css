@@ -109,6 +109,71 @@ body {
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.65);
 }
 
+/* ---------- Bulle de dialogue de la croupière ---------- */
+.dealer-bubble {
+  position: absolute;
+  top: 5%;
+  right: 3%;
+  max-width: min(60%, 320px);
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid rgba(40, 40, 40, 0.9);
+  border-radius: 14px;
+  padding: 0.55rem 0.75rem;
+  opacity: 0;
+  transform: translateY(-6px) scale(0.96);
+  transform-origin: top right;
+  transition: opacity 200ms ease, transform 200ms ease;
+  pointer-events: none;
+}
+.dealer-bubble.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.dealer-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -9px;
+  right: 28px;
+  width: 16px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  border-right: 2px solid rgba(40, 40, 40, 0.9);
+  border-bottom: 2px solid rgba(40, 40, 40, 0.9);
+  transform: rotate(45deg) translateY(-50%);
+}
+.dealer-bubble p {
+  margin: 0;
+  color: #1a1a1a;
+  font-size: clamp(0.68rem, 2.1vw, 0.82rem);
+  line-height: 1.35;
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dealer-bubble { transition: opacity 120ms ease; transform: none; }
+}
+
+/* ---------- Bouton icône (mute) ---------- */
+.icon-btn {
+  appearance: none;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  width: 2.2rem;
+  height: 2.2rem;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(246, 236, 212, 0.08);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 120ms ease, background 150ms ease;
+}
+.icon-btn:hover { background: rgba(246, 236, 212, 0.16); }
+.icon-btn:active { transform: scale(0.92); }
+.icon-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
 /* ---------- HUD ---------- */
 .hud {
   display: flex;

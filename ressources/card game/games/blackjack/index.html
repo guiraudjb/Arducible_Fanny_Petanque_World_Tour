@@ -16,11 +16,15 @@
         <span class="hud-value" id="bankroll">500</span>
       </div>
       <p class="status" id="status" role="status" aria-live="polite"></p>
+      <button type="button" class="icon-btn" id="btn-mute" aria-pressed="false" aria-label="Couper la voix de la croupière">🔊</button>
       <button type="button" class="btn btn-ghost" id="btn-new-game">Nouvelle&nbsp;partie</button>
     </header>
 
     <div class="scene">
       <img class="scene-img" src="../../assets/table/fanny-dealer-scene.jpg" alt="Fanny, votre croupière, installée à la table de pétanque." />
+      <div class="dealer-bubble" id="dealer-bubble" aria-live="polite">
+        <p id="dealer-bubble-text"></p>
+      </div>
       <section class="dealer-cluster" data-owner="dealer" aria-label="Main du croupier">
         <div class="hand-label">Croupier <span class="total" id="dealer-total"></span></div>
         <div class="hand" id="dealer-hand"></div>

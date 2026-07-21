@@ -1,10 +1,21 @@
 import { Blackjack } from '../../src/games/blackjack/engine.js';
+import { createDealerVoice } from '../../src/dealer/dealerVoice.js';
 
 const SPRITE_DIR = '../../assets/cards/';
 const BACK_SPRITE = `${SPRITE_DIR}back.png`;
 
 const WIN_RESULTS = new Set(['blackjack', 'win', 'dealer-bust']);
 const LOSE_RESULTS = new Set(['lose', 'bust', 'dealer-blackjack']);
+
+const RESULT_TO_DEALER_EVENT = {
+  blackjack: 'player_blackjack',
+  win: 'win',
+  'dealer-bust': 'dealer_bust',
+  lose: 'lose',
+  bust: 'player_bust',
+  'dealer-blackjack': 'dealer_blackjack',
+  push: 'push',
+};
 
 const prefersReducedMotion = () =>
   window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -13,6 +24,15 @@ const game = new Blackjack({ startingBankroll: 500 });
 let pendingBet = 0;
 let lastBankrollShown = null;
 let lastStatusShown = null;
+let lastPhase = null;
+let bankruptcyAnnounced = false;
+
+const dealerVoice = createDealerVoice({
+  game: 'blackjack',
+  bubbleEl: document.getElementById('dealer-bubble'),
+  textEl: document.getElementById('dealer-bubble-text'),
+  muteBtn: document.getElementById('btn-mute'),
+});
 
 const tableEl = document.getElementById('table');
 const bankrollEl = document.getElementById('bankroll');
@@ -220,7 +240,13 @@ function render() {
     lastBankrollShown = state.bankroll;
   }
 
-  if (state.message !== lastStatusShown) {
+  // Un même résultat (ex. deux "Perdu." de suite) produit un texte identique :
+  // se fier au texte seul raterait le redéclenchement du flash/confettis/voix
+  // sur cette deuxième occurrence. La vraie transition, c'est l'ENTRÉE en
+  // 'round-over', détectée ici indépendamment du contenu du message.
+  const isFreshRoundOver = state.phase === 'round-over' && lastPhase !== 'round-over';
+
+  if (state.message !== lastStatusShown || isFreshRoundOver) {
     statusEl.textContent = state.message;
     statusEl.classList.remove('is-win', 'is-lose', 'pop');
     if (state.result && WIN_RESULTS.has(state.result)) statusEl.classList.add('is-win');
@@ -230,11 +256,13 @@ function render() {
       statusEl.classList.add('pop');
     }
     lastStatusShown = state.message;
+  }
 
-    if (state.result && WIN_RESULTS.has(state.result)) {
+  if (isFreshRoundOver) {
+    if (WIN_RESULTS.has(state.result)) {
       flashTable('win');
       burstConfetti();
-    } else if (state.result && LOSE_RESULTS.has(state.result)) {
+    } else if (LOSE_RESULTS.has(state.result)) {
       flashTable('lose');
       if (state.result === 'bust') {
         playerZoneEl.classList.remove('is-bust');
@@ -242,7 +270,12 @@ function render() {
         playerZoneEl.classList.add('is-bust');
       }
     }
+
+    const dealerEvent = RESULT_TO_DEALER_EVENT[state.result];
+    if (dealerEvent) dealerVoice.say(dealerEvent);
   }
+
+  lastPhase = state.phase;
 
   renderHand(dealerHandEl, state.dealerHand);
   dealerTotalEl.textContent = state.dealerHand.length ? `(${state.dealerTotal})` : '';
@@ -268,6 +301,10 @@ function render() {
 
   if (state.isGameOver) {
     statusEl.textContent = 'Banqueroute. Cliquez sur « Nouvelle partie » pour recommencer.';
+    if (!bankruptcyAnnounced) {
+      bankruptcyAnnounced = true;
+      dealerVoice.say('bankruptcy');
+    }
   }
 }
 
@@ -293,6 +330,7 @@ btnDeal.addEventListener('click', () => {
   const result = game.startRound(pendingBet);
   if (result.ok) {
     pendingBet = 0;
+    dealerVoice.say('dealing');
   } else {
     statusEl.textContent = 'Mise invalide.';
   }
@@ -330,8 +368,12 @@ document.getElementById('btn-new-game').addEventListener('click', () => {
     pendingBet = 0;
     lastBankrollShown = null;
     lastStatusShown = null;
+    lastPhase = null;
+    bankruptcyAnnounced = false;
     render();
+    dealerVoice.say('greeting');
   });
 });
 
 render();
+dealerVoice.say('greeting');
