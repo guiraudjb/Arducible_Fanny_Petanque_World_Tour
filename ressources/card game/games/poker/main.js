@@ -7,6 +7,7 @@ const prefersReducedMotion = () =>
   window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const HAND_RANK_TO_DEALER_EVENT = {
+  'five-of-a-kind': 'win_jackpot',
   'royal-flush': 'win_jackpot',
   'straight-flush': 'win_jackpot',
   'four-of-a-kind': 'win_jackpot',

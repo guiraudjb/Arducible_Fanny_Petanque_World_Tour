@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1 class="sr-only">Vidéo Poker (Jacks or Better) — Fanny Pétanque World Tour</h1>
+  <h1 class="sr-only">Vidéo Poker Joker (Jacks or Better, paquet de 54 cartes avec 2 jokers) — Fanny Pétanque World Tour</h1>
 
   <div class="table" id="table">
     <header class="hud">
@@ -20,7 +20,9 @@
       <button type="button" class="btn btn-ghost" id="btn-new-game">Nouvelle&nbsp;partie</button>
     </header>
 
-    <div class="paytable" id="paytable" role="table" aria-label="Table des gains (Jacks or Better)">
+    <p class="joker-note">🃏 Paquet de 54 cartes — les 2 jokers sont <strong>cartes folles</strong> et remplacent n'importe quelle carte pour votre meilleure main.</p>
+    <div class="paytable" id="paytable" role="table" aria-label="Table des gains (Jacks or Better avec jokers cartes folles)">
+      <div class="pay-row" data-rank="five-of-a-kind"><span class="pay-name">Cinq identiques</span><span class="pay-mult">400x</span></div>
       <div class="pay-row" data-rank="royal-flush"><span class="pay-name">Quinte royale</span><span class="pay-mult">250x</span></div>
       <div class="pay-row" data-rank="straight-flush"><span class="pay-name">Quinte couleur</span><span class="pay-mult">50x</span></div>
       <div class="pay-row" data-rank="four-of-a-kind"><span class="pay-name">Carré</span><span class="pay-mult">25x</span></div>
@@ -68,7 +70,7 @@
       </div>
 
       <div class="dock-panel hidden" id="holding-area">
-        <p class="hint">Touchez les cartes à garder, puis tirez.</p>
+        <p class="hint">Touchez les cartes à garder, puis tirez. (🃏 = joker, carte folle)</p>
         <div class="dock-buttons">
           <button type="button" class="btn btn-primary" id="btn-draw">Tirer</button>
         </div>

@@ -1,10 +1,11 @@
-import { Deck } from '../../cards/index.js';
+import { Deck, Card, SUITS, RANKS } from '../../cards/index.js';
 
 const VALUES = {
   A: 14, K: 13, Q: 12, J: 11, 10: 10, 9: 9, 8: 8, 7: 7, 6: 6, 5: 5, 4: 4, 3: 3, 2: 2,
 };
 
 export const HAND_NAMES = {
+  'five-of-a-kind': 'Cinq identiques',
   'royal-flush': 'Quinte flush royale',
   'straight-flush': 'Quinte flush',
   'four-of-a-kind': 'Carré',
@@ -17,8 +18,10 @@ export const HAND_NAMES = {
   nothing: 'Rien',
 };
 
-/** Paytable "9/6 Jacks or Better" (multiplicateur de la mise). */
+/** Paytable "9/6 Jacks or Better" (multiplicateur de la mise), complétée
+ * par le palier "cinq identiques" rendu possible par les jokers joker. */
 export const PAYTABLE = {
+  'five-of-a-kind': 400,
   'royal-flush': 250,
   'straight-flush': 50,
   'four-of-a-kind': 25,
@@ -31,8 +34,13 @@ export const PAYTABLE = {
   nothing: 0,
 };
 
-/** Évalue une main de 5 cartes et renvoie la catégorie (clé de PAYTABLE/HAND_NAMES). */
-export function evaluateHand(cards) {
+// Ordre du meilleur au moins bon, utilisé pour choisir la meilleure
+// substitution possible des jokers (cartes folles).
+const RANK_ORDER = Object.keys(PAYTABLE);
+
+/** Évalue une main de 5 cartes SANS joker (déjà substitués le cas échéant)
+ * et renvoie la catégorie (clé de PAYTABLE/HAND_NAMES). */
+function evaluateHandBase(cards) {
   const values = cards.map((c) => VALUES[c.rank]).sort((a, b) => a - b);
   const isFlush = new Set(cards.map((c) => c.suit)).size === 1;
 
@@ -54,6 +62,9 @@ export function evaluateHand(cards) {
   for (const v of values) countByValue.set(v, (countByValue.get(v) || 0) + 1);
   const counts = [...countByValue.values()].sort((a, b) => b - a);
 
+  // Impossible avec un vrai paquet (4 exemplaires max par rang), mais
+  // atteignable une fois qu'un joker a été substitué par un rang déjà présent.
+  if (counts[0] === 5) return 'five-of-a-kind';
   if (isStraight && isFlush) {
     return straightHighForRoyalCheck === 14 ? 'royal-flush' : 'straight-flush';
   }
@@ -71,9 +82,62 @@ export function evaluateHand(cards) {
   return 'nothing';
 }
 
+/** Les 52 cartes standard, utilisées comme substitutions possibles d'un
+ * joker. Un joker est une notion abstraite ("cette carte compte comme la
+ * carte qui m'arrange le mieux"), pas une simulation d'une vraie carte
+ * encore dans le paquet : il DOIT pouvoir dupliquer un rang déjà présent
+ * dans la main (c'est justement ce qui permet un carré ou un cinq
+ * identiques), donc on n'exclut rien ici. */
+function allStandardCards() {
+  const candidates = [];
+  for (const suit of Object.values(SUITS)) {
+    for (const rank of RANKS) {
+      candidates.push(new Card(rank, suit));
+    }
+  }
+  return candidates;
+}
+
+const ALL_CANDIDATES = allStandardCards();
+
 /**
- * Video poker "Jacks or Better" : mise, distribution de 5 cartes,
- * on garde ce qu'on veut, un seul échange, paiement selon la paytable 9/6.
+ * Évalue une main de 5 cartes et renvoie la catégorie (clé de
+ * PAYTABLE/HAND_NAMES). Les jokers sont des cartes folles : on cherche la
+ * meilleure main possible en essayant toutes leurs substitutions.
+ */
+export function evaluateHand(cards) {
+  const wilds = cards.filter((c) => c.isJoker);
+  if (wilds.length === 0) return evaluateHandBase(cards);
+
+  const fixed = cards.filter((c) => !c.isJoker);
+  const candidates = ALL_CANDIDATES;
+
+  let best = 'nothing';
+  const consider = (trialCards) => {
+    const rank = evaluateHandBase(trialCards);
+    if (RANK_ORDER.indexOf(rank) < RANK_ORDER.indexOf(best)) best = rank;
+  };
+
+  if (wilds.length === 1) {
+    for (const c of candidates) consider([...fixed, c]);
+  } else {
+    // 2 jokers (rare, mais possible avec un paquet de 54 cartes) : on
+    // teste toutes les paires de substituts distincts.
+    for (let i = 0; i < candidates.length; i += 1) {
+      for (let j = 0; j < candidates.length; j += 1) {
+        if (i === j) continue;
+        consider([...fixed, candidates[i], candidates[j]]);
+      }
+    }
+  }
+  return best;
+}
+
+/**
+ * Video poker "Jacks or Better" avec jokers cartes folles (paquet de 54
+ * cartes) : mise, distribution de 5 cartes, on garde ce qu'on veut, un
+ * seul échange, paiement selon la paytable 9/6 complétée par le palier
+ * "cinq identiques" rendu possible par les jokers.
  */
 export class VideoPoker {
   constructor({ startingBankroll = 500 } = {}) {
@@ -107,7 +171,7 @@ export class VideoPoker {
     this.lastBet = bet;
     this.bankroll -= bet;
 
-    this.deck = new Deck({ jokers: 0 });
+    this.deck = new Deck({ jokers: 2 });
     this.deck.shuffle();
     this.hand = this.deck.draw(5);
     this.held = [false, false, false, false, false];
