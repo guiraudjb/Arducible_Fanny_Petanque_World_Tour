@@ -17,7 +17,7 @@ function loadDialogue() {
   return dialoguePromise;
 }
 
-function isMuted() {
+export function isMuted() {
   return localStorage.getItem(MUTE_KEY) === '1';
 }
 

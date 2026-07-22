@@ -332,7 +332,10 @@ export function findBestMove({ boardCells, rack, letterIndex, wordSet }) {
     const bingo = placements.length === RACK_SIZE;
     const score = scoreWords(resolved.words) + (bingo ? BINGO_BONUS : 0);
     if (!best || score > best.score) {
-      best = { word, score, bingo, tier: tierForScore(score) };
+      best = {
+        word, score, bingo, tier: tierForScore(score),
+        placements: placements.map(({ row, col, letter }) => ({ row, col, letter })),
+      };
     }
   }
 

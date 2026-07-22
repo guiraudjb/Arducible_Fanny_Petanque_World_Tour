@@ -1,5 +1,5 @@
 import { Scrabble, ROUND_SECONDS, BOARD_SIZE, BONUS_LABELS, buildLetterIndex } from '../../src/games/scrabble/engine.js';
-import { createDealerVoice } from '../../src/dealer/dealerVoice.js';
+import { createDealerVoice, isMuted } from '../../src/dealer/dealerVoice.js';
 
 const WORDS_URL = new URL('../../assets/scrabble/mots.txt', import.meta.url);
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -231,6 +231,10 @@ function renderBoard(state) {
   const justPlayedMap = state.phase === 'result' && state.result && state.result.valid
     ? new Map(state.result.placedCells.map((p) => [`${p.row},${p.col}`, true]))
     : new Map();
+  const bestMove = state.phase === 'result' && state.result ? state.result.bestMove : null;
+  const ghostMap = bestMove
+    ? new Map(bestMove.placements.map((p) => [`${p.row},${p.col}`, p]))
+    : new Map();
 
   for (const rowCells of state.board) {
     for (const cell of rowCells) {
@@ -267,7 +271,14 @@ function renderBoard(state) {
           });
         }
       } else {
-        if (cell.bonus) {
+        const ghostEntry = ghostMap.get(key);
+        if (ghostEntry) {
+          btn.classList.add('is-best-ghost');
+          const letterEl = document.createElement('span');
+          letterEl.className = 'cell-letter';
+          letterEl.textContent = ghostEntry.letter;
+          btn.appendChild(letterEl);
+        } else if (cell.bonus) {
           btn.classList.add(`bonus-${cell.bonus}`);
           const bonusEl = document.createElement('span');
           bonusEl.className = 'cell-bonus';
@@ -295,6 +306,20 @@ function renderBoard(state) {
 }
 
 /* ---------------------------------------------------------------- */
+/* Voix de synthèse du navigateur pour le meilleur coup possible       */
+/* ---------------------------------------------------------------- */
+function speakBestMove(best) {
+  if (!best || isMuted() || !('speechSynthesis' in window)) return;
+  const text = best.bingo
+    ? `Meilleur coup possible : ${best.word}, pour ${best.score} points, scrabble !`
+    : `Meilleur coup possible : ${best.word}, pour ${best.score} points.`;
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'fr-FR';
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utterance);
+}
+
+/* ---------------------------------------------------------------- */
 /* Soumission du mot                                                    */
 /* ---------------------------------------------------------------- */
 function doSubmit(isTimeout) {
@@ -311,6 +336,7 @@ function doSubmit(isTimeout) {
       game.computeBestMove(letterIndex, wordSet);
       bestMoveComputing = false;
       render();
+      speakBestMove(game.result.bestMove);
     }, 20);
   }
 
@@ -470,6 +496,7 @@ document.getElementById('btn-clear-word').addEventListener('click', () => {
 btnSubmit.addEventListener('click', () => doSubmit(false));
 
 document.getElementById('btn-next-round').addEventListener('click', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
   bestMoveComputing = false;
   game.nextRound();
   pendingBet = Math.min(game.lastBet, game.bankroll) || 0;
@@ -477,6 +504,7 @@ document.getElementById('btn-next-round').addEventListener('click', () => {
 });
 
 document.getElementById('btn-new-game').addEventListener('click', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
   stopTimer();
   selectedRackIndex = null;
   bestMoveComputing = false;
