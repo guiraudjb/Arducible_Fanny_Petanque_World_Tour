@@ -6,6 +6,18 @@ const BACK_SPRITE = `${SPRITE_DIR}back.png`;
 const prefersReducedMotion = () =>
   window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+/** Largeur RÉELLEMENT résolue d'une carte, en px. `--card-w` est un
+ * clamp() : getComputedStyle(...).getPropertyValue('--card-w') renvoie le
+ * texte brut de l'expression ("clamp(34px, ...)"), pas sa valeur calculée
+ * - parseFloat() de ce texte échoue silencieusement (NaN, la chaîne ne
+ * commence pas par un chiffre) et ne doit jamais servir de source de
+ * vérité pour la mise en page. On lit plutôt la largeur RÉSOLUE d'un
+ * élément qui applique `width: var(--card-w)` (le talon), qui donne
+ * toujours la vraie valeur en pixels pour la taille d'écran actuelle. */
+function resolveCardWidth() {
+  return parseFloat(getComputedStyle(stockEl).width) || 60;
+}
+
 const game = new Solitaire({ drawCount: 1 });
 let selected = null; // { type: 'waste' } | { type: 'tableau', pile, cardIndex }
 let pendingFoundationPulse = null;
@@ -139,8 +151,16 @@ function snapshotOf(state) {
 }
 
 function computeStackStep(maxLen) {
-  const containerHeight = tableauRowEl.clientHeight || 0;
-  const cardW = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--card-w')) || 60;
+  // clientHeight INCLUT le padding vertical du conteneur (haut + bas) : ce
+  // n'est pas de l'espace disponible pour empiler des cartes, il faut le
+  // retrancher. Sans ça, la pile la plus longue est systématiquement
+  // calculée ~1 padding trop haute - resté invisible tant que le tapis
+  // avait de la marge, mais fait déborder la page en paysage mobile très
+  // bas (~390px de hauteur), où cette marge n'existe plus.
+  const rowStyle = getComputedStyle(tableauRowEl);
+  const verticalPadding = parseFloat(rowStyle.paddingTop) + parseFloat(rowStyle.paddingBottom);
+  const containerHeight = Math.max(0, (tableauRowEl.clientHeight || 0) - verticalPadding);
+  const cardW = resolveCardWidth();
   const cardH = cardW * (7 / 5);
   // Plafond confortable (cartes pas trop écartées) et plancher de lisibilité
   // (rang/couleur toujours visible même sur une pile très longue).
@@ -199,7 +219,7 @@ function render() {
     pileEl.dataset.zone = 'tableau';
     pileEl.dataset.pileIndex = String(pileIndex);
 
-    const cardW = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--card-w')) || 60;
+    const cardW = resolveCardWidth();
     const cardH = cardW * (7 / 5);
     const height = pile.length ? (pile.length - 1) * step + cardH : cardW;
     pileEl.style.height = `${height}px`;
@@ -419,3 +439,11 @@ document.getElementById('btn-win-again').addEventListener('click', () => {
 window.addEventListener('resize', () => render());
 
 render();
+
+// Filet de sécurité : le tout premier calcul de l'espacement des piles
+// (computeStackStep) peut légèrement sous-estimer la hauteur réellement
+// disponible avant que la mise en page ne soit stabilisée (constaté en
+// paysage mobile très bas, où la marge est de quelques pixels) - un
+// second rendu juste après capture la bonne valeur. Sans effet visible
+// sur le jeu : l'état n'a pas changé entre les deux appels.
+requestAnimationFrame(() => requestAnimationFrame(render));

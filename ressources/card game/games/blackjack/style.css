@@ -16,7 +16,7 @@
   --card-radius: 8px;
   /* Largeur de carte : bornée à la fois par la largeur ET la hauteur de vue,
      pour ne jamais déborder verticalement en paysage sur mobile. */
-  --card-w: clamp(40px, min(9vw, 9dvh), 100px);
+  --card-w: clamp(56px, min(13vw, 13dvh), 140px);
 
   --dur-deal: 480ms;
   --dur-flip: 550ms;
@@ -24,7 +24,7 @@
 }
 
 @media (min-width: 768px) {
-  :root { --card-w: clamp(64px, min(6vw, 15dvh), 118px); }
+  :root { --card-w: clamp(95px, min(9vw, 21dvh), 170px); }
 }
 
 * { box-sizing: border-box; }

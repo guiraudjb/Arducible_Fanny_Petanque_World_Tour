@@ -19,14 +19,14 @@
      tiennent toujours horizontalement — voir le plafond desktop ci-dessous,
      qui doit rester sûr même sur un écran très large car .table est
      lui-même plafonné à 760px (vw ne le sait pas, d'où un plafond en px). */
-  --card-w: clamp(60px, min(21vw, 26dvh), 150px);
+  --card-w: clamp(72px, min(24vw, 30dvh), 172px);
 
   --dur-deal: 480ms;
   --ease-deal: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 @media (min-width: 768px) {
-  :root { --card-w: clamp(110px, min(14vw, 32dvh), 165px); }
+  :root { --card-w: clamp(130px, min(16vw, 36dvh), 178px); }
 }
 
 * { box-sizing: border-box; }

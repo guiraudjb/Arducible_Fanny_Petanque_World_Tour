@@ -13,12 +13,24 @@
 
   --card-radius: 6px;
   /* 7 colonnes + row du dessus à 6 emplacements doivent tenir sans wrap :
-     borné par la largeur ET par la hauteur restante pour la pile la plus haute. */
-  --card-w: clamp(30px, min(11.5vw, 9dvh), 76px);
+     borné par la largeur ET par la hauteur restante pour la pile la plus haute.
+     Plafond géométrique dur : 7 cartes + 6 espaces + le padding horizontal
+     doivent tenir dans 100vw (mobile) ou 760px (le tapis plafonné), donc ce
+     jeu ne peut jamais atteindre la taille de carte du Blackjack/Poker (qui
+     n'ont que 2-5 cartes à afficher à la fois) sans faire déborder les
+     colonnes les unes sur les autres. */
+  --card-w: clamp(34px, min(12.8vw, 10.5dvh), 84px);
 }
 
 @media (min-width: 768px) {
-  :root { --card-w: clamp(50px, min(7.2vw, 11dvh), 92px); }
+  /* Plancher volontairement bas (36px, pas 56px) : un mobile en paysage
+     (ex. 844×390) franchit déjà ce seuil de largeur mais n'a que ~390px de
+     hauteur totale - si le plancher dépasse ce que le terme dvh autorise
+     dans ce cas, il l'emporte à tort sur la contrainte de hauteur et fait
+     déborder les 7 colonnes. Un plancher bas ne coûte rien sur desktop/
+     tablette (où le terme vw/dvh dépasse largement 36px de toute façon) :
+     il ne fait que garantir un filet de sécurité pour ce cas extrême. */
+  :root { --card-w: clamp(36px, min(7.9vw, 12.5dvh), 102px); }
 }
 
 * { box-sizing: border-box; }
@@ -112,8 +124,8 @@ body {
 .top-row {
   display: flex;
   align-items: flex-start;
-  gap: clamp(4px, 1.4vw, 10px);
-  padding: 0.4rem clamp(0.35rem, 2vw, 0.9rem);
+  gap: clamp(3px, 1vw, 8px);
+  padding: 0.3rem clamp(0.25rem, 1.4vw, 0.6rem);
 }
 .spacer { flex: 1 1 auto; }
 
@@ -205,8 +217,8 @@ body {
 .tableau-row {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: clamp(4px, 1.4vw, 10px);
-  padding: 0.4rem clamp(0.35rem, 2vw, 0.9rem) calc(0.6rem + env(safe-area-inset-bottom, 0));
+  gap: clamp(3px, 1vw, 8px);
+  padding: 0.3rem clamp(0.25rem, 1.4vw, 0.6rem) calc(0.5rem + env(safe-area-inset-bottom, 0));
   min-height: 0;
 }
 
