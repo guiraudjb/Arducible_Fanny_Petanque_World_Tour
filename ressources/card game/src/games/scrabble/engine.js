@@ -253,6 +253,104 @@ export function scoreWords(words) {
 }
 
 /* ------------------------------------------------------------------ */
+/* Meilleur coup possible (référence "duplicate")                       */
+/* ------------------------------------------------------------------ */
+
+/** Index lettre -> mots la contenant, construit une seule fois pour tout
+ * le dictionnaire (voir main.js) et réutilisé à chaque calcul du
+ * meilleur coup, pour ne pas rescanner ~49000 mots à chaque appel. */
+export function buildLetterIndex(wordsArray) {
+  const index = new Map();
+  for (const word of wordsArray) {
+    const seen = new Set(word);
+    for (const letter of seen) {
+      if (!index.has(letter)) index.set(letter, []);
+      index.get(letter).push(word);
+    }
+  }
+  return index;
+}
+
+/**
+ * Cherche le meilleur coup jouable sur `boardCells` avec exactement les
+ * lettres de `rack` (mêmes règles que resolveMove/scoreWords - un coup
+ * trouvé ici est donc garanti légal). Explore uniquement les coups qui
+ * s'appuient sur une lettre déjà posée (croisement) : c'est ainsi que se
+ * jouent la quasi-totalité des coups à haut score au Scrabble (on ne
+ * cherche pas les mots posés simplement côte à côte sans chevaucher une
+ * lettre existante, cas rare et généralement peu payant).
+ */
+export function findBestMove({ boardCells, rack, letterIndex, wordSet }) {
+  const getCell = (r, c) => (boardCells[r][c].letter ? boardCells[r][c] : null);
+
+  const anchors = [];
+  for (let r = 0; r < BOARD_SIZE; r += 1) {
+    for (let c = 0; c < BOARD_SIZE; c += 1) {
+      if (boardCells[r][c].letter) anchors.push({ row: r, col: c, letter: boardCells[r][c].letter });
+    }
+  }
+  if (anchors.length === 0) return null;
+
+  let best = null;
+
+  function tryCandidate(word, anchor, indexInWord, axis) {
+    const positions = [];
+    for (let j = 0; j < word.length; j += 1) {
+      const row = axis === 'col' ? anchor.row - indexInWord + j : anchor.row;
+      const col = axis === 'row' ? anchor.col - indexInWord + j : anchor.col;
+      if (row < 0 || row >= BOARD_SIZE || col < 0 || col >= BOARD_SIZE) return;
+      positions.push({ row, col, letter: word[j] });
+    }
+
+    const rackCounts = {};
+    let blanks = 0;
+    for (const t of rack) { if (t.isBlank) blanks += 1; else rackCounts[t.letter] = (rackCounts[t.letter] || 0) + 1; }
+
+    const placements = [];
+    for (const p of positions) {
+      const existing = getCell(p.row, p.col);
+      if (existing) {
+        if (existing.letter !== p.letter) return;
+        continue;
+      }
+      if (rackCounts[p.letter] > 0) {
+        rackCounts[p.letter] -= 1;
+        placements.push({ row: p.row, col: p.col, letter: p.letter, value: LETTER_VALUES[p.letter] });
+      } else if (blanks > 0) {
+        blanks -= 1;
+        placements.push({ row: p.row, col: p.col, letter: p.letter, value: 0 });
+      } else {
+        return;
+      }
+    }
+    if (placements.length === 0) return;
+
+    const resolved = resolveMove({ getCell, placements, requireConnection: true });
+    if (!resolved.ok) return;
+    if (!resolved.words.every((w) => wordSet.has(w.text))) return;
+
+    const bingo = placements.length === RACK_SIZE;
+    const score = scoreWords(resolved.words) + (bingo ? BINGO_BONUS : 0);
+    if (!best || score > best.score) {
+      best = { word, score, bingo, tier: tierForScore(score) };
+    }
+  }
+
+  for (const anchor of anchors) {
+    const candidates = letterIndex.get(anchor.letter) || [];
+    for (const word of candidates) {
+      for (let i = 0; i < word.length; i += 1) {
+        if (word[i] !== anchor.letter) continue;
+        tryCandidate(word, anchor, i, 'row');
+        tryCandidate(word, anchor, i, 'col');
+      }
+    }
+  }
+
+  return best;
+}
+
+/* ------------------------------------------------------------------ */
 /* Génération de la grille pré-remplie                                  */
 /* ------------------------------------------------------------------ */
 
@@ -361,7 +459,9 @@ export class Scrabble {
     this.lastBet = 0;
     this.phase = 'betting'; // 'betting' | 'playing' | 'result'
     this.board = makeEmptyBoardCells();
+    this.seedBoard = makeEmptyBoardCells();
     this.rack = [];
+    this.originalRack = [];
     this.pending = []; // { row, col, tile }
     this.result = null;
   }
@@ -386,6 +486,12 @@ export class Scrabble {
     this.pending = [];
     this.result = null;
     this.phase = 'playing';
+    // Instantané de la grille et du chevalet de départ (avant toute pose du
+    // joueur) : sert de base à computeBestMove() pour calculer le meilleur
+    // coup possible avec exactement ce qu'il avait en main, indépendamment
+    // de ce qu'il a effectivement joué.
+    this.seedBoard = this.board.map((row) => row.map((cell) => ({ ...cell })));
+    this.originalRack = this.rack.map((t) => ({ ...t }));
     return { ok: true };
   }
 
@@ -475,9 +581,26 @@ export class Scrabble {
     this.result = {
       valid, words, invalidWord, score, bingo, tier, payout,
       placedCells: placements.map(({ row, col }) => ({ row, col })),
+      bestMove: null, // rempli à part par computeBestMove() (calcul plus lourd)
     };
     this.phase = 'result';
     return { ok: true };
+  }
+
+  /**
+   * Calcule le meilleur coup jouable avec le chevalet de départ de cette
+   * manche (voir findBestMove) et le range dans result.bestMove. Séparé
+   * de submitMove() car ce calcul prend jusqu'à ~1s (recherche dans tout
+   * le dictionnaire) : on l'appelle après coup pour ne pas geler le clic
+   * sur "Valider".
+   * @param {Map<string,string[]>} letterIndex - voir buildLetterIndex
+   * @param {Set<string>} wordSet
+   */
+  computeBestMove(letterIndex, wordSet) {
+    if (!this.result) return;
+    this.result.bestMove = findBestMove({
+      boardCells: this.seedBoard, rack: this.originalRack, letterIndex, wordSet,
+    });
   }
 
   nextRound() {

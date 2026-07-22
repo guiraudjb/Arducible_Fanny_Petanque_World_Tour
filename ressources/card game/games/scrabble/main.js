@@ -1,4 +1,4 @@
-import { Scrabble, ROUND_SECONDS, BOARD_SIZE, BONUS_LABELS } from '../../src/games/scrabble/engine.js';
+import { Scrabble, ROUND_SECONDS, BOARD_SIZE, BONUS_LABELS, buildLetterIndex } from '../../src/games/scrabble/engine.js';
 import { createDealerVoice } from '../../src/dealer/dealerVoice.js';
 
 const WORDS_URL = new URL('../../assets/scrabble/mots.txt', import.meta.url);
@@ -13,11 +13,13 @@ let lastBankrollShown = null;
 let bankruptcyAnnounced = false;
 let wordsArray = [];
 let wordSet = new Set();
+let letterIndex = null;
 let wordsLoaded = false;
 let selectedRackIndex = null;
 let pendingBlankRackIndex = null;
 let secondsLeft = ROUND_SECONDS;
 let timerInterval = null;
+let bestMoveComputing = false;
 
 const dealerVoice = createDealerVoice({
   game: 'scrabble',
@@ -31,6 +33,7 @@ const bankrollEl = document.getElementById('bankroll');
 const statusEl = document.getElementById('status');
 const timerEl = document.getElementById('timer');
 const resultMessageEl = document.getElementById('result-message');
+const bestMoveMessageEl = document.getElementById('best-move-message');
 const betAmountEl = document.getElementById('bet-amount');
 const bettingAreaEl = document.getElementById('betting-area');
 const playingAreaEl = document.getElementById('playing-area');
@@ -119,6 +122,7 @@ fetch(WORDS_URL)
   .then((text) => {
     wordsArray = text.split('\n').filter(Boolean);
     wordSet = new Set(wordsArray);
+    letterIndex = buildLetterIndex(wordsArray);
     wordsLoaded = true;
     render();
   });
@@ -300,6 +304,16 @@ function doSubmit(isTimeout) {
   if (!outcome.ok) return;
   render();
 
+  if (letterIndex) {
+    bestMoveComputing = true;
+    render();
+    setTimeout(() => {
+      game.computeBestMove(letterIndex, wordSet);
+      bestMoveComputing = false;
+      render();
+    }, 20);
+  }
+
   const state = game.getState();
   const r = state.result;
   if (isTimeout) {
@@ -389,9 +403,22 @@ function render() {
     resultMessageEl.classList.remove('pop');
     void resultMessageEl.offsetWidth;
     resultMessageEl.classList.add('pop');
+
+    const best = r.bestMove;
+    if (bestMoveComputing) {
+      bestMoveMessageEl.textContent = 'Calcul du meilleur coup possible…';
+    } else if (!best) {
+      bestMoveMessageEl.textContent = '';
+    } else if (r.valid && r.score >= best.score) {
+      bestMoveMessageEl.textContent = 'Vous avez trouvé le meilleur mot possible, bravo !';
+    } else {
+      const bingoTag = best.bingo ? ' — SCRABBLE !' : '';
+      bestMoveMessageEl.textContent = `Meilleur coup possible : ${best.word} (${best.score} pts)${bingoTag}`;
+    }
   } else {
     resultMessageEl.textContent = '';
     resultMessageEl.classList.remove('is-lose');
+    bestMoveMessageEl.textContent = '';
   }
 
   statusEl.textContent = !wordsLoaded
@@ -443,6 +470,7 @@ document.getElementById('btn-clear-word').addEventListener('click', () => {
 btnSubmit.addEventListener('click', () => doSubmit(false));
 
 document.getElementById('btn-next-round').addEventListener('click', () => {
+  bestMoveComputing = false;
   game.nextRound();
   pendingBet = Math.min(game.lastBet, game.bankroll) || 0;
   render();
@@ -451,6 +479,7 @@ document.getElementById('btn-next-round').addEventListener('click', () => {
 document.getElementById('btn-new-game').addEventListener('click', () => {
   stopTimer();
   selectedRackIndex = null;
+  bestMoveComputing = false;
   game.newSession();
   pendingBet = 0;
   lastBankrollShown = null;
