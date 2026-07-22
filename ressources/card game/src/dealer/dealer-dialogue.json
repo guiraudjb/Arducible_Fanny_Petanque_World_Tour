@@ -126,5 +126,42 @@
     "bankruptcy": [
       "La banque a gagné cette manche-là. Une revanche ?"
     ]
+  },
+  "scrabble": {
+    "greeting": [
+      "Sept lettres, et à vous de jouer les mots ! Misez, je tire le sac.",
+      "Bienvenue au Scrabble du Casino Fanny ! Trouvez-moi un joli mot."
+    ],
+    "dealing": [
+      "Voici vos sept lettres, à vous de composer !",
+      "Le sac est tiré, la pendule tourne !"
+    ],
+    "bingo": [
+      "SCRABBLE ! Les sept lettres posées, quel régal !",
+      "Bonus complet, vous avez vidé le chevalet !"
+    ],
+    "win_small": [
+      "Un petit mot bien placé, ça compte déjà !",
+      "Correct, la bankroll vous dit merci."
+    ],
+    "win_big": [
+      "Un beau mot, bien vu !",
+      "Voilà du vocabulaire qui rapporte !"
+    ],
+    "win_jackpot": [
+      "Quel mot ! Je suis impressionnée, chapeau !",
+      "Un score pareil, c'est du grand art !"
+    ],
+    "lose": [
+      "Ce mot ne paie pas, on retente sa chance ?",
+      "Pas de mot valable cette fois, dommage."
+    ],
+    "timeout": [
+      "Le temps est écoulé ! On valide ce qui est posé.",
+      "Trop tard pour chercher plus loin, la pendule a tranché."
+    ],
+    "bankruptcy": [
+      "Plus un jeton pour jouer les lettres. Une revanche ?"
+    ]
   }
 }
