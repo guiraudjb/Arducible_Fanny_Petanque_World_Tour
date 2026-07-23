@@ -21,7 +21,10 @@ const DEAL_IN_STAGGER_MS = 45;
 const TOAST_HOLD_MS = 2000;
 const TURNED_CARD_PAUSE_MS = 2400; // temps garanti pour observer la retourne avant toute enchère
 const TURNED_CARD_PAUSE_MS_REDUCED = 700;
-const SEAT_VOICE_SLUG = { [OPP1]: 'marcel', [FANNY]: 'fanny', [OPP2]: 'bernard' };
+const LAST_TRICK_VOICE_GAP_MS = 2500; // laisse le temps d'entendre "X remporte le dernier pli" avant la voix de résultat
+const SEAT_VOICE_SLUG = {
+  [PLAYER]: 'vous', [OPP1]: 'marcel', [FANNY]: 'fanny', [OPP2]: 'bernard',
+};
 
 const prefersReducedMotion = () =>
   window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -129,6 +132,7 @@ let lastPhase = null;
 let bankruptcyAnnounced = false;
 let holdingTrick = null;
 let lastTrickKey = null;
+let lastBeloteState = null;
 let aiTimer = null;
 let justCompletedDeal = false;
 
@@ -584,13 +588,14 @@ function render() {
     if (r.won) {
       flashTable('win');
       burstConfetti();
-      if (r.tier.mult >= 8) dealerVoice.say('win_jackpot');
-      else if (r.tier.mult >= 3) dealerVoice.say('win_big');
-      else dealerVoice.say('win_small');
     } else {
       flashTable('lose');
-      dealerVoice.say('lose');
     }
+    // La voix de résultat (gagné/perdu) est déclenchée par
+    // checkForCompletedTrick(), pas ici - un léger délai après l'annonce
+    // du gagnant du dernier pli évite que les deux répliques audio ne se
+    // coupent la parole (la manche se termine TOUJOURS au 8e pli, donc
+    // cette annonce a toujours déjà été programmée à ce stade).
   } else if (state.phase === 'betting') {
     resultMessageEl.textContent = '';
     resultMessageEl.classList.remove('is-lose');
@@ -611,6 +616,21 @@ function render() {
 /* ---------------------------------------------------------------- */
 /* Orchestration IA + délai d'affichage des plis                       */
 /* ---------------------------------------------------------------- */
+/** Voix "gagné/perdu" de fin de manche - extraite pour pouvoir être
+ * déclenchée avec un léger retard après l'annonce du gagnant du dernier
+ * pli (voir checkForCompletedTrick), plutôt que de se couper la parole. */
+function announceResultVoice() {
+  const r = game.result;
+  if (!r) return;
+  if (r.won) {
+    if (r.tier.mult >= 8) dealerVoice.say('win_jackpot');
+    else if (r.tier.mult >= 3) dealerVoice.say('win_big');
+    else dealerVoice.say('win_small');
+  } else {
+    dealerVoice.say('lose');
+  }
+}
+
 function checkForCompletedTrick() {
   const state = game.getState();
   if (state.trick.length !== 0 || !state.lastTrick) return false;
@@ -618,7 +638,21 @@ function checkForCompletedTrick() {
   if (key === lastTrickKey) return false;
   lastTrickKey = key;
   holdingTrick = state.lastTrick;
+
+  // La manche se termine toujours au 8e pli (dix de der) : on annonce
+  // explicitement qui l'a remporté, à la voix et au toast, avant que la
+  // voix de résultat ne parle par-dessus (voir announceResultVoice).
+  const isFinalTrick = state.phase === 'result';
+  if (isFinalTrick) {
+    const winnerSeat = holdingTrick.winnerSeat;
+    announce(winnerSeat === PLAYER ? 'Vous remportez le dernier pli !' : `${SEAT_NAMES[winnerSeat]} remporte le dernier pli !`);
+    dealerVoice.say(`last_trick_${SEAT_VOICE_SLUG[winnerSeat]}`);
+  }
+
   render();
+
+  if (isFinalTrick) setTimeout(announceResultVoice, LAST_TRICK_VOICE_GAP_MS);
+
   clearTimeout(aiTimer);
   aiTimer = setTimeout(() => {
     holdingTrick = null;
@@ -657,6 +691,15 @@ function handlePostAction() {
   if (wasBidding && state.phase === 'playing') {
     dealerVoice.say('dealing');
   }
+  // Belote (1re carte du Roi/Dame d'atout jouée) puis Rebelote (la
+  // seconde) - annoncé au moment précis où la carte tombe, peu importe
+  // le pli où ça arrive dans la mène.
+  if (state.beloteState !== lastBeloteState && state.beloteState !== null) {
+    const label = state.beloteState === 'belote' ? 'Belote' : 'Rebelote';
+    announce(`${label} !`);
+    dealerVoice.say(state.beloteState === 'belote' ? 'belote_call' : 'rebelote_call');
+  }
+  lastBeloteState = state.beloteState;
   const trickHeld = checkForCompletedTrick();
   render();
   if (!trickHeld) scheduleAiIfNeeded();
@@ -684,6 +727,7 @@ btnDeal.addEventListener('click', async () => {
   pendingBet = 0;
   lastTrickKey = null;
   holdingTrick = null;
+  lastBeloteState = null;
 
   bettingAreaEl.classList.add('hidden');
   biddingAreaEl.classList.remove('hidden');
@@ -716,6 +760,7 @@ document.getElementById('btn-new-game').addEventListener('click', () => {
   lastPhase = null;
   lastTrickKey = null;
   holdingTrick = null;
+  lastBeloteState = null;
   bankruptcyAnnounced = false;
   render();
   dealerVoice.say('greeting');

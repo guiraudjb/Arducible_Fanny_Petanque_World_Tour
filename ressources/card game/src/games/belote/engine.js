@@ -263,6 +263,10 @@ export class Belote {
     this.teamScores = { A: 0, B: 0 };
     this.tricksWonBy = { A: 0, B: 0 };
     this.beloteSeat = null;
+    // null tant qu'aucune des deux cartes n'a été jouée ; 'belote' dès que
+    // le siège qui a Roi+Dame d'atout en joue une des deux (peu importe
+    // laquelle, peu importe le pli) ; 'rebelote' dès qu'il joue l'autre.
+    this.beloteState = null;
     this.lastTrick = null;
     this.result = null;
     // Historique complet des plis déjà complétés dans LA MÈNE EN COURS,
@@ -403,6 +407,10 @@ export class Belote {
     hand.splice(idx, 1);
     this.trick.push({ card, seat });
 
+    if (seat === this.beloteSeat && card.suit === this.trumpSuit && (card.rank === 'K' || card.rank === 'Q')) {
+      this.beloteState = this.beloteState === null ? 'belote' : 'rebelote';
+    }
+
     if (this.trick.length === 4) {
       const winnerSeat = currentTrickWinnerSeat(this.trick, this.trumpSuit);
       const winnerTeam = teamOf(winnerSeat);
@@ -497,6 +505,7 @@ export class Belote {
       tricksWonBy: this.tricksWonBy,
       lastTrick: this.lastTrick,
       beloteSeat: this.beloteSeat,
+      beloteState: this.beloteState,
       result: this.result,
     };
   }

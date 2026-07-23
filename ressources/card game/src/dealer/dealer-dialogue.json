@@ -290,6 +290,12 @@
     "take_bernard_coeur": ["Bernard prend à Cœur !"],
     "take_bernard_carreau": ["Bernard prend à Carreau !"],
     "take_bernard_trefle": ["Bernard prend à Trèfle !"],
-    "take_bernard_pique": ["Bernard prend à Pique !"]
+    "take_bernard_pique": ["Bernard prend à Pique !"],
+    "belote_call": ["Belote !"],
+    "rebelote_call": ["Rebelote !"],
+    "last_trick_vous": ["Vous remportez le dernier pli !"],
+    "last_trick_marcel": ["Marcel remporte le dernier pli !"],
+    "last_trick_fanny": ["Fanny remporte le dernier pli !"],
+    "last_trick_bernard": ["Bernard remporte le dernier pli !"]
   }
 }
