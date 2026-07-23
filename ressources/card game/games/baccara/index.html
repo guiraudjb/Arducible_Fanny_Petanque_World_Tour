@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Baccara — Fanny Pétanque World Tour</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1 class="sr-only">Baccara (Punto Banco) — Fanny Pétanque World Tour</h1>
+
+  <div class="table" id="table">
+    <header class="hud">
+      <div class="hud-money">
+        <span class="hud-label">Bankroll</span>
+        <span class="hud-value" id="bankroll">500</span>
+      </div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+      <button type="button" class="icon-btn" id="btn-mute" aria-pressed="false" aria-label="Couper la voix de la croupière">🔊</button>
+      <button type="button" class="btn btn-ghost" id="btn-new-game">Nouvelle&nbsp;partie</button>
+    </header>
+
+    <div class="scene">
+      <img class="scene-img" src="../../assets/table/fanny-dealer-scene.jpg" alt="Fanny, votre croupière, installée à la table de baccara." />
+      <div class="dealer-bubble" id="dealer-bubble" aria-live="polite">
+        <p id="dealer-bubble-text"></p>
+      </div>
+      <section class="dealer-cluster" data-owner="banker" aria-label="Main de la banque">
+        <div class="hand-label">Banque <span class="total" id="banker-total"></span></div>
+        <div class="hand" id="banker-hand"></div>
+      </section>
+    </div>
+
+    <div class="felt-center" id="felt-center" aria-hidden="true">
+      <canvas id="fx-canvas"></canvas>
+    </div>
+
+    <section class="hand-zone" data-owner="player" aria-label="Main du joueur">
+      <div class="hand" id="player-hand"></div>
+      <div class="hand-label">Joueur <span class="total" id="player-total"></span></div>
+    </section>
+
+    <footer class="dock">
+      <div class="dock-panel" id="betting-area">
+        <div class="side-picker" role="group" aria-label="Sur qui misez-vous">
+          <button type="button" class="side-btn" data-side="player">Joueur <span class="odds">1:1</span></button>
+          <button type="button" class="side-btn" data-side="banker">Banque <span class="odds">0.95:1</span></button>
+          <button type="button" class="side-btn" data-side="tie">Égalité <span class="odds">8:1</span></button>
+        </div>
+        <div class="bet-readout">
+          <span class="bet-label">Mise</span>
+          <span class="bet-amount" id="bet-amount">0</span>
+        </div>
+        <div class="chips" role="group" aria-label="Jetons de mise">
+          <button type="button" class="chip" data-chip="10"><span>10</span></button>
+          <button type="button" class="chip" data-chip="25"><span>25</span></button>
+          <button type="button" class="chip" data-chip="50"><span>50</span></button>
+          <button type="button" class="chip" data-chip="100"><span>100</span></button>
+        </div>
+        <div class="dock-buttons">
+          <button type="button" class="btn btn-ghost" id="btn-clear-bet">Effacer</button>
+          <button type="button" class="btn btn-primary" id="btn-deal">Distribuer</button>
+        </div>
+      </div>
+
+      <div class="dock-panel hidden" id="round-over-area">
+        <div class="dock-buttons">
+          <button type="button" class="btn btn-primary" id="btn-next-round">Manche&nbsp;suivante</button>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

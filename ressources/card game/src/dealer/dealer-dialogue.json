@@ -163,5 +163,121 @@
     "bankruptcy": [
       "Plus un jeton pour jouer les lettres. Une revanche ?"
     ]
+  },
+  "baccara": {
+    "greeting": [
+      "Bienvenue au baccara ! Joueur, banque, ou égalité ?",
+      "La table est à vous. Faites vos jeux."
+    ],
+    "dealing": [
+      "Les cartes sont tirées !",
+      "Voyons ce que donnent ces deux mains."
+    ],
+    "win_small": [
+      "Bien joué, cette main était la bonne !",
+      "Voilà qui remplit la bankroll."
+    ],
+    "win_jackpot": [
+      "Égalité ! Un joli coup à huit contre un !",
+      "L'égalité paie gros, bravo !"
+    ],
+    "lose": [
+      "Cette main n'était pas la bonne, dommage.",
+      "On retente sa chance ?"
+    ],
+    "push": [
+      "Égalité : votre mise vous revient.",
+      "Personne n'y perd rien cette fois."
+    ],
+    "bankruptcy": [
+      "La banque a eu raison de votre bankroll. Une revanche ?"
+    ]
+  },
+  "craps": {
+    "greeting": [
+      "Bienvenue au craps ! Ligne Pass ou Ne Pass Pas ?",
+      "Les dés vous attendent, misez quand vous voulez."
+    ],
+    "dealing": [
+      "Faites vos jeux, le sortie arrive !",
+      "À vous de lancer !"
+    ],
+    "point_established": [
+      "Le point est posé, il faut le refaire avant un sept !",
+      "Voilà le point. Encore quelques lancers !"
+    ],
+    "win": [
+      "Beau lancer, vous empochez la mise !",
+      "Les dés sont avec vous aujourd'hui !"
+    ],
+    "lose": [
+      "Sept partout, la mise s'envole.",
+      "Pas de chance cette fois, on relance ?"
+    ],
+    "push": [
+      "Douze au sortie : la mise vous revient.",
+      "Douze barré, personne n'y perd rien."
+    ],
+    "bankruptcy": [
+      "Les dés ont eu raison de votre bankroll. Une revanche ?"
+    ]
+  },
+  "keno": {
+    "greeting": [
+      "Bienvenue au keno ! Choisissez vos numéros porte-bonheur.",
+      "Dix numéros maximum, et on tire !"
+    ],
+    "dealing": [
+      "Le tirage commence !",
+      "Voyons si vos numéros sortent."
+    ],
+    "win_small": [
+      "Quelques bons numéros, c'est déjà ça !",
+      "Un petit gain, on continue ?"
+    ],
+    "win_big": [
+      "Beau tirage, vos numéros étaient inspirés !",
+      "Voilà qui remplit bien la bankroll !"
+    ],
+    "win_jackpot": [
+      "Incroyable ! Un tirage exceptionnel !",
+      "Quel tirage, je n'en reviens pas !"
+    ],
+    "lose": [
+      "Pas assez de bons numéros cette fois.",
+      "On retente sa chance ?"
+    ],
+    "bankruptcy": [
+      "Le tirage a eu raison de votre bankroll. Une revanche ?"
+    ]
+  },
+  "belote": {
+    "greeting": [
+      "Bienvenue à la belote ! Prête à croiser le fer ?",
+      "Misez, et je distribue les 32 cartes."
+    ],
+    "dealing": [
+      "Voici vos seize cartes, l'atout est tiré !",
+      "À vous de jouer, beau joueur."
+    ],
+    "win_small": [
+      "Bien joué, la manche est pour vous !",
+      "Une belle manche, bravo !"
+    ],
+    "win_big": [
+      "Quelle manche ! Vous avez été à votre avantage.",
+      "Une domination sans appel, chapeau !"
+    ],
+    "win_jackpot": [
+      "Extraordinaire ! Une manche dont on se souvient !",
+      "Capot ou presque, quelle performance !"
+    ],
+    "lose": [
+      "Cette manche est pour moi, on retente ?",
+      "Pas cette fois, la belote peut être cruelle."
+    ],
+    "bankruptcy": [
+      "Plus un jeton pour jouer la belote. Une revanche ?"
+    ]
   }
 }
