@@ -9,12 +9,16 @@ const BACK_SPRITE = `${SPRITE_DIR}back.png`;
 const SUIT_TO_SPRITE = { coeur: 'hearts', carreau: 'diamonds', trefle: 'clubs', pique: 'spades' };
 const SUIT_NAMES_FR = { coeur: 'Cœur', carreau: 'Carreau', trefle: 'Trèfle', pique: 'Pique' };
 const SEAT_NAMES = { [PLAYER]: 'Vous', [OPP1]: 'Marcel', [FANNY]: 'Fanny', [OPP2]: 'Bernard' };
-const AI_DELAY_MS = 650;
-const TRICK_HOLD_MS = 1800;
+const AI_DELAY_MS = 850;
+const TRICK_HOLD_MS = 2100;
 const FLY_DURATION_MS = 520;
 const DEAL_FLY_MS = 380;
-const DEAL_STAGGER_MS = 140;
+const DEAL_STAGGER_MS = 160;
 const CUT_DURATION_MS = 750;
+const TAKE_REVEAL_MS = 2200;
+const TAKE_REVEAL_MS_REDUCED = 500; // toujours une vraie pause, même sans animation
+const DEAL_IN_STAGGER_MS = 45;
+const TOAST_HOLD_MS = 2000;
 
 const prefersReducedMotion = () =>
   window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -123,6 +127,7 @@ let bankruptcyAnnounced = false;
 let holdingTrick = null;
 let lastTrickKey = null;
 let aiTimer = null;
+let justCompletedDeal = false;
 
 const dealerVoice = createDealerVoice({
   game: 'belote',
@@ -187,7 +192,7 @@ function announce(text) {
   turnToastEl.classList.remove('is-showing');
   void turnToastEl.offsetWidth;
   turnToastEl.classList.add('is-showing');
-  toastTimer = setTimeout(() => turnToastEl.classList.remove('is-showing'), 1800);
+  toastTimer = setTimeout(() => turnToastEl.classList.remove('is-showing'), TOAST_HOLD_MS);
 }
 
 function highlightActiveSeat(activeSeat) {
@@ -206,6 +211,60 @@ function bidActionText(seat, action) {
   if (action.type === 'pass') return `${who} ${seat === PLAYER ? 'passez' : 'passe'}.`;
   const verb = seat === PLAYER ? 'prenez' : 'prend';
   return `${who} ${verb} ${SUIT_SYMBOLS[action.suit]} !`;
+}
+
+/** Grand symbole de couleur qui s'affiche puis s'efface au centre de la
+ * table - sert de "révélation" pour le 2e tour d'enchères, où il n'y a pas
+ * de carte retournée correspondante à mettre en valeur (la couleur est
+ * annoncée librement, pas montrée). */
+function showSuitBurst(suit) {
+  if (prefersReducedMotion()) return;
+  const el = document.createElement('div');
+  el.className = `suit-burst suit-${SUIT_COLORS[suit]}`;
+  el.textContent = SUIT_SYMBOLS[suit];
+  tableEl.appendChild(el);
+  el.addEventListener('animationend', () => el.remove(), { once: true });
+  setTimeout(() => el.remove(), 1600); // filet de sécurité
+}
+
+/** Temporise et met en scène la prise (qu'elle vienne du joueur ou d'un
+ * bot) : le paquet et la carte retournée restent affichés à l'écran (on
+ * n'a pas encore ré-affiché la main complétée), le texte d'enchère devient
+ * une grosse confirmation, et la carte retournée (1er tour) ou un gros
+ * symbole de couleur (2e tour) est mis en évidence quelques secondes -
+ * le temps de bien voir QUI a pris et QUELLE couleur, avant que le plateau
+ * ne bascule sur la main complétée et le début du jeu. */
+async function revealTrumpChoice(seat, suit, round) {
+  biddingButtonsEl.innerHTML = '';
+  const who = seat === PLAYER ? 'Vous' : SEAT_NAMES[seat];
+  const verb = seat === PLAYER ? 'prenez' : 'prend';
+  biddingHintEl.textContent = `${who} ${verb} l'atout : ${SUIT_NAMES_FR[suit]} ${SUIT_SYMBOLS[suit]} !`;
+  biddingHintEl.classList.add('is-reveal', `suit-${SUIT_COLORS[suit]}`);
+
+  if (round === 1) {
+    const turnedImg = biddingPanelEl.querySelector('.turned-card');
+    if (turnedImg) turnedImg.classList.add('is-revealed');
+  } else {
+    showSuitBurst(suit);
+  }
+
+  await new Promise((r) => setTimeout(r, prefersReducedMotion() ? TAKE_REVEAL_MS_REDUCED : TAKE_REVEAL_MS));
+
+  biddingHintEl.classList.remove('is-reveal', 'suit-red', 'suit-black');
+}
+
+/** Point d'entrée unique pour toute annonce d'enchère (joueur ou bot) :
+ * applique la décision au moteur, annonce le toast, et - seulement pour
+ * une prise - marque une vraie pause de mise en scène avant de faire
+ * apparaître la main complétée (voir revealTrumpChoice). */
+async function performBid(seat, action, round) {
+  game.bid(seat, action);
+  announce(bidActionText(seat, action));
+  if (action.type === 'take') {
+    await revealTrumpChoice(seat, action.suit, round);
+    justCompletedDeal = true;
+  }
+  handlePostAction();
 }
 
 /* ---------------------------------------------------------------- */
@@ -278,18 +337,26 @@ function flashTable(kind) {
 /* ---------------------------------------------------------------- */
 /* Rendu des mains                                                      */
 /* ---------------------------------------------------------------- */
-function renderBackHand(el, count) {
+/** `arriving` : vient-on de compléter la donne après une prise ? Si oui, les
+ * cartes fraîchement reçues (talon + carte retournée) apparaissent avec un
+ * petit flash/fondu en cascade, plutôt que de surgir instantanément - pour
+ * qu'on ait le temps de les voir arriver. */
+function renderBackHand(el, count, arriving) {
   el.innerHTML = '';
   for (let i = 0; i < count; i += 1) {
     const img = document.createElement('img');
     img.className = 'card back-card';
     img.src = BACK_SPRITE;
     img.alt = 'Carte cachée';
+    if (arriving && !prefersReducedMotion()) {
+      img.classList.add('is-dealing-in');
+      img.style.animationDelay = `${i * DEAL_IN_STAGGER_MS}ms`;
+    }
     el.appendChild(img);
   }
 }
 
-function renderPlayerHand(hand, legalIds, canPlay) {
+function renderPlayerHand(hand, legalIds, canPlay, arriving) {
   playerHandEl.innerHTML = '';
   const legalSet = new Set(legalIds);
   const n = hand.length;
@@ -306,6 +373,10 @@ function renderPlayerHand(hand, legalIds, canPlay) {
     img.className = 'card';
     img.src = cardSprite(card);
     img.alt = `${card.rank} de ${SUIT_NAMES_FR[card.suit]}`;
+    if (arriving && !prefersReducedMotion()) {
+      img.classList.add('is-dealing-in');
+      img.style.animationDelay = `${i * DEAL_IN_STAGGER_MS}ms`;
+    }
     btn.appendChild(img);
     const isLegal = canPlay && legalSet.has(card.id);
     btn.disabled = !isLegal;
@@ -384,10 +455,7 @@ function renderBiddingControls(state) {
     takeBtn.className = 'btn btn-primary';
     takeBtn.textContent = `Prendre ${SUIT_SYMBOLS[state.turnedCard.suit]}`;
     takeBtn.addEventListener('click', () => {
-      const action = { type: 'take', suit: state.turnedCard.suit };
-      game.bid(PLAYER, action);
-      announce(bidActionText(PLAYER, action));
-      handlePostAction();
+      performBid(PLAYER, { type: 'take', suit: state.turnedCard.suit }, 1);
     });
     biddingButtonsEl.appendChild(takeBtn);
   } else {
@@ -397,10 +465,7 @@ function renderBiddingControls(state) {
       btn.className = `btn btn-primary suit-${SUIT_COLORS[suit]}`;
       btn.textContent = `Prendre ${SUIT_SYMBOLS[suit]}`;
       btn.addEventListener('click', () => {
-        const action = { type: 'take', suit };
-        game.bid(PLAYER, action);
-        announce(bidActionText(PLAYER, action));
-        handlePostAction();
+        performBid(PLAYER, { type: 'take', suit }, 2);
       });
       biddingButtonsEl.appendChild(btn);
     });
@@ -410,10 +475,7 @@ function renderBiddingControls(state) {
   passBtn.className = 'btn btn-ghost';
   passBtn.textContent = 'Passer';
   passBtn.addEventListener('click', () => {
-    const action = { type: 'pass' };
-    game.bid(PLAYER, action);
-    announce(bidActionText(PLAYER, action));
-    handlePostAction();
+    performBid(PLAYER, { type: 'pass' }, state.biddingRound);
   });
   biddingButtonsEl.appendChild(passBtn);
 }
@@ -467,10 +529,12 @@ function render() {
   trickCounterEl.textContent = state.phase === 'playing' || state.phase === 'result'
     ? `Pli ${Math.min(state.trickNum + 1, 8)} / 8` : '';
 
-  renderBackHand(fannyHandEl, state.handCounts[FANNY]);
-  renderBackHand(opp1HandEl, state.handCounts[OPP1]);
-  renderBackHand(opp2HandEl, state.handCounts[OPP2]);
-  renderPlayerHand(state.playerHand, state.legalCardIds, state.phase === 'playing' && state.turn === PLAYER);
+  const arriving = justCompletedDeal;
+  justCompletedDeal = false;
+  renderBackHand(fannyHandEl, state.handCounts[FANNY], arriving);
+  renderBackHand(opp1HandEl, state.handCounts[OPP1], arriving);
+  renderBackHand(opp2HandEl, state.handCounts[OPP2], arriving);
+  renderPlayerHand(state.playerHand, state.legalCardIds, state.phase === 'playing' && state.turn === PLAYER, arriving);
 
   renderBiddingPanel(state);
   renderBiddingControls(state);
@@ -551,9 +615,7 @@ function scheduleAiIfNeeded() {
     aiTimer = setTimeout(() => {
       const seat = state.biddingTurn;
       const action = botEngines[seat].decideBid(game);
-      game.bid(seat, action);
-      announce(bidActionText(seat, action));
-      handlePostAction();
+      performBid(seat, action, state.biddingRound);
     }, AI_DELAY_MS);
   } else if (state.phase === 'playing' && state.turn !== PLAYER) {
     clearTimeout(aiTimer);

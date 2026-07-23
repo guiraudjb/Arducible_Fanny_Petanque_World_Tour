@@ -301,6 +301,67 @@ body {
 .bidding-turned-label { margin: 0; font-size: 0.56rem; color: var(--ink-soft); text-transform: uppercase; }
 .turned-card { width: var(--turned-card-w); }
 
+/* Révélation de la prise : la carte retournée grossit et brille un
+   instant puis reste légèrement mise en avant pendant toute la pause -
+   le temps de bien voir quelle carte/couleur vient d'être prise. */
+.turned-card.is-revealed { animation: turned-reveal 900ms ease both; }
+@keyframes turned-reveal {
+  0% { transform: scale(1) rotate(0deg); filter: drop-shadow(1px 2px 3px rgba(0, 0, 0, 0.4)); }
+  30% { transform: scale(1.2) rotate(-3deg); filter: drop-shadow(0 0 18px rgba(255, 213, 79, 0.9)); }
+  60% { transform: scale(1.1) rotate(2deg); filter: drop-shadow(0 0 14px rgba(255, 213, 79, 0.75)); }
+  100% { transform: scale(1.08) rotate(0deg); filter: drop-shadow(0 0 9px rgba(255, 213, 79, 0.55)); }
+}
+
+/* Révélation au 2e tour d'enchères : pas de carte retournée à mettre en
+   avant (la couleur est annoncée librement), donc un gros symbole de
+   couleur apparaît et s'efface au centre de la table. */
+.suit-burst {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.3);
+  font-size: clamp(3rem, 14vw, 5.5rem);
+  font-weight: 800;
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 8;
+  animation: suit-burst-pop 1500ms ease both;
+}
+.suit-burst.suit-red { color: #ff8a75; text-shadow: 0 0 26px rgba(255, 90, 70, 0.7); }
+.suit-burst.suit-black { color: var(--paper-raised); text-shadow: 0 0 26px rgba(246, 236, 212, 0.5); }
+@keyframes suit-burst-pop {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+  22% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+  38% { transform: translate(-50%, -50%) scale(1); }
+  78% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.05); }
+}
+
+/* Grosse confirmation de prise dans le pied de page ("Vous prenez l'atout :
+   Cœur ♥ !"), pendant toute la pause de révélation. */
+.hint.is-reveal {
+  font-size: clamp(0.82rem, 3vw, 1.05rem);
+  font-weight: 800;
+  color: var(--gold);
+  animation: reveal-text-pop 380ms ease both;
+}
+.hint.is-reveal.suit-red { color: #ff8a75; }
+.hint.is-reveal.suit-black { color: var(--paper-raised); }
+@keyframes reveal-text-pop {
+  0% { transform: scale(0.85); opacity: 0; }
+  60% { transform: scale(1.06); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* Cartes qui viennent d'arriver (complément après une prise) : petit
+   flash/fondu en cascade plutôt qu'une apparition instantanée. */
+.card.is-dealing-in { animation: card-arrive 380ms ease both; }
+@keyframes card-arrive {
+  0% { opacity: 0; filter: brightness(1.7) drop-shadow(0 0 10px rgba(255, 213, 79, 0.85)); }
+  100% { opacity: 1; filter: none; }
+}
+
 .dealer-bubble {
   position: absolute;
   top: 15%;
@@ -516,7 +577,10 @@ body {
   .result-message.pop,
   .table.is-win-flash,
   .table.is-lose-flash,
-  .seat-label.is-active-turn {
+  .seat-label.is-active-turn,
+  .turned-card.is-revealed,
+  .hint.is-reveal,
+  .card.is-dealing-in {
     animation: none !important;
   }
   .turn-toast { transition: opacity 120ms ease; transform: translate(-50%, 0) !important; }
