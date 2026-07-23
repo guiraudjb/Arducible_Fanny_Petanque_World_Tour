@@ -1,8 +1,9 @@
 import { Blackjack } from '../../src/games/blackjack/engine.js';
 import { createDealerVoice } from '../../src/dealer/dealerVoice.js';
+import { createDeckSelector } from '../../src/cards/deckSelector.js';
 
-const SPRITE_DIR = '../../assets/cards/';
-const BACK_SPRITE = `${SPRITE_DIR}back.png`;
+let SPRITE_DIR = '../../assets/cards/';
+let BACK_SPRITE = `${SPRITE_DIR}back.png`;
 
 const WIN_RESULTS = new Set(['blackjack', 'win', 'dealer-bust']);
 const LOSE_RESULTS = new Set(['lose', 'bust', 'dealer-blackjack']);
@@ -375,5 +376,18 @@ document.getElementById('btn-new-game').addEventListener('click', () => {
   });
 });
 
-render();
+createDeckSelector({
+  selectEl: document.getElementById('deck-select'),
+  onChange: (spriteDir) => {
+    SPRITE_DIR = spriteDir;
+    BACK_SPRITE = `${SPRITE_DIR}back.png`;
+    // renderHand() est volontairement incrémental (jamais innerHTML='' en
+    // temps normal, voir commentaire plus haut) : sans ce vidage explicite,
+    // les cartes déjà à l'écran garderaient l'ancien visuel jusqu'à la
+    // prochaine manche.
+    dealerHandEl.innerHTML = '';
+    playerHandEl.innerHTML = '';
+    render();
+  },
+});
 dealerVoice.say('greeting');

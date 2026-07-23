@@ -1,7 +1,8 @@
 import { Baccara, SIDE_LABELS } from '../../src/games/baccara/engine.js';
 import { createDealerVoice } from '../../src/dealer/dealerVoice.js';
+import { createDeckSelector } from '../../src/cards/deckSelector.js';
 
-const SPRITE_DIR = '../../assets/cards/';
+let SPRITE_DIR = '../../assets/cards/';
 
 const prefersReducedMotion = () =>
   window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -281,5 +282,15 @@ document.getElementById('btn-new-game').addEventListener('click', () => {
   });
 });
 
-render();
+createDeckSelector({
+  selectEl: document.getElementById('deck-select'),
+  onChange: (spriteDir) => {
+    SPRITE_DIR = spriteDir;
+    // renderHand() est incrémental (n'ajoute que les nouvelles cartes) :
+    // sans ce vidage, les cartes déjà à l'écran garderaient l'ancien visuel.
+    bankerHandEl.innerHTML = '';
+    playerHandEl.innerHTML = '';
+    render();
+  },
+});
 dealerVoice.say('greeting');

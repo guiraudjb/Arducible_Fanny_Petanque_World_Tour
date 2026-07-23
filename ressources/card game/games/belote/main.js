@@ -3,9 +3,10 @@ import {
 } from '../../src/games/belote/engine.js';
 import { DecisionEngine } from '../../src/games/belote/ai.js';
 import { createDealerVoice } from '../../src/dealer/dealerVoice.js';
+import { createDeckSelector } from '../../src/cards/deckSelector.js';
 
-const SPRITE_DIR = '../../assets/cards/';
-const BACK_SPRITE = `${SPRITE_DIR}back.png`;
+let SPRITE_DIR = '../../assets/cards/';
+let BACK_SPRITE = `${SPRITE_DIR}back.png`;
 const SUIT_TO_SPRITE = { coeur: 'hearts', carreau: 'diamonds', trefle: 'clubs', pique: 'spades' };
 const SUIT_NAMES_FR = { coeur: 'Cœur', carreau: 'Carreau', trefle: 'Trèfle', pique: 'Pique' };
 const SEAT_NAMES = { [PLAYER]: 'Vous', [OPP1]: 'Marcel', [FANNY]: 'Fanny', [OPP2]: 'Bernard' };
@@ -766,5 +767,13 @@ document.getElementById('btn-new-game').addEventListener('click', () => {
   dealerVoice.say('greeting');
 });
 
-render();
+createDeckSelector({
+  selectEl: document.getElementById('deck-select'),
+  onChange: (spriteDir) => {
+    SPRITE_DIR = spriteDir;
+    BACK_SPRITE = `${SPRITE_DIR}back.png`;
+    deckPileEl.querySelectorAll('.deck-card').forEach((img) => { img.src = BACK_SPRITE; });
+    render();
+  },
+});
 dealerVoice.say('greeting');

@@ -1,7 +1,8 @@
 import { Solitaire } from '../../src/games/solitaire/engine.js';
+import { createDeckSelector } from '../../src/cards/deckSelector.js';
 
-const SPRITE_DIR = '../../assets/cards/';
-const BACK_SPRITE = `${SPRITE_DIR}back.png`;
+let SPRITE_DIR = '../../assets/cards/';
+let BACK_SPRITE = `${SPRITE_DIR}back.png`;
 
 const prefersReducedMotion = () =>
   window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -438,7 +439,14 @@ document.getElementById('btn-win-again').addEventListener('click', () => {
 
 window.addEventListener('resize', () => render());
 
-render();
+createDeckSelector({
+  selectEl: document.getElementById('deck-select'),
+  onChange: (spriteDir) => {
+    SPRITE_DIR = spriteDir;
+    BACK_SPRITE = `${SPRITE_DIR}back.png`;
+    render();
+  },
+});
 
 // Filet de sécurité : le tout premier calcul de l'espacement des piles
 // (computeStackStep) peut légèrement sous-estimer la hauteur réellement

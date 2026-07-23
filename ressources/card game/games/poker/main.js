@@ -1,7 +1,8 @@
 import { VideoPoker } from '../../src/games/poker/engine.js';
 import { createDealerVoice } from '../../src/dealer/dealerVoice.js';
+import { createDeckSelector } from '../../src/cards/deckSelector.js';
 
-const SPRITE_DIR = '../../assets/cards/';
+let SPRITE_DIR = '../../assets/cards/';
 
 const prefersReducedMotion = () =>
   window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -294,5 +295,17 @@ document.getElementById('btn-new-game').addEventListener('click', () => {
   dealerVoice.say('greeting');
 });
 
-render();
+createDeckSelector({
+  selectEl: document.getElementById('deck-select'),
+  onChange: (spriteDir) => {
+    SPRITE_DIR = spriteDir;
+    // Vide la main affichée : render() a un chemin de mise à jour "en
+    // place" qui ne change img.src QUE si la carte a changé (comparaison
+    // sur entry.card.toString()) - sans ça, changer de deck en cours de
+    // main laisserait les cartes déjà affichées sur l'ancien visuel tant
+    // qu'elles ne sont pas redistribuées.
+    handEl.innerHTML = '';
+    render();
+  },
+});
 dealerVoice.say('greeting');
