@@ -301,6 +301,15 @@ body {
 .bidding-turned-label { margin: 0; font-size: 0.56rem; color: var(--ink-soft); text-transform: uppercase; }
 .turned-card { width: var(--turned-card-w); }
 
+/* Dès que la carte retournée apparaît (juste après la donne, avant toute
+   enchère) : un halo qui pulse doucement en boucle, pour attirer l'œil
+   pendant tout le temps garanti d'observation (voir pauseOnTurnedCard). */
+.turned-card.is-just-dealt { animation: turned-just-dealt-pulse 1.1s ease-in-out infinite; }
+@keyframes turned-just-dealt-pulse {
+  0%, 100% { filter: drop-shadow(1px 2px 3px rgba(0, 0, 0, 0.4)); transform: scale(1); }
+  50% { filter: drop-shadow(0 0 16px rgba(255, 213, 79, 0.8)); transform: scale(1.05); }
+}
+
 /* Révélation de la prise : la carte retournée grossit et brille un
    instant puis reste légèrement mise en avant pendant toute la pause -
    le temps de bien voir quelle carte/couleur vient d'être prise. */
@@ -579,6 +588,7 @@ body {
   .table.is-lose-flash,
   .seat-label.is-active-turn,
   .turned-card.is-revealed,
+  .turned-card.is-just-dealt,
   .hint.is-reveal,
   .card.is-dealing-in {
     animation: none !important;

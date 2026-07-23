@@ -278,6 +278,18 @@
     ],
     "bankruptcy": [
       "Plus un jeton pour jouer la belote. Une revanche ?"
-    ]
+    ],
+    "take_marcel_coeur": ["Marcel prend à Cœur !"],
+    "take_marcel_carreau": ["Marcel prend à Carreau !"],
+    "take_marcel_trefle": ["Marcel prend à Trèfle !"],
+    "take_marcel_pique": ["Marcel prend à Pique !"],
+    "take_fanny_coeur": ["Fanny prend à Cœur !"],
+    "take_fanny_carreau": ["Fanny prend à Carreau !"],
+    "take_fanny_trefle": ["Fanny prend à Trèfle !"],
+    "take_fanny_pique": ["Fanny prend à Pique !"],
+    "take_bernard_coeur": ["Bernard prend à Cœur !"],
+    "take_bernard_carreau": ["Bernard prend à Carreau !"],
+    "take_bernard_trefle": ["Bernard prend à Trèfle !"],
+    "take_bernard_pique": ["Bernard prend à Pique !"]
   }
 }

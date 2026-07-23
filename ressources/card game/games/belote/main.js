@@ -10,7 +10,7 @@ const SUIT_TO_SPRITE = { coeur: 'hearts', carreau: 'diamonds', trefle: 'clubs', 
 const SUIT_NAMES_FR = { coeur: 'Cœur', carreau: 'Carreau', trefle: 'Trèfle', pique: 'Pique' };
 const SEAT_NAMES = { [PLAYER]: 'Vous', [OPP1]: 'Marcel', [FANNY]: 'Fanny', [OPP2]: 'Bernard' };
 const AI_DELAY_MS = 850;
-const TRICK_HOLD_MS = 2100;
+const TRICK_HOLD_MS = 5000; // au moins 5s avant de ramasser un pli
 const FLY_DURATION_MS = 520;
 const DEAL_FLY_MS = 380;
 const DEAL_STAGGER_MS = 160;
@@ -19,6 +19,9 @@ const TAKE_REVEAL_MS = 2200;
 const TAKE_REVEAL_MS_REDUCED = 500; // toujours une vraie pause, même sans animation
 const DEAL_IN_STAGGER_MS = 45;
 const TOAST_HOLD_MS = 2000;
+const TURNED_CARD_PAUSE_MS = 2400; // temps garanti pour observer la retourne avant toute enchère
+const TURNED_CARD_PAUSE_MS_REDUCED = 700;
+const SEAT_VOICE_SLUG = { [OPP1]: 'marcel', [FANNY]: 'fanny', [OPP2]: 'bernard' };
 
 const prefersReducedMotion = () =>
   window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -241,6 +244,11 @@ async function revealTrumpChoice(seat, suit, round) {
   biddingHintEl.textContent = `${who} ${verb} l'atout : ${SUIT_NAMES_FR[suit]} ${SUIT_SYMBOLS[suit]} !`;
   biddingHintEl.classList.add('is-reveal', `suit-${SUIT_COLORS[suit]}`);
 
+  // Narration audio dédiée quand un BOT prend (le joueur, lui, sait déjà
+  // ce qu'il vient de choisir) - annonce qui prend et à quelle couleur,
+  // en plus du texte/de la mise en scène visuelle ci-dessus.
+  if (seat !== PLAYER) dealerVoice.say(`take_${SEAT_VOICE_SLUG[seat]}_${suit}`);
+
   if (round === 1) {
     const turnedImg = biddingPanelEl.querySelector('.turned-card');
     if (turnedImg) turnedImg.classList.add('is-revealed');
@@ -251,6 +259,18 @@ async function revealTrumpChoice(seat, suit, round) {
   await new Promise((r) => setTimeout(r, prefersReducedMotion() ? TAKE_REVEAL_MS_REDUCED : TAKE_REVEAL_MS));
 
   biddingHintEl.classList.remove('is-reveal', 'suit-red', 'suit-black');
+}
+
+/** Juste après la donne, laisse la carte retournée bien visible (grand
+ * format, halo qui pulse doucement) pendant un temps garanti, AVANT que
+ * la moindre enchère (même la toute première, d'un bot) ne commence -
+ * sinon un bot rapide au premier tour ne laisse presque aucun temps de
+ * lecture entre l'apparition de la carte et la mise en scène de la prise. */
+async function pauseOnTurnedCard(turnedCard) {
+  const turnedImg = biddingPanelEl.querySelector('.turned-card');
+  if (turnedImg && !prefersReducedMotion()) turnedImg.classList.add('is-just-dealt');
+  announce(`Carte retournée : ${SUIT_NAMES_FR[turnedCard.suit]} ${SUIT_SYMBOLS[turnedCard.suit]}`);
+  await new Promise((r) => setTimeout(r, prefersReducedMotion() ? TURNED_CARD_PAUSE_MS_REDUCED : TURNED_CARD_PAUSE_MS));
 }
 
 /** Point d'entrée unique pour toute annonce d'enchère (joueur ou bot) :
@@ -673,6 +693,7 @@ btnDeal.addEventListener('click', async () => {
   await playDealAnimation();
 
   render();
+  await pauseOnTurnedCard(game.turnedCard);
   scheduleAiIfNeeded();
 });
 
