@@ -25,14 +25,18 @@
 // sièges/profils.
 
 import {
-  SUITS, PLAYER, OPP1, FANNY, OPP2, partnerOf, cardPoints, legalMoves,
+  SUITS, PLAYER, OPP1, FANNY, OPP2, teamOf, partnerOf, cardPoints, legalMoves,
   cardRank, currentTrickWinnerSeat, reconstructDeal,
 } from './engine.js';
 
 const SEATS_ALL = [PLAYER, OPP1, FANNY, OPP2];
 const RANKS = ['7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-const BID_THRESHOLD_ROUND1 = 6.5;
-const BID_THRESHOLD_ROUND2 = 8.5;
+// Table résolument agressive à la prise (cf. module 3) : un "bon jeu" doit
+// suffire à prendre, sans sur-analyser - le seuil est donc bas. Exemples de
+// référence qui doivent passer isGoodHand : [Valet d'atout + 1 As extérieur]
+// (5 + 2 = 7) et [9 d'atout + 1 As extérieur + 1 Dix extérieur] (3+2+1 = 6).
+const TAKE_THRESHOLD_ROUND1 = 6;
+const TAKE_THRESHOLD_ROUND2 = 6.5; // un peu plus prudent : couleur non montrée par la retourne
 
 function allCardIds() {
   const ids = [];
@@ -147,26 +151,30 @@ function probSeatHoldsBetter(probMap, card, suit, seat, trumpSuit) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Module 3 : Évaluation et prise (position, retours, soutien)          */
+/* Module 3 : Évaluation et prise - agressivité systématique            */
 /* ------------------------------------------------------------------ */
-/** Cartes hors-atout capables de "reprendre la main" : un As, ou un Roi
- * protégé par au moins une carte plus basse de la même couleur. */
-function countRetours(hand, trumpSuit) {
-  let retours = 0;
+/** Cartes hors-atout capables de "reprendre la main" : un As (+2, une vraie
+ * garantie d'entrée), un Roi protégé par au moins une carte plus basse de
+ * la même couleur (+1), ou un Dix isolé (+1, moins fiable mais compte pour
+ * de l'agressivité). */
+function outsideStrength(hand, trumpSuit) {
+  let strength = 0;
   for (const suit of SUITS) {
     if (suit === trumpSuit) continue;
     const ofSuit = hand.filter((c) => c.suit === suit);
-    if (ofSuit.some((c) => c.rank === 'A')) retours += 1;
-    else if (ofSuit.some((c) => c.rank === 'K') && ofSuit.length >= 2) retours += 0.5;
+    if (ofSuit.some((c) => c.rank === 'A')) strength += 2;
+    else if (ofSuit.some((c) => c.rank === 'K') && ofSuit.length >= 2) strength += 1;
+    if (ofSuit.some((c) => c.rank === '10')) strength += 1;
   }
-  return retours;
+  return strength;
 }
 
-/** Force d'une main si `suit` devient atout, pondérée par la position à la
- * parole (parler en premier est plus risqué : moins d'information sur les
- * autres enchères) et par le soutien du partenaire (a-t-il déjà annoncé /
- * passé ce tour-ci ?). */
-function evaluateHandStrength(hand, suit, { position = 'milieu', support = 0 } = {}) {
+/** Force d'une main si `suit` devient atout : honneurs d'atout + longueur +
+ * force hors-atout (retours), plus le soutien éventuel du partenaire (a-t-il
+ * déjà annoncé/passé ce tour-ci ?). Volontairement PAS pondérée par la
+ * position à la parole - la table est agressive à la prise, un bon jeu se
+ * prend quel que soit l'ordre de parole, même en premier sans garantie. */
+function evaluateHandStrength(hand, suit, { support = 0 } = {}) {
   let score = 0;
   const trumps = hand.filter((c) => c.suit === suit);
   for (const c of trumps) {
@@ -177,48 +185,53 @@ function evaluateHandStrength(hand, suit, { position = 'milieu', support = 0 } =
     else score += 0.5;
   }
   score += Math.max(0, trumps.length - 3) * 1.5;
-  score += countRetours(hand, suit) * 1.3;
-
-  if (position === 'premier') score -= 0.5;
-  else if (position === 'dernier') score += 0.5;
-
+  score += outsideStrength(hand, suit);
   score += support;
   return score;
 }
 
-/** Décision d'enchère d'un bot. `ctx` : { position, support, profile }. */
+/** `isGoodHand` de référence (sans ajustement de profil) : un booléen net,
+ * pas juste un score continu - c'est la règle stricte demandée : SI bon jeu
+ * ALORS prise. Exemples qui doivent renvoyer `true` : Valet d'atout + 1 As
+ * extérieur (5+2=7 ≥ 6) ; 9 d'atout + 1 As extérieur + 1 Dix extérieur
+ * (3+2+1=6 ≥ 6). */
+export function isGoodHand(hand, suit, round = 1) {
+  const threshold = round === 1 ? TAKE_THRESHOLD_ROUND1 : TAKE_THRESHOLD_ROUND2;
+  return evaluateHandStrength(hand, suit) >= threshold;
+}
+
+/** Décision d'enchère d'un bot : agressive et déterministe - SI la main est
+ * jugée bonne (score ≥ seuil, ajusté par l'audace du profil), le bot prend
+ * IMMÉDIATEMENT, sans tenir compte de sa position de parole. `ctx` :
+ * { support, profile }. */
 export function chooseAiBid(hand, round, turnedCard, ctx = {}) {
-  const { position = 'milieu', support = 0, profile = DEFAULT_PROFILE } = ctx;
-  const threshold1 = BID_THRESHOLD_ROUND1 - profile.biddingBoldness;
-  const threshold2 = BID_THRESHOLD_ROUND2 - profile.biddingBoldness;
+  const { support = 0, profile = DEFAULT_PROFILE } = ctx;
+  const threshold1 = TAKE_THRESHOLD_ROUND1 - profile.biddingBoldness;
+  const threshold2 = TAKE_THRESHOLD_ROUND2 - profile.biddingBoldness;
 
   if (round === 1) {
-    const score = evaluateHandStrength(hand, turnedCard.suit, { position, support });
+    const score = evaluateHandStrength(hand, turnedCard.suit, { support });
     if (score >= threshold1) return { type: 'take', suit: turnedCard.suit };
     return { type: 'pass' };
   }
   const candidates = SUITS.filter((s) => s !== turnedCard.suit)
-    .map((s) => ({ suit: s, score: evaluateHandStrength(hand, s, { position, support }) }))
+    .map((s) => ({ suit: s, score: evaluateHandStrength(hand, s, { support }) }))
     .sort((a, b) => b.score - a.score);
   if (candidates[0].score >= threshold2) return { type: 'take', suit: candidates[0].suit };
   return { type: 'pass' };
 }
 
-/** Calcule position ('premier'/'milieu'/'dernier') et soutien du
- * partenaire pour le siège qui va enchérir, à partir de l'historique de
- * l'enchère en cours (Belote.biddingHistory) et de l'ordre de parole. */
-export function biddingContext({ seat, dealerSeat, biddingRound, biddingHistory, profile }) {
-  const firstSpeaker = (dealerSeat + 1) % 4;
-  const offset = (seat - firstSpeaker + 4) % 4;
-  const position = offset === 0 ? 'premier' : (offset === 3 ? 'dernier' : 'milieu');
-
+/** Calcule le soutien du partenaire pour le siège qui va enchérir, à partir
+ * de l'historique de l'enchère en cours (Belote.biddingHistory). La
+ * position à la parole n'entre plus en jeu (voir chooseAiBid ci-dessus). */
+export function biddingContext({ seat, biddingRound, biddingHistory, profile }) {
   const partner = partnerOf(seat);
   const partnerEntry = biddingHistory.find((e) => e.seat === partner && e.round === biddingRound);
   let support = 0;
   if (partnerEntry) {
     support = partnerEntry.action.type === 'take' ? 0 : -0.3 * profile.synergyWeight;
   }
-  return { position, support };
+  return { support };
 }
 
 /* ------------------------------------------------------------------ */
@@ -239,7 +252,7 @@ function isLikelyMaster(card, hand, trumpSuit, memory) {
 }
 
 function chooseLead(hand, options, trumpSuit, mySeat, ctx) {
-  const { memory, isEndgame, profile } = ctx;
+  const { memory, isEndgame, profile, defending } = ctx;
 
   // Dix de der : dans les deux derniers plis, on garde une carte
   // maîtresse identifiée pour sécuriser le dernier pli plutôt que de
@@ -252,14 +265,20 @@ function chooseLead(hand, options, trumpSuit, mySeat, ctx) {
     }
   }
 
-  // Marcel (profil agressif en défense) : entame l'atout pour faire
-  // tomber les atouts adverses et épuiser le preneur, dès qu'il en tient
-  // une poignée correcte.
+  // Défense affûtée (module 4) : la table prend agressivement des
+  // contrats parfois limites (module 3), donc en défense on cherche à
+  // épuiser l'atout du preneur au plus vite pour l'empêcher de couper nos
+  // gagnants plus tard et le pousser à la chute. Tous les défenseurs le
+  // font désormais, pas seulement Marcel - son profil "aggression" élevé
+  // le fait juste dès une poignée plus courte (2 atouts) que les autres (3).
   const trumpsInHand = hand.filter((c) => c.suit === trumpSuit);
-  if (profile.aggression > 0.6 && trumpsInHand.length >= 3) {
-    const leadTrump = options.filter((c) => c.suit === trumpSuit);
-    if (leadTrump.length > 0) {
-      return leadTrump.reduce((best, c) => (cardRank(c, trumpSuit) < cardRank(best, trumpSuit) ? c : best));
+  if (defending) {
+    const minTrumps = profile.aggression > 0.6 ? 2 : 3;
+    if (trumpsInHand.length >= minTrumps) {
+      const leadTrump = options.filter((c) => c.suit === trumpSuit);
+      if (leadTrump.length > 0) {
+        return leadTrump.reduce((best, c) => (cardRank(c, trumpSuit) < cardRank(best, trumpSuit) ? c : best));
+      }
     }
   }
 
@@ -311,19 +330,21 @@ function chooseFollow(hand, options, trick, trumpSuit, mySeat, ctx) {
 }
 
 /** Décision de carte d'un bot. `ctx` : { memory, probMap, profile,
- * trickNum }. `memory`/`probMap` sont optionnels (retombent sur un jeu
- * sûr mais moins fin sans eux). */
+ * trickNum, defending }. `memory`/`probMap` sont optionnels (retombent sur
+ * un jeu sûr mais moins fin sans eux). `defending` : le bot n'est PAS dans
+ * l'équipe du preneur (voir module 4 - défense affûtée). */
 export function chooseAiCard(hand, trick, trumpSuit, mySeat, ctx = {}) {
   const {
     memory = { seenIds: new Set(), voidSuits: { [PLAYER]: new Set(), [OPP1]: new Set(), [FANNY]: new Set(), [OPP2]: new Set() } },
     probMap = null,
     profile = DEFAULT_PROFILE,
     trickNum = 0,
+    defending = false,
   } = ctx;
   const options = legalMoves(hand, trick, trumpSuit, mySeat);
   const isEndgame = trickNum >= 6;
 
-  if (trick.length === 0) return chooseLead(hand, options, trumpSuit, mySeat, { memory, isEndgame, profile });
+  if (trick.length === 0) return chooseLead(hand, options, trumpSuit, mySeat, { memory, isEndgame, profile, defending });
   return chooseFollow(hand, options, trick, trumpSuit, mySeat, { memory, probMap, profile });
 }
 
@@ -364,15 +385,14 @@ export class DecisionEngine {
 
   /** `game` : instance Belote. Retourne une action { type: 'take'|'pass', suit? }. */
   decideBid(game) {
-    const { position, support } = biddingContext({
+    const { support } = biddingContext({
       seat: this.seat,
-      dealerSeat: game.dealerSeat,
       biddingRound: game.biddingRound,
       biddingHistory: game.biddingHistory,
       profile: this.profile,
     });
     return chooseAiBid(game.hands[this.seat], game.biddingRound, game.turnedCard, {
-      position, support, profile: this.profile,
+      support, profile: this.profile,
     });
   }
 
@@ -380,8 +400,9 @@ export class DecisionEngine {
   decideCard(game) {
     const memory = buildMemory(game.trickHistory);
     const probMap = this._buildProbMap(game, memory);
+    const defending = game.preneur !== null && teamOf(this.seat) !== teamOf(game.preneur);
     return chooseAiCard(game.hands[this.seat], game.trick, game.trumpSuit, this.seat, {
-      memory, probMap, profile: this.profile, trickNum: game.trickNum,
+      memory, probMap, profile: this.profile, trickNum: game.trickNum, defending,
     });
   }
 

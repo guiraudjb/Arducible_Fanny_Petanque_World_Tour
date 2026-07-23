@@ -257,23 +257,23 @@
       "Misez, et je distribue les 32 cartes."
     ],
     "dealing": [
-      "Voici vos seize cartes, l'atout est tiré !",
+      "Voici vos huit cartes, à vous d'annoncer l'atout !",
       "À vous de jouer, beau joueur."
     ],
     "win_small": [
-      "Bien joué, la manche est pour vous !",
-      "Une belle manche, bravo !"
+      "Bien joué, votre équipe remporte la manche !",
+      "Une belle manche pour votre équipe, bravo !"
     ],
     "win_big": [
-      "Quelle manche ! Vous avez été à votre avantage.",
-      "Une domination sans appel, chapeau !"
+      "Quelle manche ! Votre équipe a été à son avantage.",
+      "Une domination sans appel pour votre équipe, chapeau !"
     ],
     "win_jackpot": [
       "Extraordinaire ! Une manche dont on se souvient !",
       "Capot ou presque, quelle performance !"
     ],
     "lose": [
-      "Cette manche est pour moi, on retente ?",
+      "Cette manche est pour l'équipe adverse, on retente ?",
       "Pas cette fois, la belote peut être cruelle."
     ],
     "bankruptcy": [

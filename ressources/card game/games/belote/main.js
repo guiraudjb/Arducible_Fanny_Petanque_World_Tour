@@ -1,5 +1,5 @@
 import {
-  Belote, PLAYER, OPP1, FANNY, OPP2, SUITS, SUIT_SYMBOLS, SUIT_COLORS, teamOf,
+  Belote, PLAYER, OPP1, FANNY, OPP2, SUITS, SUIT_SYMBOLS, SUIT_COLORS,
 } from '../../src/games/belote/engine.js';
 import { DecisionEngine } from '../../src/games/belote/ai.js';
 import { createDealerVoice } from '../../src/dealer/dealerVoice.js';
@@ -134,8 +134,12 @@ const dealerVoice = createDealerVoice({
 const tableEl = document.getElementById('table');
 const bankrollEl = document.getElementById('bankroll');
 const statusEl = document.getElementById('status');
-const trumpAEl = document.getElementById('trump-a');
-const trumpBEl = document.getElementById('trump-b');
+const atoutBadgeEls = {
+  [PLAYER]: document.getElementById('player-atout-badge'),
+  [OPP1]: document.getElementById('opp1-atout-badge'),
+  [FANNY]: document.getElementById('fanny-atout-badge'),
+  [OPP2]: document.getElementById('opp2-atout-badge'),
+};
 const teamAScoreEl = document.getElementById('team-a-score');
 const teamBScoreEl = document.getElementById('team-b-score');
 const pileAEl = document.getElementById('pile-a');
@@ -449,14 +453,11 @@ function render() {
     : (state.phase === 'playing' && !holdingTrick ? state.turn : null);
   highlightActiveSeat(activeSeat);
 
-  trumpAEl.textContent = '';
-  trumpAEl.className = 'team-trump-badge';
-  trumpBEl.textContent = '';
-  trumpBEl.className = 'team-trump-badge';
+  Object.values(atoutBadgeEls).forEach((el) => { el.textContent = ''; el.className = 'atout-badge'; });
   if (state.trumpSuit && state.preneur !== null) {
-    const preneurTeamEl = teamOf(state.preneur) === 'A' ? trumpAEl : trumpBEl;
-    preneurTeamEl.textContent = `Atout ${SUIT_SYMBOLS[state.trumpSuit]}`;
-    preneurTeamEl.classList.add(`suit-${SUIT_COLORS[state.trumpSuit]}`);
+    const badge = atoutBadgeEls[state.preneur];
+    badge.textContent = `Atout ${SUIT_SYMBOLS[state.trumpSuit]}`;
+    badge.classList.add(`suit-${SUIT_COLORS[state.trumpSuit]}`);
   }
 
   teamAScoreEl.textContent = state.teamScores.A;
