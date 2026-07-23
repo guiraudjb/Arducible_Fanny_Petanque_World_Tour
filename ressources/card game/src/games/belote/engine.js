@@ -12,10 +12,12 @@
 //     second tour : chacun peut annoncer n'importe quelle AUTRE couleur
 //     comme atout, ou passer. Si tout le monde passe deux fois, on
 //     redistribue (nouvelle donne, même mise).
-//   - Une fois l'atout pris : le distributeur ramasse la carte retournée
-//     dans sa main, puis complète les mains (3 cartes aux trois autres
-//     joueurs, 2 au distributeur - qui a déjà la carte retournée) : tout
-//     le monde termine à 8 cartes.
+//   - Une fois l'atout pris : celui qui a pris ramasse la carte retournée
+//     dans sa main (pas systématiquement le distributeur), puis on
+//     complète les mains (3 cartes aux trois autres joueurs, 2 seulement
+//     au preneur qui a déjà la carte retournée) : tout le monde termine à
+//     8 cartes. Le premier pli est toujours entamé par le joueur à
+//     gauche du distributeur, que ce soit lui le preneur ou non.
 //   - Suivi du pli : obligation de fournir la couleur demandée ; à
 //     défaut, obligation de couper à l'atout ; obligation de monter
 //     (sur-couper) si on le peut - SAUF si le partenaire est déjà maître
@@ -30,6 +32,13 @@
 //     chacune gardant malgré tout son bonus belote-rebelote éventuel.
 //   - Victoire de la donne : l'équipe qui totalise le plus de points
 //     (après application de la chute) l'emporte.
+//   - Le paquet n'est JAMAIS rebattu entre deux mènes (seulement mélangé
+//     une fois, au tout premier coup d'une nouvelle partie) : entre deux
+//     mènes, on ramasse les cartes dans leur ordre de chute exact et on
+//     coupe une seule fois. C'est cette règle qui rend une vraie mémoire
+//     des plis de la mène précédente utile (voir ai.js) - contrairement à
+//     un paquet rebattu à fond, une simple coupe ne détruit pas l'ordre
+//     relatif des cartes.
 
 export const SUITS = ['coeur', 'carreau', 'trefle', 'pique'];
 export const SUIT_SYMBOLS = { coeur: '♥', carreau: '♦', trefle: '♣', pique: '♠' };
@@ -62,8 +71,6 @@ const DIX_DE_DER = 10;
 const BELOTE_REBELOTE = 20;
 const CONTRACT_THRESHOLD = 82;
 const TOTAL_TRICK_POINTS = 162; // 152 (valeur des cartes) + 10 (dix de der)
-const BID_THRESHOLD_ROUND1 = 6.5;
-const BID_THRESHOLD_ROUND2 = 8.5;
 
 function makeCard(rank, suit) {
   return { rank, suit, id: `${rank}-${suit}` };
@@ -143,75 +150,67 @@ export function legalMoves(hand, trick, trumpSuit, mySeat) {
 }
 
 /* ------------------------------------------------------------------ */
-/* IA (niveau avancé) : enchères et jeu de cartes                       */
+/* L'IA (mémoire, probabilités, enchères, jeu de carte) vit dans        */
+/* ./ai.js - elle a besoin d'un accès à cardRank/currentTrickWinnerSeat, */
+/* exportés ci-dessous pour cet usage interne au module Belote.         */
 /* ------------------------------------------------------------------ */
+export { cardRank, currentTrickWinnerSeat };
 
-/** Estime la force d'une main si `suit` devient atout - sert à décider
- * d'annoncer ou de passer. Heuristique (pas un solveur exact) : valorise
- * les gros atouts (Valet, 9, As, 10), la longueur à l'atout, et les As
- * dans les autres couleurs. */
-function evaluateHandStrength(hand, suit) {
-  let score = 0;
-  const trumps = hand.filter((c) => c.suit === suit);
-  for (const c of trumps) {
-    if (c.rank === 'J') score += 5;
-    else if (c.rank === '9') score += 3;
-    else if (c.rank === 'A') score += 2;
-    else if (c.rank === '10') score += 2;
-    else score += 0.5;
-  }
-  score += Math.max(0, trumps.length - 3) * 1.5;
-  for (const c of hand) {
-    if (c.suit !== suit && c.rank === 'A') score += 1.5;
-  }
-  return score;
+/** Distribution initiale : 5 cartes à chacun (indices de sièges fixes,
+ * PLAYER=deck[0:5], OPP1=deck[5:10], ...), puis carte retournée = deck[20].
+ * Fonction pure, partagée entre le vrai moteur et la reconstruction de
+ * l'IA (reconstructDeal) pour ne jamais désynchroniser les deux. */
+function dealInitialHands(deck) {
+  return [deck.slice(0, 5), deck.slice(5, 10), deck.slice(10, 15), deck.slice(15, 20)];
 }
 
-/** Décision d'enchère d'un bot (niveau avancé mais heuristique). */
-export function chooseAiBid(hand, round, turnedCard) {
-  if (round === 1) {
-    const score = evaluateHandStrength(hand, turnedCard.suit);
-    if (score >= BID_THRESHOLD_ROUND1) return { type: 'take', suit: turnedCard.suit };
-    return { type: 'pass' };
+/** Complète les mains après l'enchère : la carte retournée + le talon
+ * vont au preneur (3 cartes aux trois autres, dans l'ordre du tour de
+ * table à partir du joueur à gauche du distributeur ; 2 seulement au
+ * preneur qui a déjà la carte retournée). Fonction pure, voir ci-dessus. */
+function completeHands(initialHands, remainingDeck, turnedCard, dealerSeat, preneur) {
+  const hands = initialHands.map((h) => h.slice());
+  hands[preneur].push(turnedCard);
+  const order = [];
+  for (let s = nextSeat(dealerSeat), i = 0; i < 4; s = nextSeat(s), i += 1) {
+    if (s !== preneur) order.push(s);
   }
-  const candidates = SUITS.filter((s) => s !== turnedCard.suit)
-    .map((s) => ({ suit: s, score: evaluateHandStrength(hand, s) }))
-    .sort((a, b) => b.score - a.score);
-  if (candidates[0].score >= BID_THRESHOLD_ROUND2) return { type: 'take', suit: candidates[0].suit };
-  return { type: 'pass' };
+  let cursor = 0;
+  for (const seat of order) {
+    hands[seat].push(...remainingDeck.slice(cursor, cursor + 3));
+    cursor += 3;
+  }
+  hands[preneur].push(...remainingDeck.slice(cursor, cursor + 2));
+  return hands;
 }
 
-/** Décision de carte d'un bot (niveau avancé mais heuristique, pas un
- * solveur exact - pas de comptage de cartes des adversaires). En tête de
- * pli : joue son plus fort hors-atout pour écouler ses points en
- * sécurité, sinon un petit atout. En suivant : si son partenaire est
- * déjà maître du pli, ne cherche pas à gagner (défausse la carte la
- * moins chère) ; sinon tente de gagner au moindre coût, et à défaut
- * défausse la carte la moins chère. */
-export function chooseAiCard(hand, trick, trumpSuit, mySeat) {
-  const options = legalMoves(hand, trick, trumpSuit, mySeat);
-  if (trick.length === 0) {
-    const nonTrump = options.filter((c) => c.suit !== trumpSuit);
-    const pool = nonTrump.length > 0 ? nonTrump : options;
-    return pool.reduce((best, c) => (cardRank(c, trumpSuit) > cardRank(best, trumpSuit) ? c : best));
+/** Étant donné l'ordre exact de chute des cartes de la DERNIÈRE mène
+ * réellement jouée (`previousSequence`, 32 cartes, voir Belote.lastRealSequence)
+ * et sachant qu'une seule coupe (jamais un mélange) a eu lieu depuis,
+ * cherche la (ou les) rotation(s) du paquet cohérente(s) avec la main que
+ * `mySeat` a réellement reçue cette donne (`myOriginalHand`, ses 8 cartes
+ * d'origine, jouées ou non). Comme les 32 cartes sont toutes différentes,
+ * une seule rotation colle presque toujours en pratique : c'est la
+ * mémoire "absolue" d'un joueur qui a suivi toute la mène précédente et
+ * sait qu'on ne fait que couper entre deux mènes. Ne fuite aucune
+ * information cachée : ne s'appuie que sur des faits publics (l'ordre de
+ * chute déjà vu par tout le monde, ma propre main, le distributeur, le
+ * preneur). Retourne un tableau de reconstructions cohérentes (0, 1, ou
+ * rarement plus d'une), chacune `{ hands, turnedCard }`. */
+export function reconstructDeal({ previousSequence, mySeat, myOriginalHand, dealerSeat, preneur }) {
+  if (!previousSequence || previousSequence.length !== 32) return [];
+  const myIds = myOriginalHand.map((c) => c.id).slice().sort().join(',');
+  const matches = [];
+  for (let k = 0; k < 32; k += 1) {
+    const rotated = [...previousSequence.slice(k), ...previousSequence.slice(0, k)];
+    const initial = dealInitialHands(rotated);
+    const turnedCard = rotated[20];
+    const remainingDeck = rotated.slice(21);
+    const hands = completeHands(initial, remainingDeck, turnedCard, dealerSeat, preneur);
+    const simIds = hands[mySeat].map((c) => c.id).slice().sort().join(',');
+    if (simIds === myIds) matches.push({ hands, turnedCard });
   }
-
-  const winnerSeat = currentTrickWinnerSeat(trick, trumpSuit);
-  const partnerWinning = winnerSeat === partnerOf(mySeat);
-  if (partnerWinning) {
-    return options.reduce((cheapest, c) => (cardPoints(c, trumpSuit) < cardPoints(cheapest, trumpSuit) ? c : cheapest));
-  }
-
-  const winnerEntry = trick.find((t) => t.seat === winnerSeat);
-  const winningOptions = options.filter((c) => {
-    if (c.suit === trumpSuit && winnerEntry.card.suit !== trumpSuit) return true;
-    if (c.suit !== winnerEntry.card.suit) return false;
-    return cardRank(c, trumpSuit) > cardRank(winnerEntry.card, trumpSuit);
-  });
-  if (winningOptions.length > 0) {
-    return winningOptions.reduce((cheapest, c) => (cardRank(c, trumpSuit) < cardRank(cheapest, trumpSuit) ? c : cheapest));
-  }
-  return options.reduce((cheapest, c) => (cardPoints(c, trumpSuit) < cardPoints(cheapest, trumpSuit) ? c : cheapest));
+  return matches;
 }
 
 export const TIERS = [
@@ -240,6 +239,13 @@ export class Belote {
     this.bet = 0;
     this.lastBet = 0;
     this.phase = 'betting'; // 'betting' | 'bidding' | 'playing' | 'result'
+    // Ordre de chute exact de la dernière mène réellement jouée (32
+    // cartes) - null tant qu'aucune mène de CETTE session n'est encore
+    // allée à son terme. Sert à la fois à reconstituer le paquet réel de
+    // la donne suivante (jamais rebattu, seulement coupé) et de mémoire à
+    // l'IA (voir ai.js / reconstructDeal). Remis à null uniquement ici :
+    // une nouvelle session = un nouveau paquet, mélangé pour de vrai.
+    this.lastRealSequence = null;
     this._resetHandState();
   }
 
@@ -259,6 +265,14 @@ export class Belote {
     this.beloteSeat = null;
     this.lastTrick = null;
     this.result = null;
+    // Historique complet des plis déjà complétés dans LA MÈNE EN COURS,
+    // pour que l'IA puisse compter les cartes tombées et détecter les
+    // coupes (voir ai.js) - remis à zéro à chaque nouvelle donne. Son
+    // contenu final est capturé dans `lastRealSequence` par
+    // `_finishRound()` juste avant d'être écrasé ici, pour rester
+    // disponible comme mémoire de "la mène précédente" à la donne
+    // suivante (voir reconstructDeal ci-dessus).
+    this.trickHistory = [];
   }
 
   get isGameOver() {
@@ -278,14 +292,43 @@ export class Belote {
     return { ok: true };
   }
 
-  _dealForBidding() {
-    const deck = shuffle(buildDeck());
-    this.hands = [deck.slice(0, 5), deck.slice(5, 10), deck.slice(10, 15), deck.slice(15, 20)];
+  /** Une seule coupe (jamais un mélange) : scinde le paquet à un point
+   * aléatoire et échange les deux tas. */
+  _cut(deck) {
+    const margin = 4; // évite une coupe dégénérée trop proche d'un bord
+    const cutPoint = margin + Math.floor(Math.random() * (deck.length - margin * 2));
+    return [...deck.slice(cutPoint), ...deck.slice(0, cutPoint)];
+  }
+
+  _dealForBidding({ isRedeal = false } = {}) {
+    let baseDeck;
+    if (isRedeal) {
+      // Personne n'a pris : aucun pli n'a été joué, on regroupe
+      // simplement ce qui avait déjà été distribué pour cette tentative
+      // (la mémoire de l'IA, elle, reste basée sur `lastRealSequence` -
+      // rien de nouveau n'a été révélé par cette enchère ratée).
+      baseDeck = [
+        ...this.hands[PLAYER], ...this.hands[OPP1], ...this.hands[FANNY], ...this.hands[OPP2],
+        ...(this.turnedCard ? [this.turnedCard] : []),
+        ...(this._remainingDeck || []),
+      ];
+    } else if (this.lastRealSequence === null) {
+      baseDeck = shuffle(buildDeck()); // tout premier paquet de la session : seul vrai mélange
+    } else {
+      baseDeck = this.lastRealSequence; // ordre de chute exact de la dernière mène jouée
+    }
+
+    const deck = this._cut(baseDeck);
+    this.hands = dealInitialHands(deck);
     this.turnedCard = deck[20];
     this._remainingDeck = deck.slice(21); // 11 cartes, complétées après enchères
     this.biddingRound = 1;
     this.biddingTurn = nextSeat(this.dealerSeat);
     this.passCount = 0;
+    // Historique des annonces de CETTE enchère (remis à zéro à chaque
+    // redonne) - permet à l'IA de savoir ce que son partenaire a déjà dit
+    // ce tour-ci (voir "soutien" dans ai.js).
+    this.biddingHistory = [];
   }
 
   get turn() {
@@ -301,6 +344,7 @@ export class Belote {
 
   bid(seat, action) {
     if (this.phase !== 'bidding' || seat !== this.biddingTurn) return { ok: false, reason: 'wrong-phase' };
+    this.biddingHistory.push({ seat, round: this.biddingRound, action });
 
     if (action.type === 'take') {
       const suit = this.biddingRound === 1 ? this.turnedCard.suit : action.suit;
@@ -320,7 +364,7 @@ export class Belote {
         this.passCount = 0;
         this.biddingTurn = nextSeat(this.dealerSeat);
       } else {
-        this._dealForBidding(); // tout le monde a passé deux fois : redonne
+        this._dealForBidding({ isRedeal: true }); // tout le monde a passé deux fois : redonne
       }
       return { ok: true };
     }
@@ -329,15 +373,10 @@ export class Belote {
   }
 
   _completeDeal() {
-    this.hands[this.dealerSeat].push(this.turnedCard);
-    const order = [nextSeat(this.dealerSeat), nextSeat(nextSeat(this.dealerSeat)), nextSeat(nextSeat(nextSeat(this.dealerSeat)))];
-    let cursor = 0;
-    for (const seat of order) {
-      this.hands[seat].push(...this._remainingDeck.slice(cursor, cursor + 3));
-      cursor += 3;
-    }
-    this.hands[this.dealerSeat].push(...this._remainingDeck.slice(cursor, cursor + 2));
-
+    // La carte retournée revient à celui qui prend (pas systématiquement
+    // au distributeur) : il termine donc à 6 cartes avant le complément,
+    // pendant que les trois autres n'en ont que 5.
+    this.hands = completeHands(this.hands, this._remainingDeck, this.turnedCard, this.dealerSeat, this.preneur);
     this.hands[PLAYER] = sortHand(this.hands[PLAYER], this.trumpSuit);
 
     for (const seat of [PLAYER, OPP1, FANNY, OPP2]) {
@@ -373,6 +412,7 @@ export class Belote {
       this.teamScores[winnerTeam] += points;
       this.tricksWonBy[winnerTeam] += 1;
       this.lastTrick = { cards: this.trick.slice(), winnerSeat };
+      this.trickHistory.push({ cards: this.trick.slice(), ledSuit: this.trick[0].card.suit, winnerSeat });
       this.trick = [];
       this.leader = winnerSeat;
       this.trickNum += 1;
@@ -419,6 +459,11 @@ export class Belote {
       beloteTeam,
       won: teamAScore > finalScores.B,
     };
+    // Ordre de chute exact des 32 cartes cette mène - devient la mémoire
+    // "mène précédente" pour l'IA à la prochaine donne (voir ai.js) et la
+    // base réelle du paquet qui sera coupé (jamais rebattu) pour la
+    // prochaine mène (voir _dealForBidding).
+    this.lastRealSequence = this.trickHistory.flatMap((t) => t.cards.map((e) => e.card));
     this.phase = 'result';
   }
 

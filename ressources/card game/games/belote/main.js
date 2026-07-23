@@ -1,7 +1,7 @@
 import {
-  Belote, PLAYER, OPP1, FANNY, OPP2, SUITS, SUIT_SYMBOLS, SUIT_COLORS,
-  chooseAiBid, chooseAiCard,
+  Belote, PLAYER, OPP1, FANNY, OPP2, SUITS, SUIT_SYMBOLS, SUIT_COLORS, teamOf,
 } from '../../src/games/belote/engine.js';
+import { DecisionEngine } from '../../src/games/belote/ai.js';
 import { createDealerVoice } from '../../src/dealer/dealerVoice.js';
 
 const SPRITE_DIR = '../../assets/cards/';
@@ -10,7 +10,11 @@ const SUIT_TO_SPRITE = { coeur: 'hearts', carreau: 'diamonds', trefle: 'clubs', 
 const SUIT_NAMES_FR = { coeur: 'Cœur', carreau: 'Carreau', trefle: 'Trèfle', pique: 'Pique' };
 const SEAT_NAMES = { [PLAYER]: 'Vous', [OPP1]: 'Marcel', [FANNY]: 'Fanny', [OPP2]: 'Bernard' };
 const AI_DELAY_MS = 650;
-const TRICK_HOLD_MS = 900;
+const TRICK_HOLD_MS = 1800;
+const FLY_DURATION_MS = 520;
+const DEAL_FLY_MS = 380;
+const DEAL_STAGGER_MS = 140;
+const CUT_DURATION_MS = 750;
 
 const prefersReducedMotion = () =>
   window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -19,7 +23,99 @@ function cardSprite(card) {
   return `${SPRITE_DIR}${card.rank}-${SUIT_TO_SPRITE[card.suit]}.png`;
 }
 
+/** Anime une carte qui s'envole en tournoyant de `sourceEl` à `destEl`,
+ * puis se résout. Sert à la fois pour jouer une carte (main -> centre)
+ * et pour la distribution (paquet -> main de chacun). */
+function flyCard({ src, sourceEl, destEl, duration = FLY_DURATION_MS }) {
+  if (prefersReducedMotion() || !sourceEl || !destEl) return Promise.resolve();
+  const sourceRect = sourceEl.getBoundingClientRect();
+  const destRect = destEl.getBoundingClientRect();
+  if (sourceRect.width === 0 || destRect.width === 0) return Promise.resolve();
+
+  const size = sourceRect.width || 40;
+  const img = document.createElement('img');
+  img.className = 'flying-card';
+  img.src = src;
+  img.style.width = `${size}px`;
+  img.style.left = `${sourceRect.left + sourceRect.width / 2 - size / 2}px`;
+  img.style.top = `${sourceRect.top + sourceRect.height / 2 - (size * 1.4) / 2}px`;
+
+  const dx = (destRect.left + destRect.width / 2) - (sourceRect.left + sourceRect.width / 2);
+  const dy = (destRect.top + destRect.height / 2) - (sourceRect.top + sourceRect.height / 2);
+  img.style.setProperty('--dx', `${dx}px`);
+  img.style.setProperty('--dy', `${dy}px`);
+  img.style.setProperty('--fly-duration', `${duration}ms`);
+
+  document.body.appendChild(img);
+  void img.offsetWidth;
+  img.classList.add('is-flying');
+
+  return new Promise((resolve) => {
+    img.addEventListener('animationend', () => { img.remove(); resolve(); }, { once: true });
+    // Filet de sécurité si l'événement n'arrive pas (page masquée, etc.).
+    setTimeout(() => { img.remove(); resolve(); }, duration + 300);
+  });
+}
+
+function flyCardToCenter(card, sourceEl) {
+  return flyCard({ src: cardSprite(card), sourceEl, destEl: trickRowEl });
+}
+
+/* ---------------------------------------------------------------- */
+/* Distribution animée : 3 cartes, puis coupe, puis 2 cartes            */
+/* ---------------------------------------------------------------- */
+function dealOrderFromDealer() {
+  const order = [];
+  let seat = (game.dealerSeat + 1) % 4;
+  for (let i = 0; i < 4; i += 1) {
+    order.push(seat);
+    seat = (seat + 1) % 4;
+  }
+  return order;
+}
+
+async function dealRoundAnimation(cardsPerSeat) {
+  const order = dealOrderFromDealer();
+  for (let i = 0; i < cardsPerSeat; i += 1) {
+    for (const seat of order) {
+      flyCard({ src: BACK_SPRITE, sourceEl: deckPileEl, destEl: handElBySeat[seat], duration: DEAL_FLY_MS });
+      // eslint-disable-next-line no-await-in-loop
+      await new Promise((r) => setTimeout(r, DEAL_STAGGER_MS));
+    }
+  }
+  await new Promise((r) => setTimeout(r, DEAL_FLY_MS));
+}
+
+async function animateCut() {
+  announce('On coupe le paquet...');
+  if (prefersReducedMotion()) {
+    await new Promise((r) => setTimeout(r, 250));
+    return;
+  }
+  deckPileEl.classList.add('is-cutting');
+  await new Promise((r) => setTimeout(r, CUT_DURATION_MS));
+  deckPileEl.classList.remove('is-cutting');
+}
+
+async function playDealAnimation() {
+  [playerHandEl, fannyHandEl, opp1HandEl, opp2HandEl].forEach((el) => { el.innerHTML = ''; });
+  deckPileEl.classList.remove('hidden');
+  // La coupe clôt la mène précédente (avant la distribution elle-même),
+  // pas une pause au milieu de la distribution en cours.
+  await animateCut();
+  announce('Distribution : trois cartes chacun...');
+  await dealRoundAnimation(3);
+  announce('Distribution : deux cartes chacun...');
+  await dealRoundAnimation(2);
+  deckPileEl.classList.add('hidden');
+}
+
 const game = new Belote({ startingBankroll: 500 });
+const botEngines = {
+  [OPP1]: new DecisionEngine(OPP1),
+  [FANNY]: new DecisionEngine(FANNY),
+  [OPP2]: new DecisionEngine(OPP2),
+};
 let pendingBet = 0;
 let lastBankrollShown = null;
 let lastPhase = null;
@@ -38,7 +134,8 @@ const dealerVoice = createDealerVoice({
 const tableEl = document.getElementById('table');
 const bankrollEl = document.getElementById('bankroll');
 const statusEl = document.getElementById('status');
-const hudTrumpEl = document.getElementById('hud-trump');
+const trumpAEl = document.getElementById('trump-a');
+const trumpBEl = document.getElementById('trump-b');
 const teamAScoreEl = document.getElementById('team-a-score');
 const teamBScoreEl = document.getElementById('team-b-score');
 const pileAEl = document.getElementById('pile-a');
@@ -48,12 +145,9 @@ const fannyHandEl = document.getElementById('fanny-hand');
 const opp1HandEl = document.getElementById('opp1-hand');
 const opp2HandEl = document.getElementById('opp2-hand');
 const playerHandEl = document.getElementById('player-hand');
-const trickSlots = {
-  player: document.getElementById('trick-player'),
-  fanny: document.getElementById('trick-fanny'),
-  opp1: document.getElementById('trick-opp1'),
-  opp2: document.getElementById('trick-opp2'),
-};
+const trickRowEl = document.getElementById('trick-row');
+const handElBySeat = { [PLAYER]: playerHandEl, [FANNY]: fannyHandEl, [OPP1]: opp1HandEl, [OPP2]: opp2HandEl };
+const deckPileEl = document.getElementById('deck-pile');
 const biddingPanelEl = document.getElementById('bidding-panel');
 const betAmountEl = document.getElementById('bet-amount');
 const bettingAreaEl = document.getElementById('betting-area');
@@ -71,6 +165,44 @@ const dealerTagEls = {
   [FANNY]: document.getElementById('fanny-dealer-tag'),
   [OPP2]: document.getElementById('opp2-dealer-tag'),
 };
+const seatLabelEls = {
+  [PLAYER]: document.getElementById('player-seat-label'),
+  [OPP1]: document.getElementById('opp1-seat-label'),
+  [FANNY]: document.getElementById('fanny-seat-label'),
+  [OPP2]: document.getElementById('opp2-seat-label'),
+};
+const turnToastEl = document.getElementById('turn-toast');
+
+/** Bannière animée annonçant l'action de chacun (enchère, tour qui
+ * commence...) - pour qu'on suive clairement qui fait quoi, pas juste un
+ * texte statique qui change silencieusement. */
+let toastTimer = null;
+function announce(text) {
+  clearTimeout(toastTimer);
+  turnToastEl.textContent = text;
+  turnToastEl.classList.remove('is-showing');
+  void turnToastEl.offsetWidth;
+  turnToastEl.classList.add('is-showing');
+  toastTimer = setTimeout(() => turnToastEl.classList.remove('is-showing'), 1800);
+}
+
+function highlightActiveSeat(activeSeat) {
+  Object.entries(seatLabelEls).forEach(([seat, el]) => {
+    el.classList.toggle('is-active-turn', activeSeat !== null && Number(seat) === activeSeat);
+  });
+}
+
+function announceLeadIfNeeded(seat) {
+  if (game.trick.length !== 0) return;
+  announce(seat === PLAYER ? 'Vous entamez le pli.' : `${SEAT_NAMES[seat]} entame le pli.`);
+}
+
+function bidActionText(seat, action) {
+  const who = seat === PLAYER ? 'Vous' : SEAT_NAMES[seat];
+  if (action.type === 'pass') return `${who} ${seat === PLAYER ? 'passez' : 'passe'}.`;
+  const verb = seat === PLAYER ? 'prenez' : 'prend';
+  return `${who} ${verb} ${SUIT_SYMBOLS[action.suit]} !`;
+}
 
 /* ---------------------------------------------------------------- */
 /* Confettis                                                           */
@@ -176,22 +308,34 @@ function renderPlayerHand(hand, legalIds, canPlay) {
     if (canPlay && !legalSet.has(card.id)) btn.classList.add('is-dimmed');
     if (isLegal) {
       btn.addEventListener('click', () => {
-        game.playCard(PLAYER, card.id);
-        handlePostAction();
+        btn.style.visibility = 'hidden'; // la carte volante prend le relais visuellement
+        flyCardToCenter(card, btn).then(() => {
+          announceLeadIfNeeded(PLAYER);
+          game.playCard(PLAYER, card.id);
+          handlePostAction();
+        });
       });
     }
     playerHandEl.appendChild(btn);
   });
 }
 
-function renderTrickCard(el, entry) {
-  el.innerHTML = '';
-  if (!entry) return;
-  const img = document.createElement('img');
-  img.className = 'card';
-  img.src = cardSprite(entry.card);
-  img.alt = `${entry.card.rank} de ${SUIT_NAMES_FR[entry.card.suit]}`;
-  el.appendChild(img);
+function renderTrickRow(entries) {
+  trickRowEl.innerHTML = '';
+  entries.forEach((entry) => {
+    const slot = document.createElement('div');
+    slot.className = 'trick-slot';
+    const img = document.createElement('img');
+    img.className = 'card';
+    img.src = cardSprite(entry.card);
+    img.alt = `${entry.card.rank} de ${SUIT_NAMES_FR[entry.card.suit]}`;
+    slot.appendChild(img);
+    const label = document.createElement('span');
+    label.className = 'trick-owner';
+    label.textContent = SEAT_NAMES[entry.seat];
+    slot.appendChild(label);
+    trickRowEl.appendChild(slot);
+  });
 }
 
 /* ---------------------------------------------------------------- */
@@ -199,14 +343,14 @@ function renderTrickCard(el, entry) {
 /* ---------------------------------------------------------------- */
 function renderBiddingPanel(state) {
   biddingPanelEl.innerHTML = '';
-  if (state.phase !== 'bidding' && state.phase !== 'playing' && state.phase !== 'result') {
-    return;
-  }
-  if (!state.turnedCard) return;
+  // La carte retournée n'a de sens que pendant les enchères - une fois
+  // l'atout décidé, elle ne doit pas rester en permanence au milieu de
+  // la table (l'écusson "Atout" du HUD suffit à s'en souvenir).
+  if (state.phase !== 'bidding' || !state.turnedCard) return;
 
   const label = document.createElement('p');
   label.className = 'bidding-turned-label';
-  label.textContent = state.phase === 'bidding' ? 'Carte retournée' : 'Atout';
+  label.textContent = 'Carte retournée';
   biddingPanelEl.appendChild(label);
 
   const img = document.createElement('img');
@@ -214,13 +358,6 @@ function renderBiddingPanel(state) {
   img.src = cardSprite(state.turnedCard);
   img.alt = `${state.turnedCard.rank} de ${SUIT_NAMES_FR[state.turnedCard.suit]}`;
   biddingPanelEl.appendChild(img);
-
-  if (state.phase === 'bidding') {
-    const log = document.createElement('p');
-    log.className = 'bidding-log';
-    log.id = 'bidding-log-text';
-    biddingPanelEl.appendChild(log);
-  }
 }
 
 function renderBiddingControls(state) {
@@ -243,7 +380,9 @@ function renderBiddingControls(state) {
     takeBtn.className = 'btn btn-primary';
     takeBtn.textContent = `Prendre ${SUIT_SYMBOLS[state.turnedCard.suit]}`;
     takeBtn.addEventListener('click', () => {
-      game.bid(PLAYER, { type: 'take', suit: state.turnedCard.suit });
+      const action = { type: 'take', suit: state.turnedCard.suit };
+      game.bid(PLAYER, action);
+      announce(bidActionText(PLAYER, action));
       handlePostAction();
     });
     biddingButtonsEl.appendChild(takeBtn);
@@ -254,7 +393,9 @@ function renderBiddingControls(state) {
       btn.className = `btn btn-primary suit-${SUIT_COLORS[suit]}`;
       btn.textContent = `Prendre ${SUIT_SYMBOLS[suit]}`;
       btn.addEventListener('click', () => {
-        game.bid(PLAYER, { type: 'take', suit });
+        const action = { type: 'take', suit };
+        game.bid(PLAYER, action);
+        announce(bidActionText(PLAYER, action));
         handlePostAction();
       });
       biddingButtonsEl.appendChild(btn);
@@ -265,7 +406,9 @@ function renderBiddingControls(state) {
   passBtn.className = 'btn btn-ghost';
   passBtn.textContent = 'Passer';
   passBtn.addEventListener('click', () => {
-    game.bid(PLAYER, { type: 'pass' });
+    const action = { type: 'pass' };
+    game.bid(PLAYER, action);
+    announce(bidActionText(PLAYER, action));
     handlePostAction();
   });
   biddingButtonsEl.appendChild(passBtn);
@@ -302,14 +445,18 @@ function render() {
     el.textContent = Number(seat) === state.dealerSeat ? '🂠 distributeur' : '';
   });
 
-  if (state.trumpSuit) {
-    hudTrumpEl.innerHTML = '';
-    const badge = document.createElement('span');
-    badge.className = `trump-badge suit-${SUIT_COLORS[state.trumpSuit]}`;
-    badge.textContent = `Atout ${SUIT_SYMBOLS[state.trumpSuit]}`;
-    hudTrumpEl.appendChild(badge);
-  } else {
-    hudTrumpEl.innerHTML = '';
+  const activeSeat = state.phase === 'bidding' ? state.biddingTurn
+    : (state.phase === 'playing' && !holdingTrick ? state.turn : null);
+  highlightActiveSeat(activeSeat);
+
+  trumpAEl.textContent = '';
+  trumpAEl.className = 'team-trump-badge';
+  trumpBEl.textContent = '';
+  trumpBEl.className = 'team-trump-badge';
+  if (state.trumpSuit && state.preneur !== null) {
+    const preneurTeamEl = teamOf(state.preneur) === 'A' ? trumpAEl : trumpBEl;
+    preneurTeamEl.textContent = `Atout ${SUIT_SYMBOLS[state.trumpSuit]}`;
+    preneurTeamEl.classList.add(`suit-${SUIT_COLORS[state.trumpSuit]}`);
   }
 
   teamAScoreEl.textContent = state.teamScores.A;
@@ -327,11 +474,7 @@ function render() {
   renderBiddingPanel(state);
   renderBiddingControls(state);
 
-  const trickToShow = holdingTrick ? holdingTrick.cards : state.trick;
-  const bySeat = { player: null, fanny: null, opp1: null, opp2: null };
-  const seatKey = { [PLAYER]: 'player', [FANNY]: 'fanny', [OPP1]: 'opp1', [OPP2]: 'opp2' };
-  trickToShow.forEach((entry) => { bySeat[seatKey[entry.seat]] = entry; });
-  Object.entries(trickSlots).forEach(([key, el]) => renderTrickCard(el, bySeat[key]));
+  renderTrickRow(holdingTrick ? holdingTrick.cards : state.trick);
 
   if (state.phase === 'playing') {
     hintEl.textContent = holdingTrick
@@ -406,17 +549,21 @@ function scheduleAiIfNeeded() {
     clearTimeout(aiTimer);
     aiTimer = setTimeout(() => {
       const seat = state.biddingTurn;
-      const action = chooseAiBid(game.hands[seat], state.biddingRound, state.turnedCard);
+      const action = botEngines[seat].decideBid(game);
       game.bid(seat, action);
+      announce(bidActionText(seat, action));
       handlePostAction();
     }, AI_DELAY_MS);
   } else if (state.phase === 'playing' && state.turn !== PLAYER) {
     clearTimeout(aiTimer);
     aiTimer = setTimeout(() => {
       const seat = state.turn;
-      const card = chooseAiCard(game.hands[seat], game.trick, game.trumpSuit, seat);
-      game.playCard(seat, card.id);
-      handlePostAction();
+      const card = botEngines[seat].decideCard(game);
+      flyCardToCenter(card, handElBySeat[seat]).then(() => {
+        announceLeadIfNeeded(seat);
+        game.playCard(seat, card.id);
+        handlePostAction();
+      });
     }, AI_DELAY_MS);
   }
 }
@@ -447,21 +594,29 @@ document.getElementById('btn-clear-bet').addEventListener('click', () => {
   render();
 });
 
-btnDeal.addEventListener('click', () => {
+btnDeal.addEventListener('click', async () => {
   const result = game.startRound(pendingBet);
-  if (result.ok) {
-    pendingBet = 0;
-    lastTrickKey = null;
-    holdingTrick = null;
-    render();
-    scheduleAiIfNeeded();
-  } else {
-    render();
-  }
+  if (!result.ok) { render(); return; }
+
+  pendingBet = 0;
+  lastTrickKey = null;
+  holdingTrick = null;
+
+  bettingAreaEl.classList.add('hidden');
+  biddingAreaEl.classList.remove('hidden');
+  biddingButtonsEl.innerHTML = '';
+  biddingHintEl.textContent = 'Distribution des cartes...';
+
+  await playDealAnimation();
+
+  render();
+  scheduleAiIfNeeded();
 });
 
 document.getElementById('btn-next-round').addEventListener('click', () => {
   clearTimeout(aiTimer);
+  clearTimeout(toastTimer);
+  turnToastEl.classList.remove('is-showing');
   game.nextRound();
   pendingBet = Math.min(game.lastBet, game.bankroll) || 0;
   render();
@@ -469,6 +624,8 @@ document.getElementById('btn-next-round').addEventListener('click', () => {
 
 document.getElementById('btn-new-game').addEventListener('click', () => {
   clearTimeout(aiTimer);
+  clearTimeout(toastTimer);
+  turnToastEl.classList.remove('is-showing');
   game.newSession();
   pendingBet = 0;
   lastBankrollShown = null;

@@ -11,10 +11,10 @@
   --felt-1: #2f6e3f;
   --felt-2: #1c4e28;
 
-  --card-radius: 7px;
-  --card-w: clamp(52px, 12vw, 92px);
-  --side-card-w: clamp(28px, 6vw, 44px);
-  --turned-card-w: clamp(44px, 10vw, 68px);
+  --card-radius: 8px;
+  --card-w: clamp(84px, 21vw, 156px);
+  --side-card-w: clamp(32px, 7vw, 50px);
+  --turned-card-w: clamp(48px, 11vw, 74px);
 }
 
 * { box-sizing: border-box; }
@@ -83,18 +83,19 @@ body {
 .hud-value.is-bump { animation: bump 320ms ease; }
 @keyframes bump { 30% { transform: scale(1.18); } 100% { transform: scale(1); } }
 
-.trump-badge {
+.score-value-row { display: flex; align-items: center; gap: 0.3rem; }
+.team-trump-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.2rem;
-  padding: 0.15rem 0.5rem;
+  padding: 0.1rem 0.4rem;
   border-radius: 999px;
-  background: rgba(246, 236, 212, 0.1);
-  font-size: 0.68rem;
+  background: rgba(246, 236, 212, 0.12);
+  font-size: 0.62rem;
   font-weight: 700;
 }
-.trump-badge.suit-red { color: #ff8a75; }
-.trump-badge.suit-black { color: var(--paper-raised); }
+.team-trump-badge:empty { display: none; }
+.team-trump-badge.suit-red { color: #ff8a75; }
+.team-trump-badge.suit-black { color: var(--paper-raised); }
 
 .status {
   margin: 0;
@@ -137,8 +138,31 @@ body {
 .score-box { display: flex; flex-direction: column; align-items: center; min-width: 5.5rem; }
 .score-label { font-size: 0.56rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft); text-align: center; }
 .score-value { font-family: "Rockwell", "Roboto Slab", Georgia, serif; font-weight: 700; color: var(--gold); font-size: clamp(0.9rem, 2.4vw, 1.1rem); }
-.pile-count { font-size: 0.58rem; color: var(--ink-soft); }
 .trick-counter { font-size: 0.65rem; color: var(--ink-soft); }
+
+/* Pile de plis remportés - une équipe de chaque côté du bandeau de score,
+   donc littéralement "rangée sur le côté" plutôt qu'au milieu du tapis. */
+.pile-stack {
+  position: relative;
+  margin-top: 0.35rem;
+  padding: 0.12rem 0.5rem 0.12rem 0.85rem;
+  font-size: 0.6rem;
+  color: var(--ink-soft);
+  background: rgba(246, 236, 212, 0.06);
+  border-radius: 999px;
+}
+.pile-stack::before, .pile-stack::after {
+  content: "";
+  position: absolute;
+  left: 0.15rem;
+  width: 0.5rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  background: linear-gradient(160deg, #e2c98f, #cbaa65 70%);
+  box-shadow: 0 0 0 1px rgba(120, 90, 40, 0.5);
+}
+.pile-stack::before { top: 0.1rem; transform: rotate(-6deg); }
+.pile-stack::after { top: 0.15rem; transform: rotate(4deg); }
 
 /* ---------- Zones de mains ---------- */
 .fanny-zone {
@@ -158,6 +182,39 @@ body {
   text-align: center;
 }
 .seat-label span { color: var(--gold); font-weight: 700; text-transform: none; }
+.seat-label.is-active-turn {
+  color: var(--gold);
+  animation: seat-pulse 1.1s ease-in-out infinite;
+}
+@keyframes seat-pulse {
+  0%, 100% { text-shadow: 0 0 0 rgba(255, 213, 79, 0); }
+  50% { text-shadow: 0 0 8px rgba(255, 213, 79, 0.85); }
+}
+
+/* ---------- Bannière animée : "Marcel passe.", "Vous entamez le pli."... ---------- */
+.turn-toast {
+  position: absolute;
+  top: 6.5rem;
+  left: 50%;
+  transform: translate(-50%, -8px) scale(0.94);
+  z-index: 7;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255, 213, 79, 0.95);
+  color: #241c13;
+  font-family: "Rockwell", "Roboto Slab", Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(0.68rem, 2.2vw, 0.85rem);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+.turn-toast.is-showing {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
 
 .hand { display: flex; align-items: center; }
 .card {
@@ -167,7 +224,7 @@ body {
   display: block;
   filter: drop-shadow(1px 2px 3px rgba(0, 0, 0, 0.4));
 }
-.back-hand { justify-content: center; }
+.back-hand { justify-content: center; min-height: calc(var(--side-card-w) * 1.4); }
 .back-hand .card { width: var(--side-card-w); }
 .back-hand:not(.vertical) > *:not(:first-child) { margin-left: calc(var(--side-card-w) * -0.6); }
 
@@ -188,34 +245,45 @@ body {
 }
 .back-hand.vertical {
   flex-direction: column;
+  min-height: 0;
+  min-width: var(--side-card-w);
 }
 .back-hand.vertical > *:not(:first-child) { margin-top: calc(var(--side-card-w) * -1.35); }
 .back-hand.vertical .card { width: var(--side-card-w); }
 
-/* ---------- Pli en cours (mini disposition en croix) ---------- */
-.trick-zone {
+/* ---------- Pli en cours (rangée simple, entre les deux adversaires) ---------- */
+.center-zone {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.2rem;
+  gap: 0.3rem;
   min-height: 0;
 }
-.trick-mid-row {
+.trick-row {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   gap: 0.5rem;
+  flex-wrap: wrap;
+  min-height: calc(var(--side-card-w) * 1.4 + 1.2em);
 }
-.trick-slot {
-  width: calc(var(--side-card-w) * 1.3);
-  min-height: calc(var(--side-card-w) * 1.3 * 1.4);
+.trick-row .trick-slot {
+  width: calc(var(--side-card-w) * 1.5);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: 0.1rem;
 }
-.trick-slot .card { width: 100%; }
+.trick-row .trick-slot .card { width: 100%; }
+.trick-owner {
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--ink-soft);
+}
 
+.bidding-panel:empty { display: none; }
 .bidding-panel {
   display: flex;
   flex-direction: column;
@@ -225,7 +293,6 @@ body {
 }
 .bidding-turned-label { margin: 0; font-size: 0.56rem; color: var(--ink-soft); text-transform: uppercase; }
 .turned-card { width: var(--turned-card-w); }
-.bidding-log { margin: 0; font-size: 0.6rem; color: var(--ink-soft); text-align: center; min-height: 1.2em; }
 
 .dealer-bubble {
   position: absolute;
@@ -262,7 +329,7 @@ body {
   min-height: calc(var(--card-w) * 1.4 / 1 + 20px);
   padding-top: 20px;
 }
-.player-hand .card-btn:not(:first-child) { margin-left: calc(var(--card-w) * -0.34); }
+.player-hand .card-btn:not(:first-child) { margin-left: calc(var(--card-w) * -0.5); }
 
 .card-btn {
   appearance: none;
@@ -280,6 +347,70 @@ body {
 .card-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
 #fx-canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+
+/* ---------- Carte volante : de la main du joueur au centre du pli ---------- */
+.flying-card {
+  position: fixed;
+  aspect-ratio: 5 / 7;
+  border-radius: var(--card-radius);
+  filter: drop-shadow(2px 5px 8px rgba(0, 0, 0, 0.5));
+  pointer-events: none;
+  z-index: 50;
+}
+.flying-card.is-flying {
+  animation: card-fly var(--fly-duration, 520ms) cubic-bezier(0.25, 0.65, 0.3, 1) forwards;
+}
+@keyframes card-fly {
+  0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  100% { transform: translate(var(--dx, 0), var(--dy, 0)) rotate(520deg) scale(0.85); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flying-card.is-flying { animation: none !important; }
+}
+
+/* ---------- Pile du paquet (distribution + coupe) ---------- */
+.deck-pile {
+  position: relative;
+  width: var(--turned-card-w);
+  aspect-ratio: 5 / 7;
+  margin: 0 auto 0.3rem;
+}
+.deck-pile .deck-card {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--card-radius);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+.deck-pile .deck-card:nth-child(1) { transform: translate(-2px, -2px) rotate(-2deg); }
+.deck-pile .deck-card:nth-child(2) { transform: translate(-1px, -1px) rotate(-1deg); }
+.deck-pile .deck-card:nth-child(3) { transform: translate(1px, 1px) rotate(1deg); }
+.deck-pile .deck-card:nth-child(4) { transform: translate(2px, 2px) rotate(2deg); }
+
+.deck-pile.is-cutting .deck-card:nth-child(1),
+.deck-pile.is-cutting .deck-card:nth-child(2) {
+  animation: cut-top 700ms ease both;
+}
+.deck-pile.is-cutting .deck-card:nth-child(3),
+.deck-pile.is-cutting .deck-card:nth-child(4) {
+  animation: cut-bottom 700ms ease both;
+}
+@keyframes cut-top {
+  0% { transform: translate(-1px, -1px) rotate(-1deg); }
+  35% { transform: translate(18px, -22px) rotate(-10deg); }
+  65% { transform: translate(-18px, 14px) rotate(-10deg); }
+  100% { transform: translate(-1px, -1px) rotate(-1deg); }
+}
+@keyframes cut-bottom {
+  0% { transform: translate(1px, 1px) rotate(1deg); }
+  35% { transform: translate(-18px, 22px) rotate(10deg); }
+  65% { transform: translate(18px, -14px) rotate(10deg); }
+  100% { transform: translate(1px, 1px) rotate(1deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .deck-pile.is-cutting .deck-card { animation: none !important; }
+}
 
 .table.is-win-flash { animation: felt-flash-win 900ms ease; }
 @keyframes felt-flash-win {
@@ -377,8 +508,10 @@ body {
   .hud-value.is-bump,
   .result-message.pop,
   .table.is-win-flash,
-  .table.is-lose-flash {
+  .table.is-lose-flash,
+  .seat-label.is-active-turn {
     animation: none !important;
   }
+  .turn-toast { transition: opacity 120ms ease; transform: translate(-50%, 0) !important; }
   .card-btn:not(:disabled):hover { transform: none !important; }
 }
