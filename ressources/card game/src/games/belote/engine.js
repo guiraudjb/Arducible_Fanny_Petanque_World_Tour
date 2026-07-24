@@ -98,11 +98,18 @@ function cardRank(card, trumpSuit) {
   return card.suit === trumpSuit ? TRUMP_ORDER.indexOf(card.rank) : NONTRUMP_ORDER.indexOf(card.rank);
 }
 
+// Cycle des enseignes qui alterne rouge/noir/rouge/noir (et boucle
+// proprement : pique->coeur alterne aussi) - voir sortHand ci-dessous.
+const SUIT_CYCLE = ['coeur', 'trefle', 'carreau', 'pique'];
+
 /** Trie une main pour l'affichage : atout d'abord (du plus faible au plus
- * fort), puis les 3 autres couleurs dans un ordre fixe, chacune triée du
- * plus faible au plus fort. */
+ * fort) s'il y en a un, puis les 3 autres enseignes en poursuivant le cycle
+ * rouge/noir à partir de l'atout - deux enseignes de même couleur ne se
+ * suivent donc jamais. Sans atout encore connu (avant l'enchère), utilise
+ * le cycle tel quel à partir de cœur. */
 export function sortHand(hand, trumpSuit) {
-  const groups = [trumpSuit, ...SUITS.filter((s) => s !== trumpSuit)];
+  const start = trumpSuit ? SUIT_CYCLE.indexOf(trumpSuit) : 0;
+  const groups = [...SUIT_CYCLE.slice(start), ...SUIT_CYCLE.slice(0, start)];
   return hand.slice().sort((a, b) => {
     const ga = groups.indexOf(a.suit);
     const gb = groups.indexOf(b.suit);
@@ -324,6 +331,7 @@ export class Belote {
 
     const deck = this._cut(baseDeck);
     this.hands = dealInitialHands(deck);
+    this.hands[PLAYER] = sortHand(this.hands[PLAYER], null); // pas d'atout connu avant l'enchère
     this.turnedCard = deck[20];
     this._remainingDeck = deck.slice(21); // 11 cartes, complétées après enchères
     this.biddingRound = 1;
