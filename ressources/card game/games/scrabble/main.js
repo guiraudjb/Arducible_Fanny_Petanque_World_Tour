@@ -2,6 +2,7 @@ import { Scrabble, ROUND_SECONDS, BOARD_SIZE, BONUS_LABELS, buildLetterIndex } f
 import { createDealerVoice, isMuted } from '../../src/dealer/dealerVoice.js';
 
 const WORDS_URL = new URL('../../assets/scrabble/mots.txt', import.meta.url);
+const DEFINITIONS_URL = new URL('../../assets/scrabble/definitions.csv', import.meta.url);
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
 const prefersReducedMotion = () =>
@@ -15,6 +16,7 @@ let wordsArray = [];
 let wordSet = new Set();
 let letterIndex = null;
 let wordsLoaded = false;
+let definitionsMap = new Map();
 let selectedRackIndex = null;
 let pendingBlankRackIndex = null;
 let secondsLeft = ROUND_SECONDS;
@@ -46,6 +48,9 @@ const rackRowEl = document.getElementById('rack-row');
 const paytableRows = document.querySelectorAll('.pay-row[data-tier]');
 const blankPickerEl = document.getElementById('blank-picker');
 const blankPickerGridEl = document.getElementById('blank-picker-grid');
+const definitionPopupEl = document.getElementById('definition-popup');
+const definitionWordEl = document.getElementById('definition-word');
+const definitionListEl = document.getElementById('definition-list');
 
 /* ---------------------------------------------------------------- */
 /* Confettis (mêmes principes que les autres jeux du casino)          */
@@ -117,6 +122,46 @@ function flashTable(kind) {
 /* ---------------------------------------------------------------- */
 /* Dictionnaire                                                        */
 /* ---------------------------------------------------------------- */
+/** Parseur CSV minimal mais correct sur les guillemets (les définitions
+ * peuvent contenir des virgules) - suffisant pour un fichier généré par
+ * nous-mêmes (voir tools/generate_scrabble_definitions.py), pas pensé pour
+ * du CSV arbitraire externe. */
+function parseCsv(text) {
+  const rows = [];
+  let row = [];
+  let field = '';
+  let inQuotes = false;
+  for (let i = 0; i < text.length; i += 1) {
+    const c = text[i];
+    if (inQuotes) {
+      if (c === '"' && text[i + 1] === '"') { field += '"'; i += 1; }
+      else if (c === '"') { inQuotes = false; }
+      else { field += c; }
+    } else if (c === '"') {
+      inQuotes = true;
+    } else if (c === ',') {
+      row.push(field); field = '';
+    } else if (c === '\n') {
+      row.push(field); field = '';
+      rows.push(row); row = [];
+    } else if (c !== '\r') {
+      field += c;
+    }
+  }
+  if (field.length > 0 || row.length > 0) { row.push(field); rows.push(row); }
+  return rows;
+}
+
+fetch(DEFINITIONS_URL)
+  .then((r) => r.text())
+  .then((text) => {
+    const rows = parseCsv(text);
+    for (const [word, definition] of rows.slice(1)) {
+      if (word) definitionsMap.set(word, definition);
+    }
+  })
+  .catch(() => {}); // pas bloquant : le jeu marche sans définitions, juste sans l'infobulle
+
 fetch(WORDS_URL)
   .then((r) => r.text())
   .then((text) => {
@@ -126,6 +171,84 @@ fetch(WORDS_URL)
     wordsLoaded = true;
     render();
   });
+
+/* ---------------------------------------------------------------- */
+/* Définitions : reconstruction des mots depuis la grille, popup        */
+/* ---------------------------------------------------------------- */
+/** Reconstruit le(s) mot(s) (2 lettres ou plus) passant par la case
+ * (row, col) sur la grille actuelle : le mot horizontal et/ou vertical qui
+ * la traverse - une case d'intersection peut appartenir aux deux à la
+ * fois. Fonctionne sur n'importe quelle case remplie, posée ce tour-ci ou
+ * lors d'une manche précédente (le plateau ne se vide jamais entre les
+ * manches) - pas besoin de suivre un historique séparé des mots posés. */
+function wordsThroughCell(board, row, col) {
+  const letterAt = (r, c) => (board[r] && board[r][c] ? board[r][c].letter : null);
+  if (!letterAt(row, col)) return [];
+
+  const words = [];
+
+  let left = col;
+  while (letterAt(row, left - 1)) left -= 1;
+  let right = col;
+  while (letterAt(row, right + 1)) right += 1;
+  if (right > left) {
+    let text = '';
+    for (let c = left; c <= right; c += 1) text += letterAt(row, c);
+    words.push(text);
+  }
+
+  let top = row;
+  while (letterAt(top - 1, col)) top -= 1;
+  let bottom = row;
+  while (letterAt(bottom + 1, col)) bottom += 1;
+  if (bottom > top) {
+    let text = '';
+    for (let r = top; r <= bottom; r += 1) text += letterAt(r, col);
+    words.push(text);
+  }
+
+  return words;
+}
+
+function openDefinitionPopup(words) {
+  const unique = [...new Set(words)];
+  if (unique.length === 0) return;
+  definitionWordEl.textContent = unique.join(' / ');
+  definitionListEl.innerHTML = '';
+  for (const word of unique) {
+    const p = document.createElement('p');
+    const definition = definitionsMap.get(word);
+    if (definition) {
+      p.className = 'definition-entry';
+      p.textContent = `${word} — ${definition}`;
+    } else {
+      p.className = 'definition-entry is-unavailable';
+      p.textContent = `${word} — définition non disponible.`;
+    }
+    definitionListEl.appendChild(p);
+  }
+  definitionPopupEl.classList.remove('hidden');
+}
+function closeDefinitionPopup() {
+  definitionPopupEl.classList.add('hidden');
+}
+document.getElementById('btn-definition-close').addEventListener('click', closeDefinitionPopup);
+definitionPopupEl.addEventListener('click', (event) => {
+  if (event.target === definitionPopupEl) closeDefinitionPopup(); // clic sur le fond, pas le panneau
+});
+
+/** Construit un petit bouton texte pour un mot (dans le message de
+ * résultat ou le meilleur coup) qui ouvre sa définition au clic - le mot
+ * garde l'orthographe déjà connue du moteur (majuscules, sans accent),
+ * donc la clé de recherche dans definitionsMap est directe. */
+function wordLink(word) {
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'word-link';
+  btn.textContent = word;
+  btn.addEventListener('click', () => openDefinitionPopup([word]));
+  return btn;
+}
 
 /* ---------------------------------------------------------------- */
 /* Minuteur                                                            */
@@ -248,11 +371,19 @@ function renderBoard(state) {
       if (cell.letter) {
         btn.classList.add('has-letter');
         if (justPlayedMap.has(key)) btn.classList.add('is-new');
-        btn.disabled = true;
+        // Reste cliquable (contrairement à avant) : affiche la ou les
+        // définitions du/des mot(s) passant par cette case, reconstruits à
+        // la volée depuis la grille (voir wordsThroughCell) - fonctionne
+        // aussi bien pour les lettres posées ce tour-ci que lors d'une
+        // manche précédente, sans suivi séparé de l'historique des mots.
+        btn.disabled = false;
         const letterEl = document.createElement('span');
-        letterEl.className = 'cell-letter';
+        letterEl.className = 'cell-letter is-clickable-word';
         letterEl.textContent = cell.letter;
         btn.appendChild(letterEl);
+        btn.addEventListener('click', () => {
+          openDefinitionPopup(wordsThroughCell(state.board, cell.row, cell.col));
+        });
       } else if (pendingEntry) {
         btn.classList.add('has-letter', 'is-pending');
         btn.disabled = !canPlay;
@@ -420,10 +551,17 @@ function render() {
       resultMessageEl.classList.add('is-lose');
     } else {
       const bingoTag = r.bingo ? ' — SCRABBLE !' : '';
-      const wordsText = r.words.join(', ');
-      resultMessageEl.textContent = r.payout > 0
-        ? `${wordsText} (${r.score} pts)${bingoTag} — ${r.tier.name}, vous gagnez ${r.payout} !`
-        : `${wordsText} (${r.score} pts)${bingoTag} — ${r.tier.name}, mise perdue.`;
+      // Chaque mot formé ce tour-ci est un bouton cliquable (voir wordLink)
+      // qui ouvre sa définition, entrelacé avec le texte du message.
+      resultMessageEl.innerHTML = '';
+      r.words.forEach((word, i) => {
+        if (i > 0) resultMessageEl.appendChild(document.createTextNode(', '));
+        resultMessageEl.appendChild(wordLink(word));
+      });
+      const suffix = r.payout > 0
+        ? ` (${r.score} pts)${bingoTag} — ${r.tier.name}, vous gagnez ${r.payout} !`
+        : ` (${r.score} pts)${bingoTag} — ${r.tier.name}, mise perdue.`;
+      resultMessageEl.appendChild(document.createTextNode(suffix));
       resultMessageEl.classList.toggle('is-lose', r.payout === 0);
     }
     resultMessageEl.classList.remove('pop');
@@ -439,7 +577,10 @@ function render() {
       bestMoveMessageEl.textContent = 'Vous avez trouvé le meilleur mot possible, bravo !';
     } else {
       const bingoTag = best.bingo ? ' — SCRABBLE !' : '';
-      bestMoveMessageEl.textContent = `Meilleur coup possible : ${best.word} (${best.score} pts)${bingoTag}`;
+      bestMoveMessageEl.innerHTML = '';
+      bestMoveMessageEl.appendChild(document.createTextNode('Meilleur coup possible : '));
+      bestMoveMessageEl.appendChild(wordLink(best.word));
+      bestMoveMessageEl.appendChild(document.createTextNode(` (${best.score} pts)${bingoTag}`));
     }
   } else {
     resultMessageEl.textContent = '';
@@ -497,6 +638,7 @@ btnSubmit.addEventListener('click', () => doSubmit(false));
 
 document.getElementById('btn-next-round').addEventListener('click', () => {
   if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  closeDefinitionPopup();
   bestMoveComputing = false;
   game.nextRound();
   pendingBet = Math.min(game.lastBet, game.bankroll) || 0;
@@ -505,6 +647,7 @@ document.getElementById('btn-next-round').addEventListener('click', () => {
 
 document.getElementById('btn-new-game').addEventListener('click', () => {
   if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  closeDefinitionPopup();
   stopTimer();
   selectedRackIndex = null;
   bestMoveComputing = false;

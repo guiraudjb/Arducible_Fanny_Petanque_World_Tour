@@ -493,6 +493,47 @@ body {
 .blank-picker-key:hover { background: rgba(255, 213, 79, 0.28); }
 .blank-picker-key:active { transform: scale(0.92); }
 
+/* ---------- Popup définition d'un mot ---------- */
+.definition-panel { max-width: 420px; align-items: stretch; }
+.definition-word {
+  margin: 0;
+  font-family: "Rockwell", "Roboto Slab", Georgia, serif;
+  font-weight: 700;
+  color: var(--gold);
+  font-size: 1.1rem;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+.definition-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 45vh;
+  overflow-y: auto;
+}
+.definition-entry {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--paper-raised);
+  background: rgba(246, 236, 212, 0.06);
+  border-radius: 8px;
+  padding: 0.5rem 0.6rem;
+}
+.definition-entry.is-unavailable { color: var(--ink-soft); font-style: italic; }
+
+/* Mots cliquables (grille + meilleur coup) : indique visuellement qu'on
+   peut consulter leur définition, sans changer leur apparence de base. */
+.cell-letter.is-clickable-word,
+.word-link {
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+}
+.word-link { background: none; border: none; padding: 0; font: inherit; color: inherit; }
+.word-link:hover, .cell-letter.is-clickable-word:hover { color: var(--gold); }
+
 /* ---------- Dock ---------- */
 .dock {
   padding: 0.4rem 0.6rem calc(0.4rem + env(safe-area-inset-bottom, 0));
