@@ -63,28 +63,41 @@ export function createDealerVoice({ game, bubbleEl, textEl, muteBtn }) {
     hideTimer = setTimeout(hideBubble, 4200);
   }
 
+  /** Retourne une Promise résolue quand la réplique (audio) est terminée -
+   * pour permettre à un appelant (ex. la synthèse vocale du meilleur coup
+   * au Scrabble) d'attendre que Fanny ait fini de parler avant d'enchaîner,
+   * plutôt que de jouer par-dessus elle. Résout aussi (sans attendre) si
+   * l'audio est coupé ou bloqué - ne doit jamais bloquer l'appelant. */
   function say(event) {
     if (!dialogue) {
       // JSON pas encore chargé (très tôt après l'ouverture de la page) :
       // on retente une fois qu'il est prêt plutôt que de perdre la réplique.
-      loadDialogue().then((data) => {
+      return loadDialogue().then((data) => {
         dialogue = data[game] || {};
-        say(event);
+        return say(event);
       });
-      return;
     }
     const lines = dialogue[event];
-    if (!lines || lines.length === 0) return;
+    if (!lines || lines.length === 0) return Promise.resolve();
     const index = Math.floor(Math.random() * lines.length);
     const text = lines[index];
 
     showBubble(text);
 
-    if (isMuted()) return;
+    if (isMuted()) return Promise.resolve();
     audio.pause();
     audio.src = new URL(`${game}/${event}_${index}.mp3`, AUDIO_DIR).toString();
     audio.currentTime = 0;
-    audio.play().catch(() => {
+
+    return new Promise((resolve) => {
+      let done = false;
+      const finish = () => { if (!done) { done = true; resolve(); } };
+      audio.addEventListener('ended', finish, { once: true });
+      audio.addEventListener('error', finish, { once: true });
+      // Filet de sécurité : si le clip ne se termine jamais (rejoué par-dessus,
+      // évènement manqué...), ne pas laisser l'appelant attendre indéfiniment.
+      setTimeout(finish, 6000);
+      audio.play().catch(finish);
       // Lecture bloquée (politique autoplay du navigateur) : la bulle
       // affichée ci-dessus reste le seul retour, ce qui est acceptable.
     });

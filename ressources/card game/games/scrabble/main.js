@@ -51,6 +51,9 @@ const blankPickerGridEl = document.getElementById('blank-picker-grid');
 const definitionPopupEl = document.getElementById('definition-popup');
 const definitionWordEl = document.getElementById('definition-word');
 const definitionListEl = document.getElementById('definition-list');
+const webLookupPopupEl = document.getElementById('web-lookup-popup');
+const webLookupTitleEl = document.getElementById('web-lookup-title');
+const webLookupFrameEl = document.getElementById('web-lookup-frame');
 
 /* ---------------------------------------------------------------- */
 /* Confettis (mêmes principes que les autres jeux du casino)          */
@@ -225,6 +228,13 @@ function openDefinitionPopup(words) {
       p.className = 'definition-entry is-unavailable';
       p.textContent = `${word} — définition non disponible.`;
     }
+    p.appendChild(document.createElement('br'));
+    const lookupBtn = document.createElement('button');
+    lookupBtn.type = 'button';
+    lookupBtn.className = 'lookup-link';
+    lookupBtn.textContent = '🔍 Recherche approfondie';
+    lookupBtn.addEventListener('click', () => openWebLookup(word));
+    p.appendChild(lookupBtn);
     definitionListEl.appendChild(p);
   }
   definitionPopupEl.classList.remove('hidden');
@@ -235,6 +245,26 @@ function closeDefinitionPopup() {
 document.getElementById('btn-definition-close').addEventListener('click', closeDefinitionPopup);
 definitionPopupEl.addEventListener('click', (event) => {
   if (event.target === definitionPopupEl) closeDefinitionPopup(); // clic sur le fond, pas le panneau
+});
+
+/* ---------------------------------------------------------------- */
+/* Recherche approfondie : Wiktionnaire dans une frame fermable        */
+/* (Google refuse d'être affiché dans une frame externe - vérifié -    */
+/* Wiktionnaire, déjà notre source pour definitions.csv, ne bloque pas */
+/* l'intégration). */
+/* ---------------------------------------------------------------- */
+function openWebLookup(word) {
+  webLookupTitleEl.textContent = `Recherche approfondie : ${word}`;
+  webLookupFrameEl.src = `https://fr.wiktionary.org/wiki/${encodeURIComponent(word.toLowerCase())}`;
+  webLookupPopupEl.classList.remove('hidden');
+}
+function closeWebLookup() {
+  webLookupPopupEl.classList.add('hidden');
+  webLookupFrameEl.src = 'about:blank'; // stoppe le chargement/l'éventuel audio de la page intégrée
+}
+document.getElementById('btn-web-lookup-close').addEventListener('click', closeWebLookup);
+webLookupPopupEl.addEventListener('click', (event) => {
+  if (event.target === webLookupPopupEl) closeWebLookup(); // clic sur le fond, pas le panneau
 });
 
 /** Construit un petit bouton texte pour un mot (dans le message de
@@ -313,6 +343,101 @@ function closeBlankPicker() {
 document.getElementById('btn-blank-cancel').addEventListener('click', closeBlankPicker);
 
 /* ---------------------------------------------------------------- */
+/* Glisser-déposer d'une lettre du chevalet vers la grille              */
+/* (Pointer Events : un seul code pour souris ET écran tactile)         */
+/* ---------------------------------------------------------------- */
+const DRAG_START_THRESHOLD = 6; // px de mouvement avant de basculer du tap au glisser
+
+function tileGhostFor(entry) {
+  const ghost = document.createElement('div');
+  ghost.className = 'tile drag-ghost';
+  if (entry.isBlank) ghost.classList.add('is-blank');
+  const letterEl = document.createElement('span');
+  letterEl.className = 'tile-letter';
+  letterEl.textContent = entry.display || (entry.isBlank ? '★' : '');
+  ghost.appendChild(letterEl);
+  const valueEl = document.createElement('span');
+  valueEl.className = 'tile-value';
+  valueEl.textContent = String(entry.value);
+  ghost.appendChild(valueEl);
+  document.body.appendChild(ghost);
+  return ghost;
+}
+
+function boardCellFromPoint(clientX, clientY) {
+  const el = document.elementFromPoint(clientX, clientY);
+  const cell = el && el.closest ? el.closest('.board-cell') : null;
+  return cell && boardEl.contains(cell) ? cell : null;
+}
+
+function clearDropHighlight() {
+  const prev = boardEl.querySelector('.is-drop-target');
+  if (prev) prev.classList.remove('is-drop-target');
+}
+
+/** Démarre un glisser potentiel depuis une lettre du chevalet. Un simple tap
+ * (pas de mouvement au-delà du seuil) laisse le clic habituel gérer la
+ * sélection - seul un vrai déplacement du pointeur bascule en mode glisser,
+ * avec un jeton fantôme qui suit le doigt/la souris jusqu'à la case visée. */
+function attachTileDrag(btn, index, entry) {
+  btn.addEventListener('pointerdown', (event) => {
+    if (event.button > 0 || btn.disabled) return;
+    // Un joker pas encore assigné s'ouvre au tap (choix de la lettre) -
+    // rien à glisser tant qu'il n'a pas de lettre affichée.
+    if (entry.isBlank && !entry.display) return;
+
+    const startX = event.clientX;
+    const startY = event.clientY;
+    const pointerId = event.pointerId;
+    let dragging = false;
+    let ghost = null;
+
+    const onMove = (moveEvent) => {
+      if (moveEvent.pointerId !== pointerId) return;
+      const dx = moveEvent.clientX - startX;
+      const dy = moveEvent.clientY - startY;
+      if (!dragging) {
+        if (Math.hypot(dx, dy) < DRAG_START_THRESHOLD) return;
+        dragging = true;
+        btn.classList.add('is-dragging-source');
+        ghost = tileGhostFor(entry);
+      }
+      moveEvent.preventDefault();
+      const rect = ghost.getBoundingClientRect();
+      ghost.style.left = `${moveEvent.clientX - rect.width / 2}px`;
+      ghost.style.top = `${moveEvent.clientY - rect.height / 2}px`;
+      clearDropHighlight();
+      const cell = boardCellFromPoint(moveEvent.clientX, moveEvent.clientY);
+      if (cell && !cell.classList.contains('has-letter')) cell.classList.add('is-drop-target');
+    };
+
+    const onUp = (upEvent) => {
+      if (upEvent.pointerId !== pointerId) return;
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('pointercancel', onUp);
+      btn.classList.remove('is-dragging-source');
+      clearDropHighlight();
+      if (ghost) ghost.remove();
+      if (!dragging) return; // simple tap : le gestionnaire de clic s'en charge
+
+      const cell = boardCellFromPoint(upEvent.clientX, upEvent.clientY);
+      if (cell && !cell.classList.contains('has-letter') && game.getState().phase === 'playing') {
+        const row = Number(cell.dataset.row);
+        const col = Number(cell.dataset.col);
+        const res = game.placeTileFromRack(index, row, col);
+        if (res.ok) selectedRackIndex = null;
+        render();
+      }
+    };
+
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('pointercancel', onUp);
+  });
+}
+
+/* ---------------------------------------------------------------- */
 /* Chevalet                                                             */
 /* ---------------------------------------------------------------- */
 function renderRack(rack, canPlay) {
@@ -340,6 +465,7 @@ function renderRack(rack, canPlay) {
       selectedRackIndex = selectedRackIndex === index ? null : index;
       render();
     });
+    if (canPlay) attachTileDrag(btn, index, entry);
     rackRowEl.appendChild(btn);
   });
 }
@@ -365,6 +491,8 @@ function renderBoard(state) {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'board-cell';
+      btn.dataset.row = String(cell.row);
+      btn.dataset.col = String(cell.col);
       if (cell.isCenter) btn.classList.add('is-center');
 
       const pendingEntry = pendingMap.get(key);
@@ -460,6 +588,28 @@ function doSubmit(isTimeout) {
   if (!outcome.ok) return;
   render();
 
+  const state = game.getState();
+  const r = state.result;
+  // La voix de Fanny (mp3) et la synthèse vocale du meilleur coup partagent
+  // le même haut-parleur : on attend que sa réplique soit terminée avant de
+  // lancer la lecture du meilleur coup, plutôt que de jouer les deux en
+  // même temps (voir dealerVoice.say, qui résout une fois le clip fini).
+  let voiceDone;
+  if (isTimeout) {
+    voiceDone = dealerVoice.say('timeout');
+  } else if (r.bingo && r.valid) {
+    voiceDone = dealerVoice.say('bingo');
+  } else if (r.tier.mult >= 10) {
+    voiceDone = dealerVoice.say('win_jackpot');
+  } else if (r.tier.mult >= 3) {
+    voiceDone = dealerVoice.say('win_big');
+  } else if (r.tier.mult >= 1) {
+    voiceDone = dealerVoice.say('win_small');
+  } else {
+    voiceDone = dealerVoice.say('lose');
+  }
+  if (r.payout > 0) { flashTable('win'); burstConfetti(); } else { flashTable('lose'); }
+
   if (letterIndex) {
     bestMoveComputing = true;
     render();
@@ -467,26 +617,9 @@ function doSubmit(isTimeout) {
       game.computeBestMove(letterIndex, wordSet);
       bestMoveComputing = false;
       render();
-      speakBestMove(game.result.bestMove);
+      Promise.resolve(voiceDone).then(() => speakBestMove(game.result.bestMove));
     }, 20);
   }
-
-  const state = game.getState();
-  const r = state.result;
-  if (isTimeout) {
-    dealerVoice.say('timeout');
-  } else if (r.bingo && r.valid) {
-    dealerVoice.say('bingo');
-  } else if (r.tier.mult >= 10) {
-    dealerVoice.say('win_jackpot');
-  } else if (r.tier.mult >= 3) {
-    dealerVoice.say('win_big');
-  } else if (r.tier.mult >= 1) {
-    dealerVoice.say('win_small');
-  } else {
-    dealerVoice.say('lose');
-  }
-  if (r.payout > 0) { flashTable('win'); burstConfetti(); } else { flashTable('lose'); }
 }
 
 /* ---------------------------------------------------------------- */
@@ -639,6 +772,7 @@ btnSubmit.addEventListener('click', () => doSubmit(false));
 document.getElementById('btn-next-round').addEventListener('click', () => {
   if ('speechSynthesis' in window) window.speechSynthesis.cancel();
   closeDefinitionPopup();
+  closeWebLookup();
   bestMoveComputing = false;
   game.nextRound();
   pendingBet = Math.min(game.lastBet, game.bankroll) || 0;
@@ -648,6 +782,7 @@ document.getElementById('btn-next-round').addEventListener('click', () => {
 document.getElementById('btn-new-game').addEventListener('click', () => {
   if ('speechSynthesis' in window) window.speechSynthesis.cancel();
   closeDefinitionPopup();
+  closeWebLookup();
   stopTimer();
   selectedRackIndex = null;
   bestMoveComputing = false;
