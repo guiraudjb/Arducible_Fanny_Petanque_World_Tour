@@ -234,6 +234,11 @@ export function tierForScore(score) {
   return TIERS.find((t) => score >= t.min);
 }
 
+// Une "partie" (au sens traditionnel de la belote) se joue en 500 points,
+// cumulés manche après manche - indépendamment des mises/du bankroll du
+// casino, qui continuent sans interruption d'une partie à l'autre.
+const PARTIE_TARGET = 500;
+
 export class Belote {
   constructor({ startingBankroll = 500 } = {}) {
     this.startingBankroll = startingBankroll;
@@ -253,6 +258,12 @@ export class Belote {
     // l'IA (voir ai.js / reconstructDeal). Remis à null uniquement ici :
     // une nouvelle session = un nouveau paquet, mélangé pour de vrai.
     this.lastRealSequence = null;
+    // Score cumulé de la partie en cours (500 points), remis à zéro ici
+    // (nouvelle session = nouvelle partie) et quand une partie est gagnée
+    // (voir _finishRound / nextRound) - distinct de teamScores, qui ne
+    // compte que la mène en cours.
+    this.matchScores = { A: 0, B: 0 };
+    this._pendingPartieReset = false;
     this._resetHandState();
   }
 
@@ -463,6 +474,17 @@ export class Belote {
 
     const capotTeam = this.tricksWonBy.A === 8 ? 'A' : (this.tricksWonBy.B === 8 ? 'B' : null);
 
+    // Cumul de la partie (500 points, voir PARTIE_TARGET) : si le seuil est
+    // atteint, la partie est gagnée et repartira de zéro à la manche
+    // suivante (voir nextRound) - le score affiché ici, lui, reste celui
+    // qui a fait gagner la partie, jusqu'à ce que la manche suivante démarre.
+    this.matchScores.A += finalScores.A;
+    this.matchScores.B += finalScores.B;
+    const partieWinner = this.matchScores.A >= PARTIE_TARGET || this.matchScores.B >= PARTIE_TARGET
+      ? (this.matchScores.A > this.matchScores.B ? 'A' : 'B')
+      : null;
+    if (partieWinner) this._pendingPartieReset = true;
+
     this.result = {
       teamAScore,
       teamBScore: finalScores.B,
@@ -474,6 +496,8 @@ export class Belote {
       capotTeam,
       beloteTeam,
       won: teamAScore > finalScores.B,
+      matchScores: { ...this.matchScores },
+      partieWinner,
     };
     // Ordre de chute exact des 32 cartes cette mène - devient la mémoire
     // "mène précédente" pour l'IA à la prochaine donne (voir ai.js) et la
@@ -484,6 +508,10 @@ export class Belote {
   }
 
   nextRound() {
+    if (this._pendingPartieReset) {
+      this.matchScores = { A: 0, B: 0 };
+      this._pendingPartieReset = false;
+    }
     this.phase = 'betting';
     this.dealerSeat = nextSeat(this.dealerSeat);
     this._resetHandState();
@@ -510,6 +538,7 @@ export class Belote {
       legalCardIds: this.legalMovesForSeat(PLAYER).map((c) => c.id),
       trickNum: this.trickNum,
       teamScores: this.teamScores,
+      matchScores: this.matchScores,
       tricksWonBy: this.tricksWonBy,
       lastTrick: this.lastTrick,
       beloteSeat: this.beloteSeat,

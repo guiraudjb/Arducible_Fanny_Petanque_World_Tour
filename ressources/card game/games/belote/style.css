@@ -185,6 +185,16 @@ body {
 .pile-stack::before { top: 0.1rem; transform: rotate(-6deg); }
 .pile-stack::after { top: 0.15rem; transform: rotate(4deg); }
 
+/* Score cumulé de la partie (500 points), sous la pile de plis de la
+   mène en cours - distinct, plus discret, ne bouge qu'une fois par manche. */
+.score-total {
+  margin-top: 0.2rem;
+  font-size: 0.56rem;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
 /* ---------- Zones de mains ---------- */
 .fanny-zone {
   display: flex;

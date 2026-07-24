@@ -316,6 +316,14 @@
       "Bernard remporte le pli !",
       "Le pli est pour Bernard !",
       "Bernard rafle ce pli !"
+    ],
+    "partie_won": [
+      "Bravo, votre équipe remporte la partie !",
+      "Quelle partie ! Vous l'emportez !"
+    ],
+    "partie_lost": [
+      "L'équipe adverse remporte la partie, on prend notre revanche ?",
+      "Cette partie est pour l'équipe adverse, la prochaine est pour vous !"
     ]
   }
 }

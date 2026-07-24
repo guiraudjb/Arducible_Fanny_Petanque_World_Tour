@@ -4,6 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Belote — Fanny Pétanque World Tour</title>
+  <meta name="description" content="Belote à quatre en équipes (vous et Fanny contre Marcel et Bernard) - installable, jouable hors-ligne." />
+  <meta name="theme-color" content="#1c130b" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -26,12 +31,14 @@
         <span class="score-label">Équipe A (vous + Fanny)</span>
         <span class="score-value" id="team-a-score">0</span>
         <div class="pile-stack" id="pile-a">0 pli(s)</div>
+        <span class="score-total" id="team-a-match-total">Partie : 0 / 500</span>
       </div>
       <div class="trick-counter" id="trick-counter"></div>
       <div class="score-box">
         <span class="score-label">Équipe B (Marcel + Bernard)</span>
         <span class="score-value" id="team-b-score">0</span>
         <div class="pile-stack" id="pile-b">0 pli(s)</div>
+        <span class="score-total" id="team-b-match-total">Partie : 0 / 500</span>
       </div>
     </div>
 

@@ -190,6 +190,8 @@ const teamAScoreEl = document.getElementById('team-a-score');
 const teamBScoreEl = document.getElementById('team-b-score');
 const pileAEl = document.getElementById('pile-a');
 const pileBEl = document.getElementById('pile-b');
+const teamAMatchTotalEl = document.getElementById('team-a-match-total');
+const teamBMatchTotalEl = document.getElementById('team-b-match-total');
 const trickCounterEl = document.getElementById('trick-counter');
 const fannyHandEl = document.getElementById('fanny-hand');
 const opp1HandEl = document.getElementById('opp1-hand');
@@ -586,6 +588,8 @@ function render() {
   teamBScoreEl.textContent = state.teamScores.B;
   pileAEl.textContent = `${state.tricksWonBy.A} pli(s)`;
   pileBEl.textContent = `${state.tricksWonBy.B} pli(s)`;
+  teamAMatchTotalEl.textContent = `Partie : ${state.matchScores.A} / 500`;
+  teamBMatchTotalEl.textContent = `Partie : ${state.matchScores.B} / 500`;
   trickCounterEl.textContent = state.phase === 'playing' || state.phase === 'result'
     ? `Pli ${Math.min(state.trickNum + 1, 8)} / 8` : '';
 
@@ -613,9 +617,14 @@ function render() {
     const capotTag = r.capotTeam ? (r.capotTeam === 'A' ? ' — CAPOT pour votre équipe !' : ' — Capot pour l\'équipe adverse.') : '';
     const beloteTag = r.beloteTeam ? (r.beloteTeam === 'A' ? ' (Belote-Rebelote pour votre équipe, +20)' : ' (Belote-Rebelote pour l\'équipe adverse, +20)') : '';
     const chuteTag = r.chute ? (r.preneurTeam === 'A' ? ' — vous avez chuté !' : ' — l\'équipe adverse a chuté !') : '';
-    resultMessageEl.textContent = r.won
+    const partieTag = r.partieWinner
+      ? (r.partieWinner === 'A'
+        ? ` — Partie remportée par votre équipe, ${r.matchScores.A} à ${r.matchScores.B} !`
+        : ` — Partie remportée par l'équipe adverse, ${r.matchScores.B} à ${r.matchScores.A} !`)
+      : ` — Partie en cours : ${r.matchScores.A} à ${r.matchScores.B}.`;
+    resultMessageEl.textContent = (r.won
       ? `Votre équipe gagne la manche ${r.teamAScore} à ${r.teamBScore}${chuteTag}${capotTag}${beloteTag} — ${r.tier.name}, vous remportez ${r.payout} !`
-      : `L'équipe adverse gagne la manche ${r.teamBScore} à ${r.teamAScore}${chuteTag}${beloteTag} — mise perdue.`;
+      : `L'équipe adverse gagne la manche ${r.teamBScore} à ${r.teamAScore}${chuteTag}${beloteTag} — mise perdue.`) + partieTag;
     resultMessageEl.classList.toggle('is-lose', !r.won);
     resultMessageEl.classList.remove('pop');
     void resultMessageEl.offsetWidth;
@@ -658,12 +667,22 @@ function render() {
 function announceResultVoice() {
   const r = game.result;
   if (!r) return;
+  let voiceDone;
   if (r.won) {
-    if (r.tier.mult >= 8) dealerVoice.say('win_jackpot');
-    else if (r.tier.mult >= 3) dealerVoice.say('win_big');
-    else dealerVoice.say('win_small');
+    if (r.tier.mult >= 8) voiceDone = dealerVoice.say('win_jackpot');
+    else if (r.tier.mult >= 3) voiceDone = dealerVoice.say('win_big');
+    else voiceDone = dealerVoice.say('win_small');
   } else {
-    dealerVoice.say('lose');
+    voiceDone = dealerVoice.say('lose');
+  }
+  // La partie (500 points) se termine rarement en même temps que la
+  // manche : quand ça arrive, on attend que la réplique de manche soit
+  // finie avant d'enchaîner (voir dealerVoice.say, qui résout à la fin
+  // du clip), plutôt que de jouer les deux voix en même temps.
+  if (r.partieWinner) {
+    Promise.resolve(voiceDone).then(() => {
+      dealerVoice.say(r.partieWinner === 'A' ? 'partie_won' : 'partie_lost');
+    });
   }
 }
 
@@ -815,3 +834,15 @@ createDeckSelector({
   },
 });
 dealerVoice.say('greeting');
+
+// PWA : portée volontairement limitée à ce dossier (sw.js n'est enregistré
+// que depuis ici, donc son scope par défaut s'arrête à games/belote/ - les
+// autres jeux du casino ne sont pas concernés).
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {
+      // Hors-ligne indisponible cette fois (hébergement sans HTTPS en local,
+      // navigateur incompatible...) : le jeu reste jouable en ligne.
+    });
+  });
+}
