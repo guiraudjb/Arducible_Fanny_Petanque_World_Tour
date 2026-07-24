@@ -423,14 +423,23 @@ function renderPlayerHand(hand, legalIds, canPlay, arriving) {
   const legalSet = new Set(legalIds);
   const n = hand.length;
   const mid = (n - 1) / 2;
+  // Éventail plus serré à mesure que la main grandit (jusqu'à 8 cartes après
+  // la donne complémentaire) : sinon, sur un écran de téléphone étroit, les
+  // cartes des extrémités pivotent assez pour faire sortir leur coin
+  // supérieur (index de valeur) de l'écran - illisible. Moins de rotation
+  // par carte + un recouvrement plus important compensent en resserrant
+  // l'éventail, sans changer son allure pour une main de 5 cartes.
+  const angleStep = n > 1 ? Math.min(6, 30 / (n - 1)) : 6;
+  const overlapFrac = 0.5 + Math.max(0, n - 5) * 0.05;
   hand.forEach((card, i) => {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'card-btn';
-    const angle = (i - mid) * 6; // degrés par carte, éventail
+    const angle = (i - mid) * angleStep; // degrés par carte, éventail
     const lift = Math.abs(i - mid) * Math.abs(i - mid) * 1.1; // arc : les extrémités descendent légèrement
     btn.style.transform = `rotate(${angle}deg) translateY(${lift}px)`;
     btn.style.zIndex = String(100 - Math.abs(i - mid));
+    if (i > 0) btn.style.marginLeft = `calc(var(--card-w) * -${overlapFrac})`;
     const img = document.createElement('img');
     img.className = 'card';
     img.src = cardSprite(card);
@@ -455,6 +464,22 @@ function renderPlayerHand(hand, legalIds, canPlay, arriving) {
     }
     playerHandEl.appendChild(btn);
   });
+
+  // Filet de sécurité : si l'éventail déborde quand même du conteneur (très
+  // petits écrans), on le réduit uniformément pour qu'il tienne toujours
+  // entièrement à l'écran - mesuré sur le DOM réel (donc fiable quelle que
+  // soit la largeur), plutôt que déduit de constantes à l'aveugle.
+  playerHandEl.style.transform = 'none';
+  const cardRects = Array.from(playerHandEl.children).map((el) => el.getBoundingClientRect());
+  if (cardRects.length > 0) {
+    const minLeft = Math.min(...cardRects.map((r) => r.left));
+    const maxRight = Math.max(...cardRects.map((r) => r.right));
+    const visualWidth = maxRight - minLeft;
+    const available = playerHandEl.parentElement.clientWidth - 8; // petite marge de sécurité
+    if (visualWidth > available && visualWidth > 0) {
+      playerHandEl.style.transform = `scale(${available / visualWidth})`;
+    }
+  }
 }
 
 function renderTrickRow(entries) {

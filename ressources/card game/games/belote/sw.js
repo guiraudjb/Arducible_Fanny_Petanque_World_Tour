@@ -10,7 +10,7 @@
 //
 // Incrémenter CACHE_VERSION à chaque changement de cette liste ou du
 // contenu des fichiers précachés, pour forcer une nouvelle installation.
-const CACHE_VERSION = 'belote-v1';
+const CACHE_VERSION = 'belote-v2';
 
 const PRECACHE_URLS = [
   './',
