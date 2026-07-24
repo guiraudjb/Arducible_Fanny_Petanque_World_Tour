@@ -37,13 +37,20 @@ function cardSprite(card) {
 /** Anime une carte qui s'envole en tournoyant de `sourceEl` à `destEl`,
  * puis se résout. Sert à la fois pour jouer une carte (main -> centre)
  * et pour la distribution (paquet -> main de chacun). */
-function flyCard({ src, sourceEl, destEl, duration = FLY_DURATION_MS }) {
+function flyCard({ src, sourceEl, destEl, duration = FLY_DURATION_MS, zoomToDest = false }) {
   if (prefersReducedMotion() || !sourceEl || !destEl) return Promise.resolve();
   const sourceRect = sourceEl.getBoundingClientRect();
   const destRect = destEl.getBoundingClientRect();
   if (sourceRect.width === 0 || destRect.width === 0) return Promise.resolve();
 
-  const size = sourceRect.width || 40;
+  // zoomToDest : la carte part visuellement à la taille de la source (petite,
+  // ex. une carte en main) et grossit progressivement jusqu'à la taille
+  // d'arrivée (ex. une carte au centre du tapis, plus grande) - au lieu du
+  // léger rétrécissement utilisé pour la distribution.
+  const size = zoomToDest ? (destRect.width || sourceRect.width || 40) : (sourceRect.width || 40);
+  const scaleFrom = zoomToDest ? (sourceRect.width || size) / size : 1;
+  const scaleTo = zoomToDest ? 1 : 0.85;
+
   const img = document.createElement('img');
   img.className = 'flying-card';
   img.src = src;
@@ -56,6 +63,8 @@ function flyCard({ src, sourceEl, destEl, duration = FLY_DURATION_MS }) {
   img.style.setProperty('--dx', `${dx}px`);
   img.style.setProperty('--dy', `${dy}px`);
   img.style.setProperty('--fly-duration', `${duration}ms`);
+  img.style.setProperty('--scale-from', scaleFrom);
+  img.style.setProperty('--scale-to', scaleTo);
 
   document.body.appendChild(img);
   void img.offsetWidth;
@@ -69,7 +78,7 @@ function flyCard({ src, sourceEl, destEl, duration = FLY_DURATION_MS }) {
 }
 
 function flyCardToCenter(card, sourceEl) {
-  return flyCard({ src: cardSprite(card), sourceEl, destEl: trickRowEl });
+  return flyCard({ src: cardSprite(card), sourceEl, destEl: trickRowEl, zoomToDest: true });
 }
 
 /* ---------------------------------------------------------------- */
@@ -118,6 +127,16 @@ async function playDealAnimation() {
   await dealRoundAnimation(3);
   announce('Distribution : deux cartes chacun...');
   await dealRoundAnimation(2);
+  deckPileEl.classList.add('hidden');
+}
+
+/** Une fois la prise actée (voir performBid), le donneur complète chaque
+ * main jusqu'à 8 cartes : mêmes cartes qui s'envolent du talon vers chaque
+ * joueur, comme pour la donne initiale - pas juste un fondu sur place. */
+async function playCompletionDealAnimation() {
+  deckPileEl.classList.remove('hidden');
+  announce('Distribution : complément de la main...');
+  await dealRoundAnimation(3);
   deckPileEl.classList.add('hidden');
 }
 
@@ -287,6 +306,7 @@ async function performBid(seat, action, round) {
   announce(bidActionText(seat, action));
   if (action.type === 'take') {
     await revealTrumpChoice(seat, action.suit, round);
+    await playCompletionDealAnimation();
     justCompletedDeal = true;
   }
   handlePostAction();

@@ -245,7 +245,7 @@ body {
   display: block;
   filter: drop-shadow(1px 2px 3px rgba(0, 0, 0, 0.4));
 }
-.back-hand { justify-content: center; min-height: calc(var(--side-card-w) * 1.4); }
+.back-hand { justify-content: center; min-height: calc(var(--side-card-w) * 1.4); min-width: var(--side-card-w); }
 .back-hand .card { width: var(--side-card-w); }
 .back-hand:not(.vertical) > *:not(:first-child) { margin-left: calc(var(--side-card-w) * -0.6); }
 
@@ -418,6 +418,7 @@ body {
   align-items: flex-end;
   justify-content: center;
   min-height: calc(var(--card-w) * 1.4 / 1 + 20px);
+  min-width: var(--card-w);
   padding-top: 20px;
 }
 .player-hand .card-btn:not(:first-child) { margin-left: calc(var(--card-w) * -0.5); }
@@ -452,8 +453,8 @@ body {
   animation: card-fly var(--fly-duration, 520ms) cubic-bezier(0.25, 0.65, 0.3, 1) forwards;
 }
 @keyframes card-fly {
-  0% { transform: translate(0, 0) rotate(0deg) scale(1); }
-  100% { transform: translate(var(--dx, 0), var(--dy, 0)) rotate(520deg) scale(0.85); }
+  0% { transform: translate(0, 0) rotate(0deg) scale(var(--scale-from, 1)); }
+  100% { transform: translate(var(--dx, 0), var(--dy, 0)) rotate(520deg) scale(var(--scale-to, 0.85)); }
 }
 @media (prefers-reduced-motion: reduce) {
   .flying-card.is-flying { animation: none !important; }
