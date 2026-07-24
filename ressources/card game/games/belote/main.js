@@ -2,11 +2,12 @@ import {
   Belote, PLAYER, OPP1, FANNY, OPP2, SUITS, SUIT_SYMBOLS, SUIT_COLORS,
 } from '../../src/games/belote/engine.js';
 import { DecisionEngine } from '../../src/games/belote/ai.js';
-import { createDealerVoice } from '../../src/dealer/dealerVoice.js';
+import { createDealerVoice, isMuted } from '../../src/dealer/dealerVoice.js';
 import { createDeckSelector } from '../../src/cards/deckSelector.js';
 
 let SPRITE_DIR = '../../assets/cards/';
 let BACK_SPRITE = `${SPRITE_DIR}back.png`;
+const CARD_AUDIO_DIR = '../../assets/cards_audio/belote/';
 const SUIT_TO_SPRITE = { coeur: 'hearts', carreau: 'diamonds', trefle: 'clubs', pique: 'spades' };
 const SUIT_NAMES_FR = { coeur: 'Cœur', carreau: 'Carreau', trefle: 'Trèfle', pique: 'Pique' };
 const SEAT_NAMES = { [PLAYER]: 'Vous', [OPP1]: 'Marcel', [FANNY]: 'Fanny', [OPP2]: 'Bernard' };
@@ -32,6 +33,19 @@ const prefersReducedMotion = () =>
 
 function cardSprite(card) {
   return `${SPRITE_DIR}${card.rank}-${SUIT_TO_SPRITE[card.suit]}.png`;
+}
+
+/** Annonce à la voix la carte retournée (« As de Cœur », etc.) - un clip
+ * gTTS dédié par carte (voir tools/generate_card_audio.py), distinct des
+ * répliques de Fanny puisque ce n'est pas une réplique mais un simple
+ * nom de carte. Respecte le même mute que la voix de la croupière. */
+const cardAnnounceAudio = new Audio();
+function announceCardVoice(card) {
+  if (isMuted()) return;
+  cardAnnounceAudio.pause();
+  cardAnnounceAudio.src = `${CARD_AUDIO_DIR}${card.rank}-${card.suit}.mp3`;
+  cardAnnounceAudio.currentTime = 0;
+  cardAnnounceAudio.play().catch(() => {});
 }
 
 /** Anime une carte qui s'envole en tournoyant de `sourceEl` à `destEl`,
@@ -294,6 +308,7 @@ async function pauseOnTurnedCard(turnedCard) {
   const turnedImg = biddingPanelEl.querySelector('.turned-card');
   if (turnedImg && !prefersReducedMotion()) turnedImg.classList.add('is-just-dealt');
   announce(`Carte retournée : ${SUIT_NAMES_FR[turnedCard.suit]} ${SUIT_SYMBOLS[turnedCard.suit]}`);
+  announceCardVoice(turnedCard);
   await new Promise((r) => setTimeout(r, prefersReducedMotion() ? TURNED_CARD_PAUSE_MS_REDUCED : TURNED_CARD_PAUSE_MS));
 }
 
@@ -579,7 +594,7 @@ function render() {
   renderBackHand(fannyHandEl, state.handCounts[FANNY], arriving);
   renderBackHand(opp1HandEl, state.handCounts[OPP1], arriving);
   renderBackHand(opp2HandEl, state.handCounts[OPP2], arriving);
-  renderPlayerHand(state.playerHand, state.legalCardIds, state.phase === 'playing' && state.turn === PLAYER, arriving);
+  renderPlayerHand(state.playerHand, state.legalCardIds, state.phase === 'playing' && !holdingTrick && state.turn === PLAYER, arriving);
 
   renderBiddingPanel(state);
   renderBiddingControls(state);
@@ -662,12 +677,15 @@ function checkForCompletedTrick() {
 
   // La manche se termine toujours au 8e pli (dix de der) : on annonce
   // explicitement qui l'a remporté, à la voix et au toast, avant que la
-  // voix de résultat ne parle par-dessus (voir announceResultVoice).
+  // voix de résultat ne parle par-dessus (voir announceResultVoice). Pour
+  // les 7 autres plis, une réplique plus courte suffit (voir SEAT_VOICE_SLUG).
+  const winnerSeat = holdingTrick.winnerSeat;
   const isFinalTrick = state.phase === 'result';
   if (isFinalTrick) {
-    const winnerSeat = holdingTrick.winnerSeat;
     announce(winnerSeat === PLAYER ? 'Vous remportez le dernier pli !' : `${SEAT_NAMES[winnerSeat]} remporte le dernier pli !`);
     dealerVoice.say(`last_trick_${SEAT_VOICE_SLUG[winnerSeat]}`);
+  } else {
+    dealerVoice.say(`trick_win_${SEAT_VOICE_SLUG[winnerSeat]}`);
   }
 
   render();

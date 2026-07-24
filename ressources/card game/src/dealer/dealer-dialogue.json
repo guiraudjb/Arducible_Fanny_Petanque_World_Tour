@@ -296,6 +296,26 @@
     "last_trick_vous": ["Vous remportez le dernier pli !"],
     "last_trick_marcel": ["Marcel remporte le dernier pli !"],
     "last_trick_fanny": ["Fanny remporte le dernier pli !"],
-    "last_trick_bernard": ["Bernard remporte le dernier pli !"]
+    "last_trick_bernard": ["Bernard remporte le dernier pli !"],
+    "trick_win_vous": [
+      "Vous remportez le pli !",
+      "Le pli est à vous !",
+      "Bien joué, le pli vous revient !"
+    ],
+    "trick_win_marcel": [
+      "Marcel remporte le pli !",
+      "Le pli est pour Marcel !",
+      "Marcel rafle ce pli !"
+    ],
+    "trick_win_fanny": [
+      "Je remporte le pli !",
+      "Le pli est pour moi !",
+      "Je rafle ce pli !"
+    ],
+    "trick_win_bernard": [
+      "Bernard remporte le pli !",
+      "Le pli est pour Bernard !",
+      "Bernard rafle ce pli !"
+    ]
   }
 }
