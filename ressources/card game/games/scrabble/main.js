@@ -796,3 +796,15 @@ document.getElementById('btn-new-game').addEventListener('click', () => {
 
 render();
 dealerVoice.say('greeting');
+
+// PWA : portée volontairement limitée à ce dossier (sw.js n'est enregistré
+// que depuis ici, donc son scope par défaut s'arrête à games/scrabble/ -
+// les autres jeux du casino ne sont pas concernés).
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {
+      // Hors-ligne indisponible cette fois (hébergement sans HTTPS en local,
+      // navigateur incompatible...) : le jeu reste jouable en ligne.
+    });
+  });
+}
