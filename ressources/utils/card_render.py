@@ -265,16 +265,17 @@ def render_card(target, image_path, label, rank_label, symbol, color, is_joker=F
     return canvas if (p["is_precut"] and corner_radius > 0) else canvas.convert("RGB")
 
 
-def render_back(target, subtitle=None, trim_mm=(63, 88), corner_style="rounded", logo_path=None):
+def render_back(target, subtitle=None, trim_mm=(63, 88), corner_style="rounded", logo_path=None, color=(191, 58, 42)):
     p = build_profile(target, trim_mm, corner_style)
     card_w, card_h = p["card_w"], p["card_h"]
-    canvas = Image.new("RGBA", (card_w, card_h), (191, 58, 42, 255))
+    canvas = Image.new("RGBA", (card_w, card_h), (*color, 255))
     draw = ImageDraw.Draw(canvas)
 
+    stripe_color = tuple(max(0, c - 28) for c in color)
     step = round(card_w * 0.067)
     for y in range(-card_h, card_h * 2, step):
-        draw.line([(0, y), (card_w, y + card_w)], fill=(163, 45, 32, 255), width=max(4, step // 7))
-        draw.line([(card_w, y), (0, y + card_w)], fill=(163, 45, 32, 255), width=max(4, step // 7))
+        draw.line([(0, y), (card_w, y + card_w)], fill=(*stripe_color, 255), width=max(4, step // 7))
+        draw.line([(card_w, y), (0, y + card_w)], fill=(*stripe_color, 255), width=max(4, step // 7))
 
     m = p["safe_margin"] if not p["is_precut"] else round(min(card_w, card_h) * 0.06)
     draw.rounded_rectangle([(m, m), (card_w - m, card_h - m)], radius=p["corner_radius"], outline=PARCHMENT, width=max(5, p["border_width"] - 2))
@@ -291,7 +292,7 @@ def render_back(target, subtitle=None, trim_mm=(63, 88), corner_style="rounded",
     font_title = ImageFont.truetype(FONT_BOLD, p["back_title_font"])
     font_sub_text = subtitle or "WORLD TOUR"
     font_sub = _fit_text(bd, font_sub_text, FONT_BOLD, badge_w - 40, p["back_sub_font"])
-    bd.text((badge_w / 2, badge_h * 0.635), "FANNY", font=font_title, fill=(191, 58, 42), anchor="mm")
+    bd.text((badge_w / 2, badge_h * 0.635), "FANNY", font=font_title, fill=color, anchor="mm")
     bd.text((badge_w / 2, badge_h * 0.755), font_sub_text, font=font_sub, fill=INK, anchor="mm")
     canvas.alpha_composite(badge, (card_w // 2 - badge_w // 2, card_h // 2 - badge_h // 2))
 

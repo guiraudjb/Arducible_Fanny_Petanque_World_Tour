@@ -53,7 +53,7 @@ def build_contact_sheet(card_paths, out_path, cols=9):
     sheet.save(out_path)
 
 
-def build_deck(tiers, out_dir, volume_label):
+def build_deck(tiers, out_dir, volume_label, back_color=(191, 58, 42)):
     """tiers = 52 pays pour les cartes A..K des 4 couleurs, suivis d'un
     nombre pair de pays supplémentaires pour les jokers (2 au minimum :
     joker-red/joker-black ; au-delà, joker-red-2/joker-black-2, etc.) - permet
@@ -86,7 +86,7 @@ def build_deck(tiers, out_dir, volume_label):
         generated.append(out_path)
         print(f"{out_path}  <-  {pays}")
 
-    back_img = render_back("home", subtitle=f"WORLD TOUR — {volume_label}")
+    back_img = render_back("home", subtitle=f"WORLD TOUR — {volume_label}", color=back_color)
     back_img.save(f"{out_dir}/back.png")
     print(f"{out_dir}/back.png  <-  (généré, motif géométrique)")
 
@@ -99,8 +99,8 @@ def main():
     deck_1_tiers = all_tiers[0:54]   # 52 cartes + 2 jokers
     deck_2_tiers = all_tiers[54:112]  # 52 cartes + 6 jokers (inclut les 4 pays restants)
 
-    build_deck(deck_1_tiers, f"{OUT_DIR}/deck_1", "Vol. 1")
-    build_deck(deck_2_tiers, f"{OUT_DIR}/deck_2", "Vol. 2")
+    build_deck(deck_1_tiers, f"{OUT_DIR}/deck_1", "Vol. 1", back_color=(191, 58, 42))
+    build_deck(deck_2_tiers, f"{OUT_DIR}/deck_2", "Vol. 2", back_color=(35, 70, 130))
 
     print(f"\n{len(deck_1_tiers) + len(deck_2_tiers)} portraits utilisés sur 112 "
           f"(deck 1 : {len(deck_1_tiers)} cartes, deck 2 : {len(deck_2_tiers)} cartes).")

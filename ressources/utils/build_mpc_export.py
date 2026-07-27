@@ -34,7 +34,7 @@ def portrait_path(tier):
     return _portrait_path(tier, slug), pays
 
 
-def build_deck(tiers, out_dir, deck_label):
+def build_deck(tiers, out_dir, deck_label, back_color=(191, 58, 42)):
     fronts_dir = f"{out_dir}/fronts"
     os.makedirs(fronts_dir, exist_ok=True)
     cards = [(rank, suit) for suit in SUITS for rank in RANKS]  # 52
@@ -61,7 +61,7 @@ def build_deck(tiers, out_dir, deck_label):
         front_files.append(out_path)
         seq += 1
 
-    back_img = render_back("mpc")
+    back_img = render_back("mpc", color=back_color)
     back_path = f"{out_dir}/back.png"
     back_img.save(back_path, dpi=(DPI, DPI))
 
@@ -99,8 +99,8 @@ def main():
     deck_1_tiers = all_tiers[0:54]
     deck_2_tiers = all_tiers[54:112]
 
-    build_deck(deck_1_tiers, f"{OUT_DIR}/deck_1", "Volume 1 (54 cartes)")
-    build_deck(deck_2_tiers, f"{OUT_DIR}/deck_2", "Volume 2 (58 cartes)")
+    build_deck(deck_1_tiers, f"{OUT_DIR}/deck_1", "Volume 1 (54 cartes)", back_color=(191, 58, 42))
+    build_deck(deck_2_tiers, f"{OUT_DIR}/deck_2", "Volume 2 (58 cartes)", back_color=(35, 70, 130))
 
 
 if __name__ == "__main__":

@@ -1,4 +1,0 @@
-tile_set: "/assets/GameSprites.atlas"
-default_animation: "Arducible"
-material: "/builtins/materials/sprite.material"
-blend_mode: BLEND_MODE_ALPHA

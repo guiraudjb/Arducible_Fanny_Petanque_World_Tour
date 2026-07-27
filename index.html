@@ -969,7 +969,7 @@
         <p class="section-lede">Une caméra veille discrètement pendant la partie. Son seul rôle : vérifier que vous restez bien dans votre zone de tir, comme le ferait un arbitre sur un vrai terrain. Sortez de la zone, et le jeu patiente sagement que vous reveniez — jamais de triche possible.</p>
 
         <h3 class="bom-group-title">Les bonus du voyage</h3>
-        <p class="section-lede">Le tour du monde laisse des souvenirs : une collection de cartes postales illustrées pour chacun des 115 pays, un jeu de cartes à l'effigie de Fanny en tenue traditionnelle, et trois petits classiques — solitaire, poker, blackjack — jouables directement dans le navigateur pour patienter entre deux parties.</p>
+        <p class="section-lede">Le tour du monde laisse des souvenirs : une collection de cartes postales illustrées pour chacun des 115 pays, douze jeux de cartes à l'effigie de Fanny, et Fanny's Casino — dix jeux classiques (solitaire, poker, blackjack, belote...) jouables directement dans le navigateur pour patienter entre deux parties.</p>
       </div>
 
       <aside class="intro-gallery">
@@ -1005,11 +1005,10 @@
       <li><strong>La rotule GE8C</strong> sert de point de pivot : elle permet au support de basculer librement dans toutes les directions autour d'un seul point fixe.</li>
       <li><strong>Le tampon en caoutchouc</strong> (polychloroprène, dureté 60&nbsp;SHA) encaisse l'essentiel du choc par compression, puis restitue l'énergie pour ramener le mécanisme en position — c'est ce va-et-vient qui écarte puis réaligne l'aimant face au capteur, déclenchant la détection.</li>
     </ul>
-    <p class="section-lede" style="font-size:0.85rem;"><strong>Notes d'atelier — le choix de la boule :</strong> deux alternatives à la boule en acier standard (∅70&nbsp;mm, ~680&nbsp;g) ont été testées pour un usage en intérieur. La boule souple Al'Comm (PVC rempli de microbilles d'acier) reprend exactement le poids et le diamètre d'une boule traditionnelle : elle s'installe sans rien changer au montage. La boule La Schmolle (plastique léger, 280&nbsp;g) transmet un impact nettement plus faible à l'axe — un tampon de dureté SHA inférieure au 60 standard est recommandé pour conserver une détection fiable avec ce modèle.</p>
 
     <h3 class="bom-group-title">Électronique</h3>
     <p class="section-lede">Le signal de chaque cible remonte à une carte <strong>Pro Micro</strong> (puce ATmega32U4, brochage compatible Arduino Leonardo — reconnue nativement comme un clavier USB par l'ordinateur). Le firmware embarqué est volontairement minimal : trois entrées numériques lues en boucle, retranscrites en pression/relâchement de touches via la bibliothèque <code>Keyboard</code>.</p>
-    <p class="section-lede">La détection elle-même repose sur un réseau de <strong>capteurs à effet Hall</strong> : chaque cible embarque son propre capteur magnétique, qui détecte le passage d'un aimant sans aucun contact électrique avec la boule. Le câblage suit une topologie simple et robuste : un câble réseau RJ45 (Cat5/6) par cible ramène signal et alimentation jusqu'à la carte contrôleur, avant une liaison Micro-USB unique vers l'ordinateur.</p>
+    <p class="section-lede">La détection elle-même repose sur un réseau de <strong>capteurs à effet Hall</strong> : chaque cible embarque son propre capteur magnétique, qui détecte le passage d'un aimant sans aucun contact électrique avec la boule. Le câblage suit une topologie simple et robuste : un unique câble réseau RJ45 (Cat5/6) relie le socle à la carte contrôleur, en ramenant à la fois l'alimentation et le retour des 3 capteurs, avant une liaison Micro-USB vers l'ordinateur.</p>
 
     <h3 class="bom-group-title">Logiciel &amp; vision</h3>
     <p class="section-lede">Le moteur de jeu est écrit en <strong>Python</strong>, avec Pygame pour la boucle de jeu et l'affichage. L'ensemble des paramètres — résolution, plein écran, durées, bonus de temps, nombre de tirs par pays — se règle dans un unique fichier <code>config.ini</code>, sans toucher au code.</p>
@@ -1126,31 +1125,27 @@
     </div>
 
     <h3 class="bom-group-title">Une vraie borne, de vraies cibles</h3>
-    <p class="section-lede">Trois vidéos tournées sur le vif : la cible vue de près, la borne en plein concours de pétanque, et un reportage sur un prototype plus ancien.</p>
+    <p class="section-lede">Des vidéos de prototypes, tournées sur le vif.</p>
     <div class="video-row">
       <figure class="video-tile">
         <video controls preload="none" poster="videos/poster-demo-cible.jpg" playsinline>
           <source src="videos/demo-cible.mp4" type="video/mp4" />
         </video>
-        <figcaption>La cible à effet Hall, de près</figcaption>
       </figure>
       <figure class="video-tile">
         <video controls preload="none" poster="videos/poster-demo-evenement.jpg" playsinline>
           <source src="videos/demo-evenement.mp4" type="video/mp4" />
         </video>
-        <figcaption>En situation, aux Apéros de la Pétanque</figcaption>
       </figure>
       <figure class="video-tile">
         <video controls preload="none" poster="videos/poster-demo-reportage.jpg" playsinline>
           <source src="videos/demo-reportage.mp4" type="video/mp4" />
         </video>
-        <figcaption>Reportage sur un prototype antérieur</figcaption>
       </figure>
       <figure class="video-tile">
         <video controls preload="none" poster="videos/poster-teaser-arducible.jpg" playsinline>
           <source src="videos/teaser-arducible.mp4" type="video/mp4" />
         </video>
-        <figcaption>Teaser #arducible</figcaption>
       </figure>
     </div>
   </section>
@@ -1193,7 +1188,7 @@
       À chaque coup de boule, deux pièces amortissent le choc avant qu'il n'arrive jusqu'au châssis : une rotule (un genre d'articulation à bille, référence GE8C) et un tampon en caoutchouc souple (« tampon ressort », dureté 60 SHA — une échelle qui mesure la souplesse du caoutchouc). Au lieu de transmettre le choc directement aux vis de fixation, l'énergie est absorbée par la compression de ce tampon, qui ramène ensuite tout en place comme un ressort.
     </p>
     <p class="section-lede">
-      Une seule vis fait tout le travail : l'axe principal (une vis à tête creuse M8×70). Sa longueur, combinée à la course du tampon en caoutchouc, détermine à quel point le mécanisme bascule quand on tape dans la boule. C'est ce basculement qui écarte l'aimant du capteur puis l'y ramène — le signal qui dit au jeu « touché ! ». Bien réglé, ça marche pareil sur les trois cibles sans réglage au cas par cas.
+      Une seule vis fait tout le travail : l'axe principal (une vis à tête creuse M8×70, classe 12.9). Sa longueur, combinée à la course du tampon en caoutchouc, détermine à quel point le mécanisme bascule quand on tape dans la boule. C'est ce basculement qui écarte l'aimant du capteur puis l'y ramène — le signal qui dit au jeu « touché ! ». Bien réglé, ça marche pareil sur les trois cibles sans réglage au cas par cas.
     </p>
 
     <h3 class="bom-group-title">Montage en atelier</h3>
@@ -1221,7 +1216,6 @@
     </ol>
 
     <img class="hero-render" src="hardware/renders/articulation/assemblage-articulation-mouvement.gif" alt="Rendu 3D animé de l'articulation en mouvement : un coup sur la boule fait basculer le bracket sur sa rotule GE8, l'axe remonte légèrement et le tampon ressort se comprime en coin avant de tout ramener en position nominale." />
-    <p class="caption">Simulation du mouvement réel : la rotule GE8 (partie fixe + bille solidaire de l'axe), le tampon en caoutchouc qui se comprime, et les rondelles qui glissent, sont chacun animés individuellement — ce n'est pas juste une image qui bouge (rendu 3D ; l'amplitude du mouvement est volontairement exagérée pour bien voir).</p>
 
     <h3 class="bom-group-title">Le mouvement vu sous 4 angles</h3>
     <p class="section-lede">Même simulation, mais poussée plus loin pour vérifier que le mécanisme fonctionne dans toutes les directions : 4 coups portés dans les 4 directions (avant, arrière, gauche, droite), puis un mouvement continu à 360°, filmé depuis 4 caméras fixes différentes.</p>
@@ -1249,7 +1243,6 @@
     </div>
 
     <img class="hero-render" src="hardware/renders/articulation/assemblage-articulation-turntable.gif" alt="Rendu 3D animé de l'articulation d'une cible, tournant à 360° : la boule de pétanque montée sur son bracket, rotule et axe visibles en dessous." />
-    <p class="caption">L'articulation une fois assemblée, vue à 360° (rendu 3D — il n'y a pas encore de photo de l'exemplaire réel monté).</p>
 
     <div class="part-grid">
       <div class="part-card">
@@ -1400,7 +1393,7 @@
         <p class="files"><a href="https://www.laschmolle.com/">laschmolle.com</a></p>
       </div>
     </div>
-    <p class="section-lede" style="font-size:0.85rem;">La boule Al'Comm (du PVC rempli de petites billes d'acier) a le même poids et le même diamètre qu'une boule traditionnelle : elle s'utilise sans rien changer au montage, avec le tampon en caoutchouc CR60 d'origine. La boule La Schmolle (en plastique souple, 280&nbsp;g) est nettement plus légère : elle tape moins fort sur l'axe, donc pour garder une détection fiable, mieux vaut installer un tampon en caoutchouc plus souple que le CR60 standard.</p>
+    <p class="section-lede" style="font-size:0.85rem;">La boule Al'Comm (du PVC rempli de petites billes d'acier) a le même poids et le même diamètre qu'une boule traditionnelle : elle s'utilise sans rien changer au montage, avec le tampon en caoutchouc CR60 d'origine. La boule La Schmolle (en plastique souple, 280&nbsp;g) est nettement plus légère : elle tape moins fort sur l'axe, donc pour garder une détection fiable, il faut utiliser des ressorts de compression plutôt que le CR60 standard.</p>
   </section>
 
   <section id="partie4" aria-label="Partie 4 — Électronique">
@@ -1492,9 +1485,9 @@ void loop(){
     <p class="caption">La carte de détection, version 3 (un circuit imprimé à 2 couches, avec un petit connecteur à 3 broches à l'arrière) — <a href="hardware/pcb/gerber-pcb-detection-v3.zip">fichiers de fabrication (Gerber)</a> · <a href="hardware/pcb/bom-jlcpcb-v3.csv">liste des composants (BOM)</a> · <a href="hardware/pcb/pick-and-place-v3.csv">position des composants (Pick &amp; Place)</a> · <a href="hardware/pcb/OBJ_arduciblesmdv3_2026-07-19.zip">modèle 3D (OBJ)</a> · <a href="hardware/cad/detection-pcb-v3.FCStd">FCStd</a> · <a href="hardware/fritzing/PetanqueDetection_Board_v3.fzpz">Fritzing</a> — ces fichiers sont prêts à envoyer chez un fabricant de circuits imprimés comme JLCPCB.</p>
 
     <h3 class="bom-group-title">Comment tout est relié</h3>
-    <p class="section-lede">Un câble réseau (le même type que pour brancher un ordinateur, RJ45, catégorie 5 ou 6) part de chaque cible et ramène le signal du capteur jusqu'à la carte Pro Micro. Un câble Micro-USB relie ensuite cette carte à l'ordinateur.</p>
+    <p class="section-lede">Un seul câble réseau (le même type que pour brancher un ordinateur, RJ45, catégorie 5 ou 6) relie le socle à la carte Pro Micro : il regroupe l'alimentation et le retour des 3 capteurs, un fil par cible (fil 1 : +, fil 2 : −, fil 3 : retour cible 1, fil 4 : retour cible 2, fil 5 : retour cible 3). Un câble Micro-USB relie ensuite cette carte à l'ordinateur.</p>
     <img class="hero-render" src="hardware/schematics/pro-micro-wiring.png" alt="Schéma de câblage Fritzing : les 3 cartes de détection v3 (une par cible) reliées à la carte Pro Micro, broches DATA/+/− vers les broches 14, 15, 16 et VCC/GND." />
-    <p class="caption">Schéma de câblage réalisé avec le logiciel Fritzing — fichier source : <a href="hardware/fritzing/cablage-pro-micro.fzz">cablage-pro-micro.fzz</a>. Les 3 cartes de détection représentent les 3 cibles ; elles sont dessinées reliées directement pour que le schéma reste lisible, mais dans la vraie borne, chaque liaison passe par un câble réseau.</p>
+    <p class="caption">Schéma de câblage réalisé avec le logiciel Fritzing — fichier source : <a href="hardware/fritzing/cablage-pro-micro.fzz">cablage-pro-micro.fzz</a>. Les 3 cartes de détection représentent les 3 cibles ; elles sont dessinées reliées directement pour que le schéma reste lisible, mais dans la vraie borne, un seul câble réseau (5 fils utilisés) relie le socle à la carte contrôleur.</p>
     <p class="bom-links">Un ancien schéma (avec le contrôleur Leonardo et des boutons qui ne sont plus utilisés) est gardé pour référence : <a href="hardware/schematics/arduino-leonardo-rj45-wiring.png">arduino-leonardo-rj45-wiring.png</a>.</p>
 
     <h3 class="bom-group-title">Montage en atelier</h3>
@@ -2352,6 +2345,1696 @@ void loop(){
       </figure>
       <figure class="playing-card">
         <img src="goodies/cards/deck_2/joker-red.png" alt="Carte à jouer Fanny Pétanque World Tour, deck 2 : Joker rouge." loading="lazy" />
+      </figure>
+    </div>
+
+    <h3 class="bom-group-title">Le jeu de cartes — Classique</h3>
+    <div class="rail-scroll">
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/10-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 10 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/10-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 10 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/10-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 10 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/10-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 10 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/2-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 2 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/2-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 2 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/2-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 2 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/2-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 2 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/3-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 3 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/3-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 3 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/3-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 3 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/3-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 3 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/4-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 4 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/4-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 4 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/4-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 4 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/4-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 4 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/5-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 5 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/5-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 5 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/5-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 5 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/5-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 5 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/6-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 6 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/6-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 6 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/6-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 6 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/6-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 6 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/7-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 7 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/7-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 7 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/7-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 7 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/7-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 7 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/8-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 8 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/8-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 8 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/8-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 8 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/8-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 8 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/9-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 9 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/9-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 9 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/9-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 9 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/9-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : 9 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/A-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : A de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/A-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : A de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/A-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : A de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/A-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : A de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/J-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : J de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/J-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : J de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/J-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : J de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/J-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : J de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/K-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : K de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/K-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : K de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/K-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : K de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/K-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : K de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/Q-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : Q de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/Q-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : Q de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/Q-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : Q de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/Q-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : Q de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/back.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : Dos de carte." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/joker-black.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : Joker noir." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/classique/joker-red.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Classique : Joker rouge." loading="lazy" />
+      </figure>
+    </div>
+
+    <h3 class="bom-group-title">Le jeu de cartes — Sexy</h3>
+    <div class="rail-scroll">
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/10-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 10 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/10-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 10 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/10-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 10 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/10-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 10 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/2-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 2 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/2-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 2 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/2-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 2 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/2-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 2 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/3-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 3 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/3-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 3 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/3-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 3 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/3-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 3 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/4-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 4 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/4-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 4 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/4-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 4 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/4-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 4 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/5-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 5 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/5-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 5 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/5-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 5 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/5-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 5 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/6-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 6 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/6-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 6 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/6-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 6 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/6-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 6 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/7-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 7 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/7-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 7 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/7-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 7 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/7-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 7 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/8-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 8 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/8-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 8 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/8-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 8 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/8-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 8 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/9-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 9 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/9-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 9 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/9-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 9 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/9-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : 9 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/A-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : A de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/A-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : A de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/A-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : A de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/A-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : A de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/J-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : J de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/J-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : J de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/J-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : J de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/J-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : J de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/K-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : K de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/K-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : K de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/K-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : K de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/K-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : K de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/Q-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : Q de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/Q-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : Q de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/Q-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : Q de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/Q-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : Q de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/back.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : Dos de carte." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/joker-black.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : Joker noir." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sexy/joker-red.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sexy : Joker rouge." loading="lazy" />
+      </figure>
+    </div>
+
+    <h3 class="bom-group-title">Le jeu de cartes — Plage / Ville</h3>
+    <div class="rail-scroll">
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/10-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 10 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/10-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 10 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/10-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 10 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/10-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 10 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/2-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 2 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/2-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 2 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/2-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 2 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/2-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 2 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/3-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 3 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/3-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 3 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/3-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 3 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/3-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 3 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/4-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 4 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/4-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 4 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/4-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 4 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/4-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 4 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/5-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 5 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/5-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 5 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/5-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 5 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/5-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 5 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/6-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 6 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/6-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 6 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/6-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 6 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/6-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 6 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/7-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 7 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/7-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 7 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/7-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 7 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/7-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 7 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/8-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 8 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/8-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 8 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/8-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 8 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/8-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 8 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/9-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 9 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/9-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 9 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/9-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 9 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/9-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : 9 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/A-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : A de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/A-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : A de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/A-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : A de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/A-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : A de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/J-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : J de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/J-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : J de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/J-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : J de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/J-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : J de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/K-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : K de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/K-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : K de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/K-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : K de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/K-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : K de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/Q-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : Q de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/Q-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : Q de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/Q-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : Q de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/Q-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : Q de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/back.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : Dos de carte." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/joker-black.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : Joker noir." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/plage-ville/joker-red.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Plage / Ville : Joker rouge." loading="lazy" />
+      </figure>
+    </div>
+
+    <h3 class="bom-group-title">Le jeu de cartes — Outfits</h3>
+    <div class="rail-scroll">
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/10-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 10 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/10-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 10 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/10-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 10 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/10-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 10 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/2-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 2 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/2-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 2 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/2-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 2 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/2-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 2 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/3-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 3 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/3-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 3 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/3-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 3 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/3-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 3 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/4-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 4 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/4-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 4 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/4-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 4 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/4-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 4 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/5-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 5 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/5-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 5 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/5-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 5 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/5-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 5 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/6-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 6 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/6-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 6 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/6-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 6 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/6-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 6 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/7-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 7 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/7-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 7 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/7-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 7 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/7-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 7 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/8-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 8 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/8-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 8 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/8-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 8 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/8-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 8 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/9-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 9 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/9-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 9 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/9-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 9 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/9-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : 9 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/A-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : A de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/A-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : A de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/A-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : A de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/A-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : A de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/J-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : J de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/J-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : J de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/J-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : J de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/J-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : J de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/K-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : K de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/K-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : K de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/K-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : K de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/K-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : K de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/Q-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : Q de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/Q-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : Q de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/Q-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : Q de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/Q-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : Q de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/back.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : Dos de carte." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/joker-black.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : Joker noir." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/outfits/joker-red.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Outfits : Joker rouge." loading="lazy" />
+      </figure>
+    </div>
+
+    <h3 class="bom-group-title">Le jeu de cartes — Décennies vintage</h3>
+    <div class="rail-scroll">
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/10-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 10 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/10-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 10 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/10-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 10 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/10-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 10 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/2-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 2 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/2-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 2 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/2-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 2 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/2-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 2 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/3-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 3 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/3-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 3 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/3-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 3 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/3-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 3 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/4-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 4 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/4-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 4 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/4-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 4 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/4-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 4 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/5-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 5 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/5-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 5 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/5-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 5 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/5-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 5 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/6-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 6 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/6-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 6 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/6-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 6 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/6-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 6 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/7-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 7 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/7-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 7 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/7-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 7 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/7-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 7 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/8-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 8 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/8-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 8 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/8-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 8 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/8-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 8 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/9-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 9 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/9-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 9 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/9-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 9 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/9-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : 9 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/A-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : A de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/A-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : A de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/A-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : A de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/A-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : A de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/J-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : J de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/J-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : J de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/J-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : J de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/J-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : J de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/K-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : K de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/K-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : K de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/K-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : K de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/K-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : K de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/Q-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : Q de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/Q-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : Q de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/Q-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : Q de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/Q-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : Q de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/back.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : Dos de carte." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/joker-black.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : Joker noir." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/decennies/joker-red.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Décennies vintage : Joker rouge." loading="lazy" />
+      </figure>
+    </div>
+
+    <h3 class="bom-group-title">Le jeu de cartes — Haute Couture</h3>
+    <div class="rail-scroll">
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/10-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 10 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/10-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 10 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/10-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 10 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/10-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 10 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/2-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 2 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/2-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 2 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/2-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 2 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/2-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 2 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/3-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 3 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/3-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 3 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/3-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 3 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/3-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 3 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/4-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 4 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/4-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 4 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/4-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 4 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/4-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 4 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/5-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 5 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/5-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 5 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/5-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 5 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/5-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 5 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/6-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 6 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/6-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 6 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/6-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 6 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/6-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 6 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/7-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 7 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/7-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 7 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/7-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 7 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/7-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 7 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/8-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 8 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/8-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 8 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/8-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 8 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/8-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 8 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/9-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 9 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/9-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 9 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/9-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 9 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/9-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : 9 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/A-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : A de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/A-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : A de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/A-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : A de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/A-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : A de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/J-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : J de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/J-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : J de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/J-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : J de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/J-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : J de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/K-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : K de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/K-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : K de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/K-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : K de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/K-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : K de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/Q-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : Q de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/Q-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : Q de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/Q-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : Q de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/Q-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : Q de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/back.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : Dos de carte." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/joker-black.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : Joker noir." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/couture/joker-red.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Haute Couture : Joker rouge." loading="lazy" />
+      </figure>
+    </div>
+
+    <h3 class="bom-group-title">Le jeu de cartes — Autre</h3>
+    <div class="rail-scroll">
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/10-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 10 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/10-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 10 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/10-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 10 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/10-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 10 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/2-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 2 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/2-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 2 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/2-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 2 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/2-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 2 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/3-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 3 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/3-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 3 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/3-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 3 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/3-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 3 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/4-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 4 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/4-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 4 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/4-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 4 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/4-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 4 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/5-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 5 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/5-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 5 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/5-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 5 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/5-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 5 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/6-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 6 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/6-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 6 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/6-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 6 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/6-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 6 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/7-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 7 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/7-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 7 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/7-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 7 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/7-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 7 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/8-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 8 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/8-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 8 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/8-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 8 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/8-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 8 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/9-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 9 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/9-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 9 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/9-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 9 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/9-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : 9 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/A-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : A de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/A-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : A de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/A-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : A de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/A-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : A de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/J-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : J de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/J-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : J de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/J-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : J de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/J-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : J de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/K-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : K de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/K-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : K de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/K-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : K de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/K-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : K de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/Q-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : Q de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/Q-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : Q de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/Q-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : Q de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/Q-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : Q de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/back.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : Dos de carte." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/joker-black.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : Joker noir." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/autre/joker-red.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Autre : Joker rouge." loading="lazy" />
+      </figure>
+    </div>
+
+    <h3 class="bom-group-title">Le jeu de cartes — Voyage & Vacances</h3>
+    <div class="rail-scroll">
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/10-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 10 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/10-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 10 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/10-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 10 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/10-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 10 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/2-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 2 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/2-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 2 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/2-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 2 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/2-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 2 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/3-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 3 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/3-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 3 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/3-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 3 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/3-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 3 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/4-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 4 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/4-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 4 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/4-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 4 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/4-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 4 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/5-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 5 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/5-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 5 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/5-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 5 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/5-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 5 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/6-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 6 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/6-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 6 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/6-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 6 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/6-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 6 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/7-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 7 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/7-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 7 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/7-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 7 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/7-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 7 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/8-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 8 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/8-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 8 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/8-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 8 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/8-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 8 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/9-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 9 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/9-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 9 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/9-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 9 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/9-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : 9 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/A-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : A de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/A-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : A de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/A-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : A de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/A-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : A de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/J-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : J de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/J-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : J de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/J-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : J de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/J-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : J de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/K-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : K de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/K-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : K de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/K-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : K de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/K-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : K de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/Q-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : Q de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/Q-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : Q de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/Q-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : Q de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/Q-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : Q de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/back.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : Dos de carte." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/joker-black.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : Joker noir." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/voyage/joker-red.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Voyage & Vacances : Joker rouge." loading="lazy" />
+      </figure>
+    </div>
+
+    <h3 class="bom-group-title">Le jeu de cartes — Soirée & Gala</h3>
+    <div class="rail-scroll">
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/10-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 10 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/10-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 10 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/10-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 10 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/10-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 10 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/2-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 2 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/2-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 2 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/2-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 2 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/2-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 2 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/3-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 3 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/3-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 3 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/3-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 3 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/3-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 3 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/4-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 4 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/4-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 4 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/4-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 4 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/4-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 4 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/5-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 5 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/5-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 5 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/5-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 5 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/5-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 5 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/6-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 6 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/6-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 6 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/6-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 6 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/6-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 6 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/7-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 7 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/7-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 7 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/7-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 7 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/7-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 7 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/8-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 8 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/8-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 8 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/8-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 8 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/8-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 8 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/9-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 9 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/9-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 9 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/9-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 9 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/9-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : 9 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/A-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : A de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/A-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : A de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/A-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : A de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/A-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : A de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/J-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : J de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/J-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : J de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/J-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : J de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/J-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : J de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/K-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : K de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/K-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : K de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/K-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : K de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/K-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : K de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/Q-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : Q de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/Q-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : Q de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/Q-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : Q de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/Q-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : Q de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/back.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : Dos de carte." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/joker-black.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : Joker noir." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/soiree/joker-red.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Soirée & Gala : Joker rouge." loading="lazy" />
+      </figure>
+    </div>
+
+    <h3 class="bom-group-title">Le jeu de cartes — Sport & Loisirs</h3>
+    <div class="rail-scroll">
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/10-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 10 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/10-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 10 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/10-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 10 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/10-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 10 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/2-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 2 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/2-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 2 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/2-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 2 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/2-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 2 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/3-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 3 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/3-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 3 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/3-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 3 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/3-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 3 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/4-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 4 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/4-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 4 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/4-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 4 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/4-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 4 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/5-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 5 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/5-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 5 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/5-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 5 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/5-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 5 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/6-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 6 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/6-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 6 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/6-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 6 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/6-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 6 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/7-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 7 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/7-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 7 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/7-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 7 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/7-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 7 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/8-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 8 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/8-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 8 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/8-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 8 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/8-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 8 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/9-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 9 de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/9-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 9 de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/9-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 9 de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/9-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : 9 de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/A-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : A de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/A-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : A de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/A-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : A de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/A-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : A de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/J-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : J de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/J-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : J de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/J-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : J de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/J-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : J de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/K-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : K de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/K-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : K de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/K-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : K de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/K-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : K de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/Q-clubs.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : Q de trèfle." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/Q-diamonds.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : Q de carreau." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/Q-hearts.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : Q de cœur." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/Q-spades.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : Q de pique." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/back.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : Dos de carte." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/joker-black.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : Joker noir." loading="lazy" />
+      </figure>
+      <figure class="playing-card">
+        <img src="goodies/cards/sport/joker-red.png" alt="Carte à jouer Fanny Pétanque World Tour, thème Sport & Loisirs : Joker rouge." loading="lazy" />
       </figure>
     </div>
   </section>

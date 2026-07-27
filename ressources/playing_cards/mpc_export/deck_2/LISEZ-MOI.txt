@@ -1,0 +1,16 @@
+Fanny Pétanque World Tour — Volume 2 (58 cartes)
+Export pour MakePlayingCards.com
+
+1. Aller sur makeplayingcards.com -> Design & Print -> Game / Custom Cards
+   -> choisir le produit "Custom Game Cards (63 x 88mm)".
+2. Quantité : 58 cartes uniques, 1 exemplaire de chaque (1 jeu).
+3. Verso ("Card Back") : choisir l'option "same image for all cards" /
+   "one card back for the whole deck" et uploader back.png.
+4. Recto ("Card Front") : uploader les 58 fichiers du
+   dossier fronts/ EN GARDANT L'ORDRE NUMÉRIQUE du préfixe (01_, 02_, ...) -
+   c'est l'ordre A,2,3...K de Coeur, Carreau, Trèfle, Pique puis les Jokers.
+5. Les fichiers sont déjà au bon format (fond perdu + marge de sécurité
+   inclus, 300 dpi) : ne pas les recadrer ni les redimensionner sur le site.
+
+Fichiers : 58 images dans fronts/ + back.png (verso unique).
+Tout est aussi disponible pré-zippé : deck_2.zip

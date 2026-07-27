@@ -93,8 +93,8 @@ def draw_corner_index(canvas, rank_label, symbol, color, top_left):
     draw = ImageDraw.Draw(badge)
     draw.rounded_rectangle([(0, 0), (badge_w - 1, badge_h - 1)], radius=18, fill=(255, 255, 255, 235))
 
-    rank_font = ImageFont.truetype(FONT_BOLD, 44)
-    symbol_font = ImageFont.truetype(FONT_SYMBOL, 40)
+    rank_font = ImageFont.truetype(FONT_BOLD, 56)
+    symbol_font = ImageFont.truetype(FONT_SYMBOL, 48)
 
     draw.text((badge_w / 2, 34), rank_label, font=rank_font, fill=color, anchor="mm")
     draw.text((badge_w / 2, 92), symbol, font=symbol_font, fill=color, anchor="mm")

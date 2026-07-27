@@ -44,7 +44,7 @@ def portrait_path(tier):
     return _portrait_path(tier, slug), pays
 
 
-def build_deck_pdf(tiers, out_path):
+def build_deck_pdf(tiers, out_path, back_color=(191, 58, 42)):
     cards = [(rank, suit) for suit in SUITS for rank in RANKS]  # 52
     joker_tiers = tiers[52:]
     assert len(joker_tiers) % 2 == 0 and len(joker_tiers) >= 2
@@ -60,7 +60,7 @@ def build_deck_pdf(tiers, out_path):
         image_path, pays = portrait_path(tier)
         fronts.append(render_card("printeurope", image_path, pays, "JOKER", "", color, is_joker=True))
 
-    back = render_back("printeurope")
+    back = render_back("printeurope", color=back_color)
 
     # Structure imposée par le guide PAO Print Europe pour un dos unique :
     # page 1 = dos, pages suivantes = les rectos dans l'ordre. Conversion
@@ -78,8 +78,8 @@ def main():
     deck_1_tiers = all_tiers[0:54]
     deck_2_tiers = all_tiers[54:112]
 
-    build_deck_pdf(deck_1_tiers, f"{OUT_DIR}/deck_1.pdf")
-    build_deck_pdf(deck_2_tiers, f"{OUT_DIR}/deck_2.pdf")
+    build_deck_pdf(deck_1_tiers, f"{OUT_DIR}/deck_1.pdf", back_color=(191, 58, 42))
+    build_deck_pdf(deck_2_tiers, f"{OUT_DIR}/deck_2.pdf", back_color=(35, 70, 130))
 
     readme = """Fanny Pétanque World Tour — Export pour Print Europe
 (jeuxdecartes.printeurope.fr)
