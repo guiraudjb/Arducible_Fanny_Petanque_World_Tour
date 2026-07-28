@@ -9,38 +9,38 @@
     },
     {
       "num": 2,
-      "label": "Ecrou M8",
-      "x": 0.0,
-      "y": 0.0,
-      "z": 131.7
-    },
-    {
-      "num": 3,
       "label": "Vis M4x30 (coin 4)",
       "x": -14.0,
       "y": -14.0,
       "z": 121.5
     },
     {
-      "num": 4,
+      "num": 3,
       "label": "Vis M4x30 (coin 2)",
       "x": 14.0,
       "y": -14.0,
       "z": 121.5
     },
     {
-      "num": 5,
+      "num": 4,
       "label": "Vis M4x30 (coin 3)",
       "x": -14.0,
       "y": 14.0,
       "z": 121.5
     },
     {
-      "num": 6,
+      "num": 5,
       "label": "Vis M4x30 (coin 1)",
       "x": 14.0,
       "y": 14.0,
       "z": 121.5
+    },
+    {
+      "num": 6,
+      "label": "Ecrou M8",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 111.7
     },
     {
       "num": 7,
@@ -100,31 +100,31 @@
     },
     {
       "num": 15,
-      "label": "Vis CHC M8x70 (axe central)",
-      "x": 0.0,
-      "y": -0.0,
-      "z": 5.5
-    },
-    {
-      "num": 16,
       "label": "Plaque inferieure",
       "x": -0.0,
       "y": 0.0,
-      "z": -33.3
+      "z": -9.3
     },
     {
-      "num": 17,
+      "num": 16,
       "label": "Rondelle epaisse M8 (bas)",
       "x": 0.0,
       "y": 0.0,
       "z": -55.3
     },
     {
-      "num": 18,
+      "num": 17,
       "label": "Ecrou M4 (PCB, haut 2)",
       "x": -40.0,
       "y": -13.0,
       "z": -68.3
+    },
+    {
+      "num": 18,
+      "label": "Vis CHC M8x70 (axe central)",
+      "x": 0.0,
+      "y": -0.0,
+      "z": -74.5
     },
     {
       "num": 19,
@@ -163,24 +163,24 @@
     },
     {
       "num": 24,
+      "label": "Entretoise carte electronique",
+      "x": -40.0,
+      "y": 0.0,
+      "z": -118.3
+    },
+    {
+      "num": 25,
       "label": "Aimant neodyme",
       "x": 0.0,
       "y": -0.0,
       "z": -121.3
     },
     {
-      "num": 25,
-      "label": "Entretoise carte electronique",
-      "x": -40.0,
-      "y": 0.0,
-      "z": -132.3
-    },
-    {
       "num": 26,
       "label": "Interface axe-aimant",
       "x": 0.0,
       "y": -0.0,
-      "z": -143.3
+      "z": -129.3
     },
     {
       "num": 27,

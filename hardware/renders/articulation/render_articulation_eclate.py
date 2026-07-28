@@ -113,6 +113,7 @@ gdoc = FreeCADGui.getDocument(doc.Name)
 view = gdoc.mdiViewsOfType("Gui::View3DInventor")[0]
 
 real_objs = []
+orig_center = {}   # obj.Name -> (cx,cy,cz) d'origine, pour les overrides manuels plus bas
 for obj in doc.Objects:
     if not hasattr(obj, 'Shape') or obj.Shape.isNull():
         continue
@@ -122,6 +123,8 @@ for obj in doc.Objects:
     if not vobj or not vobj.Visibility:
         continue
     real_objs.append(obj)
+    c = obj.Shape.BoundBox.Center
+    orig_center[obj.Name] = (c.x, c.y, c.z)
 
 print("Objets reels visibles retenus :", len(real_objs))
 
@@ -276,6 +279,26 @@ print("Groupes : axe=%d coin(pp/pm/mp/mm)=%d/%d/%d/%d pcb=%d spine=%s" % (
     len(axe_list), len(groups['coin_pp']), len(groups['coin_pm']),
     len(groups['coin_mp']), len(groups['coin_mm']), len(pcb_list),
     spine.Label if spine else 'NON TROUVEE'))
+
+# --- Overrides manuels : positions Z relevees sur
+# assemblage-articulation-eclate-manuel.FCStd (copie ouverte par
+# l'utilisateur dans FreeCAD, pieces deplacees a la souris puis
+# sauvegardees). Remplacent le resultat de l'algorithme ci-dessus pour ces
+# 5 pieces precises -- tout le reste garde le calcul automatique. Le plus
+# notable : la vis centrale ne reste plus immobile ("colonne vertebrale"),
+# l'utilisateur l'a explicitement tiree vers le bas comme les autres pieces.
+MANUAL_TARGET_Z = {
+    'Vis métaux CHC BTR Clé de 6 HC6 M8X70 Filetée sur 22 Classe 12.9 Acier brut_001': -74.5,
+    'plaquearticulationINF_001': -9.3,
+    'EcrouM8_001': 111.7,
+    'entretoisesV5H31_001': -118.3,
+    'interfaceAxeAimant4mm_001': -129.3,
+}
+for obj in real_objs:
+    key = ident(obj)
+    if key in MANUAL_TARGET_Z:
+        cx, cy, cz = orig_center[obj.Name]
+        offsets[obj.Name] = FreeCAD.Vector(0, 0, MANUAL_TARGET_Z[key] - cz)
 
 for obj in real_objs:
     delta = offsets.get(obj.Name, FreeCAD.Vector(0, 0, 0))
