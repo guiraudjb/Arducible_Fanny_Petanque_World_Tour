@@ -1,0 +1,289 @@
+{
+  "parts": [
+    {
+      "num": 1,
+      "label": "Boule de petanque",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 166.9
+    },
+    {
+      "num": 2,
+      "label": "Ecrou M8",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 131.7
+    },
+    {
+      "num": 3,
+      "label": "Vis M4x30 (coin 4)",
+      "x": -14.0,
+      "y": -14.0,
+      "z": 121.5
+    },
+    {
+      "num": 4,
+      "label": "Vis M4x30 (coin 2)",
+      "x": 14.0,
+      "y": -14.0,
+      "z": 121.5
+    },
+    {
+      "num": 5,
+      "label": "Vis M4x30 (coin 3)",
+      "x": -14.0,
+      "y": 14.0,
+      "z": 121.5
+    },
+    {
+      "num": 6,
+      "label": "Vis M4x30 (coin 1)",
+      "x": 14.0,
+      "y": 14.0,
+      "z": 121.5
+    },
+    {
+      "num": 7,
+      "label": "Ecrou M4 (coin 1)",
+      "x": 14.0,
+      "y": 14.0,
+      "z": 99.5
+    },
+    {
+      "num": 8,
+      "label": "Ecrou M4 (coin 3)",
+      "x": -14.0,
+      "y": 14.0,
+      "z": 99.5
+    },
+    {
+      "num": 9,
+      "label": "Ecrou M4 (coin 2)",
+      "x": 14.0,
+      "y": -14.0,
+      "z": 99.5
+    },
+    {
+      "num": 10,
+      "label": "Ecrou M4 (coin 4)",
+      "x": -14.0,
+      "y": -14.0,
+      "z": 99.5
+    },
+    {
+      "num": 11,
+      "label": "Rondelle epaisse M8 (haut)",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 96.5
+    },
+    {
+      "num": 12,
+      "label": "Plaque superieure",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 74.5
+    },
+    {
+      "num": 13,
+      "label": "Plaque milieu",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 34.9
+    },
+    {
+      "num": 14,
+      "label": "Rotule GE8 (chape+bille)",
+      "x": -0.0,
+      "y": 0.0,
+      "z": 6.3
+    },
+    {
+      "num": 15,
+      "label": "Vis CHC M8x70 (axe central)",
+      "x": 0.0,
+      "y": -0.0,
+      "z": 5.5
+    },
+    {
+      "num": 16,
+      "label": "Plaque inferieure",
+      "x": -0.0,
+      "y": 0.0,
+      "z": -33.3
+    },
+    {
+      "num": 17,
+      "label": "Rondelle epaisse M8 (bas)",
+      "x": 0.0,
+      "y": 0.0,
+      "z": -55.3
+    },
+    {
+      "num": 18,
+      "label": "Ecrou M4 (PCB, haut 2)",
+      "x": -40.0,
+      "y": -13.0,
+      "z": -68.3
+    },
+    {
+      "num": 19,
+      "label": "Tampon ressort CR60",
+      "x": 0.0,
+      "y": -0.0,
+      "z": -77.3
+    },
+    {
+      "num": 20,
+      "label": "Ecrou M4 (PCB, haut 1)",
+      "x": -40.0,
+      "y": 13.0,
+      "z": -84.3
+    },
+    {
+      "num": 21,
+      "label": "Rondelle 8x22x1,5",
+      "x": 0.0,
+      "y": -0.0,
+      "z": -99.3
+    },
+    {
+      "num": 22,
+      "label": "Vis M4x50 (PCB 2)",
+      "x": -40.0,
+      "y": -13.0,
+      "z": -100.3
+    },
+    {
+      "num": 23,
+      "label": "Vis M4x50 (PCB 1)",
+      "x": -40.0,
+      "y": 13.0,
+      "z": -116.3
+    },
+    {
+      "num": 24,
+      "label": "Aimant neodyme",
+      "x": 0.0,
+      "y": -0.0,
+      "z": -121.3
+    },
+    {
+      "num": 25,
+      "label": "Entretoise carte electronique",
+      "x": -40.0,
+      "y": 0.0,
+      "z": -132.3
+    },
+    {
+      "num": 26,
+      "label": "Interface axe-aimant",
+      "x": 0.0,
+      "y": -0.0,
+      "z": -143.3
+    },
+    {
+      "num": 27,
+      "label": "PCB detection",
+      "x": -20.0,
+      "y": 0.0,
+      "z": -148.3
+    },
+    {
+      "num": 28,
+      "label": "Ecrou frein M4 (PCB, bas 2)",
+      "x": -40.0,
+      "y": -13.0,
+      "z": -164.3
+    },
+    {
+      "num": 29,
+      "label": "Ecrou frein M4 (PCB, bas 1)",
+      "x": -40.0,
+      "y": 13.0,
+      "z": -180.3
+    }
+  ],
+  "views": {
+    "assemblage-articulation-eclate-iso.png": {
+      "campos": [
+        119.87165832519531,
+        -119.87158203125,
+        129.39309692382812
+      ],
+      "right": [
+        0.7071067094802856,
+        0.70710688829422,
+        -3.5762786865234375e-07
+      ],
+      "up": [
+        -0.4082481265068054,
+        0.4082484245300293,
+        0.8164966702461243
+      ],
+      "height": 477.5345458984375,
+      "img_w": 1800,
+      "img_h": 1500
+    },
+    "assemblage-articulation-eclate-face.png": {
+      "campos": [
+        0.0,
+        -207.62368774414062,
+        9.521504402160645
+      ],
+      "right": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "up": [
+        0.0,
+        5.960464477539063e-08,
+        0.9999999403953552
+      ],
+      "height": 477.5345458984375,
+      "img_w": 1800,
+      "img_h": 1500
+    },
+    "assemblage-articulation-eclate-droite.png": {
+      "campos": [
+        207.62371826171875,
+        1.9073486328125e-05,
+        9.521492004394531
+      ],
+      "right": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "up": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "height": 477.5345458984375,
+      "img_w": 1800,
+      "img_h": 1500
+    },
+    "assemblage-articulation-eclate-dessous.png": {
+      "campos": [
+        0.0,
+        1.9073486328125e-05,
+        -198.10223388671875
+      ],
+      "right": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "up": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "height": 477.5345458984375,
+      "img_w": 1800,
+      "img_h": 1500
+    }
+  }
+}
