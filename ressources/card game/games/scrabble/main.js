@@ -17,6 +17,8 @@ let wordSet = new Set();
 let letterIndex = null;
 let wordsLoaded = false;
 let definitionsMap = new Map();
+let definitionsSettled = false; // fetch definitions.csv terminé (succès OU échec)
+let seedWordsArray = null; // mots.txt restreint aux mots ayant une définition (mémoïsé)
 let selectedRackIndex = null;
 let pendingBlankRackIndex = null;
 let secondsLeft = ROUND_SECONDS;
@@ -163,7 +165,21 @@ fetch(DEFINITIONS_URL)
       if (word) definitionsMap.set(word, definition);
     }
   })
-  .catch(() => {}); // pas bloquant : le jeu marche sans définitions, juste sans l'infobulle
+  .catch(() => {}) // le jeu marche sans définitions (voir plus bas : repli sur le dico complet)
+  .finally(() => { definitionsSettled = true; seedWordsArray = null; render(); });
+
+/** Mots utilisables sur la grille de départ : ceux qui ont une définition,
+ * pour qu'un clic sur une case pré-remplie donne toujours une définition
+ * (voir engine.startRound / generateSeedBoard). Repli sur le dictionnaire
+ * complet si definitions.csv n'a pas pu être chargé - on ne bloque pas le
+ * jeu pour autant. Mémoïsé (le filtre coûte ~10 ms sur 645k mots). */
+function getSeedWordsArray() {
+  if (seedWordsArray) return seedWordsArray;
+  seedWordsArray = definitionsMap.size > 0
+    ? wordsArray.filter((w) => definitionsMap.has(w))
+    : wordsArray;
+  return seedWordsArray;
+}
 
 fetch(WORDS_URL)
   .then((r) => r.text())
@@ -172,6 +188,7 @@ fetch(WORDS_URL)
     wordSet = new Set(wordsArray);
     letterIndex = buildLetterIndex(wordsArray);
     wordsLoaded = true;
+    seedWordsArray = null; // recalculé au prochain getSeedWordsArray()
     render();
   });
 
@@ -613,12 +630,15 @@ function doSubmit(isTimeout) {
   if (letterIndex) {
     bestMoveComputing = true;
     render();
-    setTimeout(() => {
+    // Double rAF : garantit que le sablier a été peint et que son animation
+    // tourne côté compositeur AVANT de lancer computeBestMove, qui bloque le
+    // thread principal plusieurs secondes (dictionnaire complet).
+    requestAnimationFrame(() => requestAnimationFrame(() => {
       game.computeBestMove(letterIndex, wordSet);
       bestMoveComputing = false;
       render();
       Promise.resolve(voiceDone).then(() => speakBestMove(game.result.bestMove));
-    }, 20);
+    }));
   }
 }
 
@@ -643,7 +663,8 @@ function render() {
   playingAreaEl.classList.toggle('hidden', state.phase !== 'playing');
   resultAreaEl.classList.toggle('hidden', state.phase !== 'result');
 
-  btnDeal.disabled = !wordsLoaded || pendingBet <= 0 || pendingBet > state.bankroll || state.isGameOver;
+  btnDeal.disabled = !wordsLoaded || !definitionsSettled
+    || pendingBet <= 0 || pendingBet > state.bankroll || state.isGameOver;
   document.querySelectorAll('.chip').forEach((btn) => {
     const amount = Number(btn.dataset.chip);
     btn.disabled = state.isGameOver || pendingBet + amount > state.bankroll;
@@ -703,7 +724,16 @@ function render() {
 
     const best = r.bestMove;
     if (bestMoveComputing) {
-      bestMoveMessageEl.textContent = 'Calcul du meilleur coup possible…';
+      // findBestMove balaie le dictionnaire complet (plusieurs secondes,
+      // calcul synchrone) : on montre un sablier animé - son animation est
+      // portée par le compositeur et continue de tourner pendant le blocage
+      // du thread (voir .inline-spinner dans style.css).
+      bestMoveMessageEl.innerHTML = '';
+      const spinner = document.createElement('span');
+      spinner.className = 'inline-spinner';
+      spinner.setAttribute('aria-hidden', 'true');
+      bestMoveMessageEl.appendChild(spinner);
+      bestMoveMessageEl.appendChild(document.createTextNode('Calcul du meilleur coup possible…'));
     } else if (!best) {
       bestMoveMessageEl.textContent = '';
     } else if (r.valid && r.score >= best.score) {
@@ -721,7 +751,7 @@ function render() {
     bestMoveMessageEl.textContent = '';
   }
 
-  statusEl.textContent = !wordsLoaded
+  statusEl.textContent = (!wordsLoaded || !definitionsSettled)
     ? 'Chargement du dictionnaire…'
     : (state.isGameOver ? 'Banqueroute. Cliquez sur « Nouvelle partie » pour recommencer.' : '');
   if (state.isGameOver && !bankruptcyAnnounced) {
@@ -746,7 +776,7 @@ document.getElementById('btn-clear-bet').addEventListener('click', () => {
 });
 
 btnDeal.addEventListener('click', () => {
-  const result = game.startRound(pendingBet, wordsArray);
+  const result = game.startRound(pendingBet, wordsArray, getSeedWordsArray());
   if (result.ok) {
     pendingBet = 0;
     selectedRackIndex = null;

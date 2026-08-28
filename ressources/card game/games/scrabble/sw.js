@@ -8,7 +8,7 @@
 //
 // Incrémenter CACHE_VERSION à chaque changement de cette liste ou du
 // contenu des fichiers précachés, pour forcer une nouvelle installation.
-const CACHE_VERSION = 'scrabble-v1';
+const CACHE_VERSION = 'scrabble-v2';
 
 const PRECACHE_URLS = [
   './',
@@ -25,7 +25,7 @@ const PRECACHE_URLS = [
   '../../src/dealer/dealer-dialogue.json',
   '../../assets/table/fanny-dealer-scene.jpg',
   // Dictionnaire + définitions : sans eux le jeu est injouable, donc
-  // précachés malgré leur taille (mots.txt ~550Ko, definitions.csv ~4,7Mo).
+  // précachés malgré leur taille (mots.txt ~7,4Mo, definitions.csv ~43Mo).
   '../../assets/scrabble/mots.txt',
   '../../assets/scrabble/definitions.csv',
   // Répliques de Fanny (voir src/dealer/dealer-dialogue.json).

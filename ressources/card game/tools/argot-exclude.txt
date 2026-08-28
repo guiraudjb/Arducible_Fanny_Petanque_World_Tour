@@ -1,0 +1,29 @@
+# Liste noire argot — titres de la catégorie Wiktionnaire "Termes argotiques
+# en français" qui ne sont PAS du français : interjections / mots anglais
+# d'Internet sans usage francisé, translittérations, variantes parasites.
+# Retirés de l'apport argot par words_from_argot() (comparaison sur forme
+# normalisée : majuscules, sans accents). Un mot par ligne, '#' = commentaire.
+#
+# Périmètre volontairement ÉTROIT : "weed", "crew", "life", "clout", "chill"...
+# sont laissés — anglicismes, certes, mais d'usage courant dans l'argot
+# français actuel, et le Wiktionnaire les décrit comme mots français
+# (cf. "enrichissement assumé, pas une prétention ODS" dans le module).
+# N'ajouter ici QUE des intrus sans réelle vie en français.
+#
+# La source (argot-wiktionary-fr.txt) est un instantané figé : cette liste
+# l'est aussi. À compléter à la main si une nouvelle capture fait entrer
+# d'autres intrus.
+
+# — interjections / argot anglais sans forme française
+AIGHT
+COWABUNGA
+DUCKFACE
+FRICK
+OPPS
+
+# — translittérations
+KONNICHIWA
+
+# — jargon étranger non francisé
+VISUALIZER
+WHOONGA

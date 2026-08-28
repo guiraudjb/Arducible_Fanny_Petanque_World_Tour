@@ -357,8 +357,8 @@ export function findBestMove({ boardCells, rack, letterIndex, wordSet }) {
 /* Génération de la grille pré-remplie                                  */
 /* ------------------------------------------------------------------ */
 
-function randomWordCoveringCenter(wordsArray, bag) {
-  const candidates = shuffle(wordsArray.filter((w) => w.length >= 4 && w.length <= 8));
+function randomWordCoveringCenter(seedWords, bag) {
+  const candidates = shuffle(seedWords.filter((w) => w.length >= 4 && w.length <= 8));
   for (const word of candidates) {
     const startCol = CENTER - Math.floor(word.length / 2);
     if (startCol < 0 || startCol + word.length > BOARD_SIZE) continue;
@@ -386,17 +386,49 @@ function computeOverlapPlacement(word, anchorRow, anchorCol, anchorIndex, axis, 
   return placements;
 }
 
+/** Cache { seedWordSet, byLetter } par tableau `seedWords`. main.js réutilise
+ * la même référence de tableau à chaque donne (liste mémoïsée), donc l'index
+ * n'est construit qu'une fois pour toute la session. WeakMap : pas de fuite si
+ * la liste est remplacée (rechargement du dico). `byLetter` : lettre -> mots
+ * de 2 à 9 lettres la contenant, pour éviter un seedWords.filter() par
+ * tentative de génération (jusqu'à GENERATION_MAX_ATTEMPTS passes sur ~560k
+ * mots sinon). */
+const _seedIndexCache = new WeakMap();
+function seedIndexFor(seedWords) {
+  const cached = _seedIndexCache.get(seedWords);
+  if (cached) return cached;
+  const byLetter = new Map();
+  for (const w of seedWords) {
+    if (w.length < 2 || w.length > 9) continue;
+    for (const letter of new Set(w)) {
+      let list = byLetter.get(letter);
+      if (!list) { list = []; byLetter.set(letter, list); }
+      list.push(w);
+    }
+  }
+  const index = { seedWordSet: new Set(seedWords), byLetter };
+  _seedIndexCache.set(seedWords, index);
+  return index;
+}
+
 /** Construit une grille de départ en réutilisant resolveMove pour
  * garantir que chaque mot ajouté (y compris les croisements
  * accidentels) est légal - la génération suit exactement les mêmes
  * règles qu'un coup joué. `bag` est mutée (les lettres utilisées sont
  * retirées, comme si la grille avait été jouée avant que le joueur ne
- * tire son propre chevalet). */
-function generateSeedBoard(bag, wordsArray) {
+ * tire son propre chevalet).
+ *
+ * `seedWords` : les mots autorisés sur la grille de DÉPART. L'appelant y
+ * passe la liste restreinte aux mots qui ont une définition (voir
+ * main.js), pour qu'un clic sur n'importe quelle case pré-remplie donne
+ * toujours une définition. La contrainte porte sur TOUS les mots formés,
+ * croisements accidentels compris (every(seedWordSet.has)). */
+function generateSeedBoard(bag, seedWords) {
   const cells = makeEmptyBoardCells();
   const getCell = (r, c) => (cells[r][c].letter ? cells[r][c] : null);
+  const { seedWordSet, byLetter } = seedIndexFor(seedWords);
 
-  const first = randomWordCoveringCenter(wordsArray, bag);
+  const first = randomWordCoveringCenter(seedWords, bag);
   let placedWords = 0;
   if (first) {
     const placements = first.word.split('').map((letter, i) => ({
@@ -423,8 +455,8 @@ function generateSeedBoard(bag, wordsArray) {
     const anchor = filled[Math.floor(Math.random() * filled.length)];
     const axis = Math.random() < 0.5 ? 'row' : 'col';
 
-    const withLetter = wordsArray.filter((w) => w.length >= 2 && w.length <= 9 && w.includes(anchor.letter));
-    if (withLetter.length === 0) continue;
+    const withLetter = byLetter.get(anchor.letter);
+    if (!withLetter || withLetter.length === 0) continue;
     const word = withLetter[Math.floor(Math.random() * withLetter.length)];
     const indices = [];
     for (let i = 0; i < word.length; i += 1) if (word[i] === anchor.letter) indices.push(i);
@@ -436,7 +468,7 @@ function generateSeedBoard(bag, wordsArray) {
 
     const resolved = resolveMove({ getCell, placements, requireConnection: true });
     if (!resolved.ok) continue;
-    if (!resolved.words.every((w) => wordsArray.includes(w.text))) continue;
+    if (!resolved.words.every((w) => seedWordSet.has(w.text))) continue;
 
     for (const p of placements) cells[p.row][p.col] = { letter: p.letter, value: p.value };
     takeLettersFromBag(bag, placements.map((p) => p.letter));
@@ -473,18 +505,24 @@ export class Scrabble {
     return this.phase === 'betting' && this.bankroll <= 0;
   }
 
-  /** @param {string[]} wordsArray - dictionnaire (mots valides, majuscules sans accent) */
-  startRound(bet, wordsArray) {
+  /**
+   * @param {string[]} wordsArray - dictionnaire complet (mots valides, majuscules sans accent)
+   * @param {string[]} [seedWords=wordsArray] - sous-ensemble autorisé sur la grille de
+   *   départ ; main.js y passe les seuls mots ayant une définition, pour qu'un clic sur
+   *   une case pré-remplie donne toujours une définition. Défaut : tout le dictionnaire.
+   */
+  startRound(bet, wordsArray, seedWords = wordsArray) {
     if (this.phase !== 'betting') return { ok: false, reason: 'wrong-phase' };
     if (!Number.isFinite(bet) || bet <= 0 || bet > this.bankroll) return { ok: false, reason: 'bad-bet' };
     if (!wordsArray || wordsArray.length === 0) return { ok: false, reason: 'no-dictionary' };
+    if (!seedWords || seedWords.length === 0) return { ok: false, reason: 'no-seed-words' };
 
     this.bet = bet;
     this.lastBet = bet;
     this.bankroll -= bet;
 
     const bag = shuffle(buildBag());
-    this.board = generateSeedBoard(bag, wordsArray);
+    this.board = generateSeedBoard(bag, seedWords);
     this.rack = drawTiles(bag, RACK_SIZE);
     this.pending = [];
     this.result = null;

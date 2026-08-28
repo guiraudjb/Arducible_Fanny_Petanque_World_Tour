@@ -27,11 +27,37 @@ laissait passer des abréviations comme "KM" ou "CC") :
      non distribuable), juste un enrichissement assumé, pas une
      prétention d'exactitude compétition.
 
+     La catégorie brute est bruitée. words_from_argot() en retire :
+       - les titres capitalisés : noms propres (Bercy, Pantruche...) et
+         sigles (BDR, DZ...), que Morphalou exclut déjà de son côté ;
+       - les fragments trop courts ou sans voyelle : SMS / phonétique
+         ("br", "vrm", "wsh", "teh"...) - on exige >= 4 lettres ET une
+         voyelle, sauf poignée de mono/dissyllabes d'argot vérifiés
+         (_SHORT_ARGOT_KEEP : TAF, RIF, ZOB...) ;
+       - une liste noire manuelle versionnée, argot-exclude.txt : mots
+         non français (anglais internet, translittérations) que rien de
+         structurel ne distingue - à éditer à la main, la source étant
+         figée.
+     Rafraîchir l'instantané (nouvelle capture de la catégorie) : via
+     PetScan (https://petscan.wmcloud.org) sur frwiktionary, catégorie
+     "Termes argotiques en français", profondeur 0, sortie "Wiki" ou
+     "CSV" titres seuls ; ou l'API MediaWiki :
+       https://fr.wiktionary.org/w/api.php?action=query&list=categorymembers
+         &cmtitle=Cat%C3%A9gorie:Termes_argotiques_en_fran%C3%A7ais
+         &cmlimit=max&cmnamespace=0&format=json  (paginer sur cmcontinue)
+     Écraser argot-wiktionary-fr.txt (un titre par ligne) et mettre à
+     jour la date de capture ci-dessus.
+
 Mêmes filtres qu'avant : replié en majuscules SANS accent (une lettre du
-jeu = un jeton, "ÉTÉ" se pose avec les jetons E, T, E), longueur 2 à 7
-(le chevalet ne contient que 7 lettres), une seule chaîne de lettres
-(rejette espaces, apostrophes, tirets, chiffres - donc les locutions et
-mots composés).
+jeu = un jeton, "ÉTÉ" se pose avec les jetons E, T, E), longueur 2 à 15,
+une seule chaîne de lettres (rejette espaces, apostrophes, tirets,
+chiffres - donc les locutions et mots composés).
+
+Le plafond est 15 (largeur du plateau) et non 7 (taille du chevalet) : le
+mini-jeu permet de PROLONGER un mot déjà posé en n'ajoutant qu'un ou deux
+jetons, donc un coup légal peut former un mot de 8 à 15 lettres
+("STIPULA" + I -> "STIPULAI"). Se limiter à 7 rendait toute cette bande
+injouable.
 
 Sortie : assets/scrabble/mots.txt (un mot par ligne, trié) - lu tel quel
 par src/games/scrabble/engine.js via fetch + split('\\n').
@@ -67,9 +93,14 @@ _CARD_GAME_ROOT = os.path.abspath(os.path.join(_THIS_DIR, ".."))
 MORPHALOU_CSV_PATH = os.path.expanduser("~/iatools/morphalou/Morphalou3.1_CSV.csv")
 SYSTEM_DICT_PATH = "/usr/share/dict/french"
 ARGOT_TITLES_PATH = os.path.join(_THIS_DIR, "argot-wiktionary-fr.txt")
+ARGOT_EXCLUDE_PATH = os.path.join(_THIS_DIR, "argot-exclude.txt")
 OUTPUT_PATH = os.path.join(_CARD_GAME_ROOT, "assets", "scrabble", "mots.txt")
 
 SHORT_WORD_MAX_LEN = 3  # longueur à partir de laquelle le bruit "Nom commun" de Morphalou disparaît
+
+# Mono/dissyllabes d'argot vérifiés, gardés malgré la règle ">= 4 lettres
+# ET une voyelle" appliquée au reste de la catégorie (voir words_from_argot).
+_SHORT_ARGOT_KEEP = {"TAF", "RIF", "SAP", "ZOB", "ZIG", "DAB", "NIB", "MEC"}
 
 # Une seule chaîne de lettres (accentuées ou non) : rejette d'entrée les
 # locutions ("à la bien"), mots composés ("croque-mitaine"), formes avec
@@ -88,7 +119,7 @@ def normalize(word):
 
 def keep(word):
     normalized = normalize(word)
-    return 2 <= len(normalized) <= 7 and ASCII_LETTERS_RE.match(normalized)
+    return 2 <= len(normalized) <= 15 and ASCII_LETTERS_RE.match(normalized)
 
 
 def trusted_short_words(path):
@@ -144,23 +175,68 @@ def words_from_morphalou(path, trusted_short):
                 skipped_short_noms += 1
                 continue
             words.add(normalized)
-    print(f"Morphalou : {total_rows} formes fléchies lues, {len(words)} mots de 2 à 7 lettres retenus "
+    print(f"Morphalou : {total_rows} formes fléchies lues, {len(words)} mots de 2 à 15 lettres retenus "
           f"({skipped_short_noms} noms communs courts écartés, non confirmés par le dictionnaire système)")
     return words
 
 
-def words_from_argot(path):
+def load_argot_exclude(path):
+    """Liste noire manuelle (un mot par ligne, '#' = commentaire) des titres
+    argot non français que rien de structurel ne distingue - anglais
+    internet (CREW, WEED, POOKIE...), translittérations (KONNICHIWA...),
+    variantes orthographiques parasites. Normalisée pour comparer à
+    normalize(titre). Absente = pas de liste noire (rien retiré)."""
+    excluded = set()
+    if not os.path.exists(path):
+        return excluded
+    with open(path, encoding="utf-8") as f:
+        for line in f:
+            entry = line.split("#", 1)[0].strip()
+            if entry:
+                excluded.add(normalize(entry))
+    return excluded
+
+
+def words_from_argot(path, exclude_path=ARGOT_EXCLUDE_PATH):
+    """Titres à un seul mot de la catégorie argot du Wiktionnaire, nettoyés
+    (voir le point 2 du docstring du module). On écarte :
+      - l'en-tête "argot" et tout titre capitalisé : noms propres (Bercy,
+        Pantruche...) et sigles (BDR, DZ...) - Morphalou les exclut déjà ;
+      - les fragments < 4 lettres ou sans voyelle : SMS / phonétique
+        ("br", "vrm", "wsh"...), SAUF _SHORT_ARGOT_KEEP (TAF, RIF, ZOB...) ;
+      - argot-exclude.txt : liste noire manuelle des mots non français.
+    Instantané figé : si le fichier manque, on avertit et on renvoie un
+    ensemble vide (comme words_from_morphalou) plutôt que de planter."""
+    if not os.path.exists(path):
+        print(f"ATTENTION : instantané argot introuvable à {path} - voir le point 2 du "
+              "docstring pour le recapturer. Génération poursuivie sans l'apport argot.")
+        return set()
+
+    excluded = load_argot_exclude(exclude_path)
     words = set()
-    total = 0
+    skipped_propres = skipped_courts = skipped_liste = 0
     with open(path, encoding="utf-8") as f:
         for line in f:
             title = line.strip()
             if not title or not VALID_SOURCE_RE.match(title):
                 continue
-            total += 1
-            if keep(title):
-                words.add(normalize(title))
-    print(f"Argot (Wiktionnaire) : {total} titres à un seul mot lus, {len(words)} mots de 2 à 7 lettres retenus")
+            if title == "argot" or title[0].isupper():
+                skipped_propres += 1
+                continue
+            if not keep(title):
+                continue
+            normalized = normalize(title)
+            if normalized in excluded:
+                skipped_liste += 1
+                continue
+            if normalized not in _SHORT_ARGOT_KEEP and (
+                    len(normalized) < 4 or not VOWEL_RE.search(normalized)):
+                skipped_courts += 1
+                continue
+            words.add(normalized)
+    print(f"Argot (Wiktionnaire) : {len(words)} mots retenus "
+          f"({skipped_propres} noms propres/sigles, {skipped_courts} fragments courts, "
+          f"{skipped_liste} sur liste noire écartés)")
     return words
 
 
