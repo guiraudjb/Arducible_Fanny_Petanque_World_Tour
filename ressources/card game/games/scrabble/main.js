@@ -26,6 +26,81 @@ let timerInterval = null;
 let bestMoveComputing = false;
 let bestMoveShownIndex = 0; // en cas d'égalité au meilleur score : quel coup de la liste est dessiné sur la grille
 
+// Calcul du meilleur coup en tâche de fond : lancé dès le début de la manche
+// pour exploiter les 90 s de réflexion du joueur (findBestMove prend ~10-15 s).
+// Repli synchrone (Scrabble.computeBestMove + letterIndex) si les module
+// workers ne sont pas disponibles.
+let bestMoveWorker = null;
+try {
+  bestMoveWorker = new Worker(new URL('./best-move-worker.js', import.meta.url), { type: 'module' });
+} catch (_) { bestMoveWorker = null; }
+let bestMoveJobId = 0;
+let bestMoveJob = null; // { id, result, done, voiceDone } de la manche en cours
+
+if (bestMoveWorker) {
+  bestMoveWorker.onmessage = (e) => {
+    const { id, best } = e.data;
+    if (!bestMoveJob || bestMoveJob.id !== id) return; // résultat d'une manche déjà passée
+    bestMoveJob.result = best;
+    bestMoveJob.done = true;
+    // Si le joueur a déjà soumis et attend (sablier affiché), on montre tout de suite.
+    if (bestMoveComputing && game.getState().phase === 'result') applyBestMove(best);
+  };
+  bestMoveWorker.onerror = () => {
+    bestMoveWorker = null; // worker cassé -> repli synchrone pour les manches suivantes
+    // ... et pour la manche en cours si le joueur attend déjà le résultat.
+    if (bestMoveComputing && game.getState().phase === 'result') {
+      runSyncBestMove(bestMoveJob ? bestMoveJob.voiceDone : null);
+    }
+  };
+}
+
+/** Construit letterIndex à la demande (repli synchrone uniquement). Inutile
+ * tant que le worker fonctionne : il a son propre index sur son thread. */
+function ensureLetterIndex() {
+  if (!letterIndex && wordsArray.length) letterIndex = buildLetterIndex(wordsArray);
+  return letterIndex;
+}
+
+/** Envoie la grille de départ + le chevalet d'origine au worker dès le début
+ * de la manche. Sans worker, ne fait rien (doSubmit calcule en synchrone). */
+function startBestMoveJob() {
+  const id = ++bestMoveJobId;
+  bestMoveJob = { id, result: null, done: false, voiceDone: null };
+  if (bestMoveWorker) {
+    bestMoveWorker.postMessage({ id, seedBoard: game.seedBoard, rack: game.originalRack });
+  }
+}
+
+/** Applique un résultat de meilleur coup (worker ou synchrone) : le range
+ * dans game.result, réaffiche, et lit la voix une fois la réplique de Fanny
+ * terminée. */
+function applyBestMove(best) {
+  if (game.result) game.result.bestMove = best;
+  bestMoveComputing = false;
+  bestMoveShownIndex = 0;
+  render();
+  const voiceDone = bestMoveJob ? bestMoveJob.voiceDone : null;
+  Promise.resolve(voiceDone).then(() => speakBestMove(best));
+}
+
+/** Repli : calcul bloquant sur le thread principal (sablier affiché avant),
+ * quand le worker est indisponible. */
+function runSyncBestMove(voiceDone) {
+  if (!ensureLetterIndex()) { bestMoveComputing = false; render(); return; }
+  bestMoveComputing = true;
+  bestMoveShownIndex = 0;
+  render();
+  // Double rAF : le sablier est peint et son animation tourne côté compositeur
+  // AVANT le calcul, qui bloque le thread plusieurs secondes.
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    game.computeBestMove(letterIndex, wordSet);
+    bestMoveComputing = false;
+    render();
+    Promise.resolve(voiceDone).then(() => speakBestMove(game.result.bestMove));
+  }));
+}
+
 const dealerVoice = createDealerVoice({
   game: 'scrabble',
   bubbleEl: document.getElementById('dealer-bubble'),
@@ -128,44 +203,39 @@ function flashTable(kind) {
 /* ---------------------------------------------------------------- */
 /* Dictionnaire                                                        */
 /* ---------------------------------------------------------------- */
-/** Parseur CSV minimal mais correct sur les guillemets (les définitions
- * peuvent contenir des virgules) - suffisant pour un fichier généré par
- * nous-mêmes (voir tools/generate_scrabble_definitions.py), pas pensé pour
- * du CSV arbitraire externe. */
-function parseCsv(text) {
-  const rows = [];
-  let row = [];
-  let field = '';
-  let inQuotes = false;
-  for (let i = 0; i < text.length; i += 1) {
-    const c = text[i];
-    if (inQuotes) {
-      if (c === '"' && text[i + 1] === '"') { field += '"'; i += 1; }
-      else if (c === '"') { inQuotes = false; }
-      else { field += c; }
-    } else if (c === '"') {
-      inQuotes = true;
-    } else if (c === ',') {
-      row.push(field); field = '';
-    } else if (c === '\n') {
-      row.push(field); field = '';
-      rows.push(row); row = [];
-    } else if (c !== '\r') {
-      field += c;
+/** Charge definitions.csv (mot,définition) dans definitionsMap. Parseur
+ * spécialisé pour CE fichier, pas un CSV générique : il est produit par
+ * tools/generate_scrabble_definitions.py via csv.writer, donc chaque
+ * enregistrement tient sur UNE ligne physique (les gloses sont aplaties par
+ * clean_gloss), le mot (1re colonne) est toujours [A-Z]+ sans guillemet ni
+ * virgule, et seule la définition est éventuellement encadrée de " " avec
+ * les " internes doublés. Découpage par lignes + indexOf/slice natifs : ~43
+ * Mo se traitent en une fraction de seconde, là où un automate caractère par
+ * caractère bloquait le thread ~20 s. */
+function loadDefinitions(text) {
+  const n = text.length;
+  let start = text.indexOf('\n') + 1; // saute l'en-tête "mot,definition"
+  while (start > 0 && start < n) {
+    let end = text.indexOf('\n', start);
+    if (end === -1) end = n;
+    let line = text.slice(start, end);
+    start = end + 1;
+    if (line.charCodeAt(line.length - 1) === 13) line = line.slice(0, -1); // \r final
+    if (!line) continue;
+    const comma = line.indexOf(',');
+    if (comma <= 0) continue;
+    const word = line.slice(0, comma);
+    let def = line.slice(comma + 1);
+    if (def.charCodeAt(0) === 34) { // définition entre guillemets
+      def = (def.charCodeAt(def.length - 1) === 34 ? def.slice(1, -1) : def.slice(1)).replace(/""/g, '"');
     }
+    definitionsMap.set(word, def);
   }
-  if (field.length > 0 || row.length > 0) { row.push(field); rows.push(row); }
-  return rows;
 }
 
 fetch(DEFINITIONS_URL)
   .then((r) => r.text())
-  .then((text) => {
-    const rows = parseCsv(text);
-    for (const [word, definition] of rows.slice(1)) {
-      if (word) definitionsMap.set(word, definition);
-    }
-  })
+  .then((text) => { loadDefinitions(text); })
   .catch(() => {}) // le jeu marche sans définitions (voir plus bas : repli sur le dico complet)
   .finally(() => { definitionsSettled = true; seedWordsArray = null; render(); });
 
@@ -187,7 +257,9 @@ fetch(WORDS_URL)
   .then((text) => {
     wordsArray = text.split('\n').filter(Boolean);
     wordSet = new Set(wordsArray);
-    letterIndex = buildLetterIndex(wordsArray);
+    // letterIndex ne sert qu'au calcul synchrone de repli : inutile (et ~1 s)
+    // quand le worker s'en charge sur son propre thread.
+    if (!bestMoveWorker) letterIndex = buildLetterIndex(wordsArray);
     wordsLoaded = true;
     seedWordsArray = null; // recalculé au prochain getSeedWordsArray()
     render();
@@ -649,19 +721,19 @@ function doSubmit(isTimeout) {
   }
   if (r.payout > 0) { flashTable('win'); burstConfetti(); } else { flashTable('lose'); }
 
-  if (letterIndex) {
-    bestMoveComputing = true;
-    bestMoveShownIndex = 0;
-    render();
-    // Double rAF : garantit que le sablier a été peint et que son animation
-    // tourne côté compositeur AVANT de lancer computeBestMove, qui bloque le
-    // thread principal plusieurs secondes (dictionnaire complet).
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      game.computeBestMove(letterIndex, wordSet);
-      bestMoveComputing = false;
+  // Meilleur coup : calculé en tâche de fond par le worker pendant les 90 s
+  // de la manche (voir startBestMoveJob). Le plus souvent déjà prêt ici.
+  if (bestMoveWorker && bestMoveJob) {
+    bestMoveJob.voiceDone = voiceDone;
+    if (bestMoveJob.done) {
+      applyBestMove(bestMoveJob.result); // prêt : affichage instantané
+    } else {
+      bestMoveComputing = true; // pas encore fini : sablier ; onmessage prendra le relais
+      bestMoveShownIndex = 0;
       render();
-      Promise.resolve(voiceDone).then(() => speakBestMove(game.result.bestMove));
-    }));
+    }
+  } else {
+    runSyncBestMove(voiceDone); // pas de worker : calcul bloquant
   }
 }
 
@@ -842,6 +914,7 @@ btnDeal.addEventListener('click', () => {
     selectedRackIndex = null;
     dealerVoice.say('dealing');
     startTimer();
+    startBestMoveJob(); // calcul du meilleur coup en fond pendant la réflexion
   }
   render();
 });

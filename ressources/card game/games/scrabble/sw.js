@@ -8,12 +8,13 @@
 //
 // Incrémenter CACHE_VERSION à chaque changement de cette liste ou du
 // contenu des fichiers précachés, pour forcer une nouvelle installation.
-const CACHE_VERSION = 'scrabble-v3';
+const CACHE_VERSION = 'scrabble-v4';
 
 const PRECACHE_URLS = [
   './',
   './index.html',
   './main.js',
+  './best-move-worker.js',
   './style.css',
   './manifest.webmanifest',
   './icons/icon-192.png',
