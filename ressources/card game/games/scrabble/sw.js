@@ -2,13 +2,20 @@
 // enregistré que depuis games/scrabble/, donc sa portée s'arrête
 // naturellement à ce dossier, sans toucher aux autres jeux du casino).
 //
-// Stratégie : cache-first sur tout, avec mise en cache opportuniste des
-// requêtes réussies qui ne sont pas déjà précachées (ex. les pages
-// Wiktionnaire consultées via la recherche approfondie).
+// Stratégie mixte :
+//   - "coquille applicative" (navigations + .js / .css / .json / .webmanifest
+//     de même origine) : NETWORK-FIRST avec repli cache. Le code frais gagne
+//     dès qu'on est en ligne - une mise à jour de main.js / engine.js atteint
+//     donc les joueurs au prochain chargement, sans dépendre d'un bump de
+//     CACHE_VERSION ni du moment où le navigateur revalide sw.js.
+//   - reste (dictionnaire .txt/.csv, audio, images) : CACHE-FIRST - lourd et
+//     stable, on garde des chargements instantanés et le hors-ligne.
+//   - mise en cache opportuniste des requêtes réussies non précachées
+//     (ex. pages Wiktionnaire de la recherche approfondie).
 //
-// Incrémenter CACHE_VERSION à chaque changement de cette liste ou du
-// contenu des fichiers précachés, pour forcer une nouvelle installation.
-const CACHE_VERSION = 'scrabble-v4';
+// CACHE_VERSION sert surtout à purger l'ancien cache à l'activation ;
+// l'incrémenter reste utile quand un gros asset cache-first change.
+const CACHE_VERSION = 'scrabble-v5';
 
 const PRECACHE_URLS = [
   './',
@@ -65,26 +72,44 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+// Coquille applicative (même origine) : navigations + fichiers de code.
+const APP_SHELL_RE = /\.(?:js|css|json|webmanifest)$/;
+
+function putInCache(request, response) {
+  // Uniquement les réponses saines de même origine (jamais les erreurs ni
+  // les réponses opaques cross-origin).
+  if (response.ok && response.type === 'basic') {
+    const copy = response.clone();
+    caches.open(CACHE_VERSION).then((cache) => cache.put(request, copy));
+  }
+}
+
 self.addEventListener('fetch', (event) => {
   const request = event.request;
   if (request.method !== 'GET') return; // pas de mise en cache des mutations
 
+  const url = new URL(request.url);
+  const isShell = request.mode === 'navigate'
+    || (url.origin === self.location.origin && APP_SHELL_RE.test(url.pathname));
+
+  if (isShell) {
+    // NETWORK-FIRST : code frais si en ligne, cache sinon.
+    event.respondWith(
+      fetch(request)
+        .then((response) => { putInCache(request, response); return response; })
+        .catch(() => caches.match(request)),
+    );
+    return;
+  }
+
+  // CACHE-FIRST pour le reste (dictionnaire, audio, images ; + cache
+  // opportuniste des pages Wiktionnaire de la recherche approfondie).
   event.respondWith(
     caches.match(request).then((cached) => {
       if (cached) return cached;
-      return fetch(request).then((response) => {
-        // Mise en cache opportuniste (ex. une page Wiktionnaire consultée
-        // via la recherche approfondie) : uniquement les réponses saines
-        // et de même origine, jamais les erreurs ni les réponses opaques
-        // cross-origin (Wiktionnaire, chargé dans une frame, n'est de
-        // toute façon pas concerné : c'est une requête cross-origin faite
-        // par le navigateur pour l'iframe, pas par ce service worker).
-        if (response.ok && response.type === 'basic') {
-          const copy = response.clone();
-          caches.open(CACHE_VERSION).then((cache) => cache.put(request, copy));
-        }
-        return response;
-      }).catch(() => cached);
+      return fetch(request)
+        .then((response) => { putInCache(request, response); return response; })
+        .catch(() => cached);
     }),
   );
 });
