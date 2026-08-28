@@ -8,7 +8,7 @@
 //
 // Incrémenter CACHE_VERSION à chaque changement de cette liste ou du
 // contenu des fichiers précachés, pour forcer une nouvelle installation.
-const CACHE_VERSION = 'scrabble-v2';
+const CACHE_VERSION = 'scrabble-v3';
 
 const PRECACHE_URLS = [
   './',

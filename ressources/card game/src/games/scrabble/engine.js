@@ -272,13 +272,21 @@ export function buildLetterIndex(wordsArray) {
 }
 
 /**
- * Cherche le meilleur coup jouable sur `boardCells` avec exactement les
- * lettres de `rack` (mêmes règles que resolveMove/scoreWords - un coup
- * trouvé ici est donc garanti légal). Explore uniquement les coups qui
- * s'appuient sur une lettre déjà posée (croisement) : c'est ainsi que se
- * jouent la quasi-totalité des coups à haut score au Scrabble (on ne
+ * Cherche le(s) meilleur(s) coup(s) jouable(s) sur `boardCells` avec
+ * exactement les lettres de `rack` (mêmes règles que resolveMove/scoreWords
+ * - un coup trouvé ici est donc garanti légal). Explore uniquement les
+ * coups qui s'appuient sur une lettre déjà posée (croisement) : c'est ainsi
+ * que se jouent la quasi-totalité des coups à haut score au Scrabble (on ne
  * cherche pas les mots posés simplement côte à côte sans chevaucher une
  * lettre existante, cas rare et généralement peu payant).
+ *
+ * Retour : null si aucun coup, sinon
+ *   { score, tier, moves: [{ word, bingo, axis: 'row'|'col', placements: [{row,col,letter}] }] }
+ * `moves` liste TOUS les placements distincts atteignant le meilleur score
+ * (dédupliqués par signature de cases), dans l'ordre de découverte -
+ * déterministe : cf. l'ordre de balayage (ancre haut->bas puis gauche->droite,
+ * mots par ordre alpha, position de la lettre d'ancrage, axe ligne puis
+ * colonne). `moves[0]` est donc l'ancien "meilleur coup" unique.
  */
 export function findBestMove({ boardCells, rack, letterIndex, wordSet }) {
   const getCell = (r, c) => (boardCells[r][c].letter ? boardCells[r][c] : null);
@@ -291,7 +299,9 @@ export function findBestMove({ boardCells, rack, letterIndex, wordSet }) {
   }
   if (anchors.length === 0) return null;
 
-  let best = null;
+  let topScore = -1;
+  const seenSig = new Set();
+  let moves = [];
 
   function tryCandidate(word, anchor, indexInWord, axis) {
     const positions = [];
@@ -331,12 +341,13 @@ export function findBestMove({ boardCells, rack, letterIndex, wordSet }) {
 
     const bingo = placements.length === RACK_SIZE;
     const score = scoreWords(resolved.words) + (bingo ? BINGO_BONUS : 0);
-    if (!best || score > best.score) {
-      best = {
-        word, score, bingo, tier: tierForScore(score),
-        placements: placements.map(({ row, col, letter }) => ({ row, col, letter })),
-      };
-    }
+    if (score < topScore) return;
+    const cells = placements.map(({ row, col, letter }) => ({ row, col, letter }));
+    if (score > topScore) { topScore = score; seenSig.clear(); moves = []; }
+    const sig = cells.map((p) => `${p.row},${p.col},${p.letter}`).sort().join('|');
+    if (seenSig.has(sig)) return;
+    seenSig.add(sig);
+    moves.push({ word, bingo, axis, placements: cells });
   }
 
   for (const anchor of anchors) {
@@ -350,7 +361,8 @@ export function findBestMove({ boardCells, rack, letterIndex, wordSet }) {
     }
   }
 
-  return best;
+  if (moves.length === 0) return null;
+  return { score: topScore, tier: tierForScore(topScore), moves };
 }
 
 /* ------------------------------------------------------------------ */

@@ -635,6 +635,16 @@ body {
 .word-link { background: none; border: none; padding: 0; font: inherit; color: inherit; }
 .word-link:hover, .cell-letter.is-clickable-word:hover { color: var(--gold); }
 
+/* Liste des meilleurs coups à égalité : la puce active (dessinée sur la
+   grille) est mise en évidence ; les autres restent des liens sobres. */
+.best-move-choice { text-decoration-style: dashed; }
+.best-move-choice.is-active {
+  color: var(--gold);
+  text-decoration: none;
+  font-weight: 700;
+}
+.best-move-hint { opacity: 0.65; font-style: italic; }
+
 /* ---------- Dock ---------- */
 .dock {
   padding: 0.4rem 0.6rem calc(0.4rem + env(safe-area-inset-bottom, 0));

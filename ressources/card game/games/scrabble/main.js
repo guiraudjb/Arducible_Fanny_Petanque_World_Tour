@@ -24,6 +24,7 @@ let pendingBlankRackIndex = null;
 let secondsLeft = ROUND_SECONDS;
 let timerInterval = null;
 let bestMoveComputing = false;
+let bestMoveShownIndex = 0; // en cas d'égalité au meilleur score : quel coup de la liste est dessiné sur la grille
 
 const dealerVoice = createDealerVoice({
   game: 'scrabble',
@@ -498,8 +499,14 @@ function renderBoard(state) {
     ? new Map(state.result.placedCells.map((p) => [`${p.row},${p.col}`, true]))
     : new Map();
   const bestMove = state.phase === 'result' && state.result ? state.result.bestMove : null;
-  const ghostMap = bestMove
-    ? new Map(bestMove.placements.map((p) => [`${p.row},${p.col}`, p]))
+  // En cas d'égalité au meilleur score, bestMove.moves en liste plusieurs :
+  // on dessine sur la grille celui que le joueur a choisi (bestMoveShownIndex,
+  // 0 par défaut = le premier trouvé).
+  const shownMove = bestMove && bestMove.moves && bestMove.moves.length
+    ? bestMove.moves[Math.min(bestMoveShownIndex, bestMove.moves.length - 1)]
+    : null;
+  const ghostMap = shownMove
+    ? new Map(shownMove.placements.map((p) => [`${p.row},${p.col}`, p]))
     : new Map();
 
   for (const rowCells of state.board) {
@@ -551,9 +558,15 @@ function renderBoard(state) {
         if (ghostEntry) {
           btn.classList.add('is-best-ghost');
           const letterEl = document.createElement('span');
-          letterEl.className = 'cell-letter';
+          letterEl.className = 'cell-letter is-clickable-word';
           letterEl.textContent = ghostEntry.letter;
           btn.appendChild(letterEl);
+          // Une case fantôme reste cliquable : ouvre la définition du mot
+          // du meilleur coup actuellement dessiné (même geste que sur un
+          // mot réellement posé, voir plus haut).
+          if (shownMove) {
+            btn.addEventListener('click', () => openDefinitionPopup([shownMove.word]));
+          }
         } else if (cell.bonus) {
           btn.classList.add(`bonus-${cell.bonus}`);
           const bonusEl = document.createElement('span');
@@ -567,7 +580,7 @@ function renderBoard(state) {
           btn.appendChild(starEl);
         }
         const canPlaceHere = canPlay && selectedRackIndex !== null;
-        btn.disabled = !canPlaceHere;
+        btn.disabled = !canPlaceHere && !ghostEntry;
         if (canPlaceHere) {
           btn.addEventListener('click', () => {
             const res = game.placeTileFromRack(selectedRackIndex, cell.row, cell.col);
@@ -586,9 +599,18 @@ function renderBoard(state) {
 /* ---------------------------------------------------------------- */
 function speakBestMove(best) {
   if (!best || isMuted() || !('speechSynthesis' in window)) return;
-  const text = best.bingo
-    ? `Meilleur coup possible : ${best.word}, pour ${best.score} points, scrabble !`
-    : `Meilleur coup possible : ${best.word}, pour ${best.score} points.`;
+  const moves = best.moves || [];
+  if (moves.length === 0) return;
+  const scrabble = moves.some((m) => m.bingo);
+  let text;
+  if (moves.length === 1) {
+    text = `Meilleur coup possible : ${moves[0].word}, pour ${best.score} points${scrabble ? ', scrabble !' : '.'}`;
+  } else {
+    const distinct = [...new Set(moves.map((m) => m.word))];
+    const names = distinct.slice(0, 3).join(', ');
+    const extra = distinct.length > 3 ? `, et ${distinct.length - 3} autres` : '';
+    text = `${moves.length} meilleurs coups à ${best.score} points${scrabble ? ', scrabble' : ''} : ${names}${extra}.`;
+  }
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = 'fr-FR';
   window.speechSynthesis.cancel();
@@ -629,6 +651,7 @@ function doSubmit(isTimeout) {
 
   if (letterIndex) {
     bestMoveComputing = true;
+    bestMoveShownIndex = 0;
     render();
     // Double rAF : garantit que le sablier a été peint et que son animation
     // tourne côté compositeur AVANT de lancer computeBestMove, qui bloque le
@@ -739,11 +762,48 @@ function render() {
     } else if (r.valid && r.score >= best.score) {
       bestMoveMessageEl.textContent = 'Vous avez trouvé le meilleur mot possible, bravo !';
     } else {
-      const bingoTag = best.bingo ? ' — SCRABBLE !' : '';
+      const moves = best.moves;
+      const bingoTag = moves.some((m) => m.bingo) ? ' — SCRABBLE !' : '';
       bestMoveMessageEl.innerHTML = '';
-      bestMoveMessageEl.appendChild(document.createTextNode('Meilleur coup possible : '));
-      bestMoveMessageEl.appendChild(wordLink(best.word));
-      bestMoveMessageEl.appendChild(document.createTextNode(` (${best.score} pts)${bingoTag}`));
+      if (moves.length === 1) {
+        bestMoveMessageEl.appendChild(document.createTextNode('Meilleur coup possible : '));
+        bestMoveMessageEl.appendChild(wordLink(moves[0].word));
+        bestMoveMessageEl.appendChild(document.createTextNode(` (${best.score} pts)${bingoTag}`));
+      } else {
+        // Plusieurs coups à égalité au meilleur score : on les liste tous.
+        // Chaque puce dessine son placement sur la grille au clic (la puce
+        // active est mise en évidence) ; la définition s'ouvre en cliquant
+        // les lettres fantômes correspondantes sur la grille.
+        const LIST_CAP = 10;
+        const shownIdx = Math.min(bestMoveShownIndex, moves.length - 1);
+        // Un même mot peut figurer plusieurs fois (placements différents) :
+        // dans ce cas seulement, on ajoute sa position pour les distinguer.
+        const wordCounts = moves.reduce((acc, m) => acc.set(m.word, (acc.get(m.word) || 0) + 1), new Map());
+        const label = (m) => {
+          if (wordCounts.get(m.word) === 1) return m.word;
+          const p = m.placements[0];
+          return `${m.word} (${m.axis === 'row' ? `ligne ${p.row + 1}` : `col. ${p.col + 1}`})`;
+        };
+        bestMoveMessageEl.appendChild(document.createTextNode(
+          `${moves.length} meilleurs coups à ${best.score} pts${bingoTag} : `));
+        moves.slice(0, LIST_CAP).forEach((m, i) => {
+          if (i > 0) bestMoveMessageEl.appendChild(document.createTextNode(', '));
+          const choice = document.createElement('button');
+          choice.type = 'button';
+          choice.className = 'word-link best-move-choice';
+          if (i === shownIdx) choice.classList.add('is-active');
+          choice.textContent = label(m);
+          choice.addEventListener('click', () => { bestMoveShownIndex = i; render(); });
+          bestMoveMessageEl.appendChild(choice);
+        });
+        if (moves.length > LIST_CAP) {
+          bestMoveMessageEl.appendChild(document.createTextNode(` … +${moves.length - LIST_CAP}`));
+        }
+        const hint = document.createElement('span');
+        hint.className = 'best-move-hint';
+        hint.textContent = ' — touchez un mot pour le situer sur la grille';
+        bestMoveMessageEl.appendChild(hint);
+      }
     }
   } else {
     resultMessageEl.textContent = '';
@@ -804,6 +864,7 @@ document.getElementById('btn-next-round').addEventListener('click', () => {
   closeDefinitionPopup();
   closeWebLookup();
   bestMoveComputing = false;
+  bestMoveShownIndex = 0;
   game.nextRound();
   pendingBet = Math.min(game.lastBet, game.bankroll) || 0;
   render();
@@ -816,6 +877,7 @@ document.getElementById('btn-new-game').addEventListener('click', () => {
   stopTimer();
   selectedRackIndex = null;
   bestMoveComputing = false;
+  bestMoveShownIndex = 0;
   game.newSession();
   pendingBet = 0;
   lastBankrollShown = null;
