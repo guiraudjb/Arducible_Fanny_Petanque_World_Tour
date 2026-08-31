@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Défi Scrabble — Générateur de grilles | Fanny Pétanque World Tour</title>
+  <meta name="description" content="Génère des lots de défis Scrabble (grille + solution de Fanny) prêts à télécharger en JPEG pour un compte social." />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    html, body { height: auto; overflow: auto; }
+    .generator-page {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .generator-header { text-align: center; }
+    .generator-header h1 {
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--gold);
+      font-size: 1.6rem;
+      margin: 0.5rem 0 0.25rem;
+    }
+    .generator-header p { color: var(--ink-soft); font-size: 0.9rem; margin: 0; }
+    .fanny-portrait {
+      width: min(220px, 55vw);
+      border-radius: 14px;
+      display: block;
+      margin: 0 auto 0.5rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+    .generator-controls {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+    .generator-controls label {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      color: var(--ink-soft);
+    }
+    .generator-controls input[type="number"] {
+      width: 4.5rem;
+      padding: 0.4rem 0.5rem;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--paper-raised);
+      font-size: 0.95rem;
+    }
+    #status-line { color: var(--ink-soft); font-size: 0.85rem; min-height: 1.2em; text-align: center; }
+    .preview-pair {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+    }
+    .preview-card { text-align: center; }
+    .preview-card p { color: var(--ink-soft); font-size: 0.8rem; margin: 0.35rem 0 0; }
+    .preview-card canvas {
+      max-width: min(320px, 90vw);
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      background: #1c4e28;
+    }
+    #progress-line { color: var(--gold); font-size: 0.85rem; min-height: 1.2em; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="generator-page">
+    <div class="generator-header">
+      <img class="fanny-portrait" src="../../assets/table/fanny_intello_lunettes.png" alt="Fanny en tenue de maîtresse d'école, avec lunettes, prête à corriger vos mots." />
+      <h1>Défi Scrabble du jour</h1>
+      <p>Une grille à deviner, la solution de Fanny juste après — deux images JPEG par défi.</p>
+    </div>
+
+    <div class="generator-controls">
+      <button type="button" class="btn btn-primary" id="btn-preview">🎲 Nouveau défi (aperçu)</button>
+    </div>
+
+    <div class="preview-pair">
+      <div class="preview-card">
+        <canvas id="canvas-problem" width="1080" height="1350"></canvas>
+        <p>Image 1 — le défi</p>
+      </div>
+      <div class="preview-card">
+        <canvas id="canvas-solution" width="1080" height="1350"></canvas>
+        <p>Image 2 — la solution de Fanny</p>
+      </div>
+    </div>
+
+    <p id="status-line">Chargement du dictionnaire…</p>
+
+    <div class="generator-controls">
+      <label for="batch-count">Nombre de défis</label>
+      <input type="number" id="batch-count" min="1" max="200" value="10" />
+      <button type="button" class="btn" id="btn-batch">⬇️ Télécharger le lot (JPEG)</button>
+    </div>
+    <p id="progress-line"></p>
+  </div>
+
+  <script type="module" src="defiscrabblegenerator.js"></script>
+</body>
+</html>
