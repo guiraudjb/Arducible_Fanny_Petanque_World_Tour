@@ -433,8 +433,11 @@ function closeBlankPicker() {
 document.getElementById('btn-blank-cancel').addEventListener('click', closeBlankPicker);
 
 /* ---------------------------------------------------------------- */
-/* Glisser-déposer d'une lettre du chevalet vers la grille              */
-/* (Pointer Events : un seul code pour souris ET écran tactile)         */
+/* Glisser-déposer d'un jeton (Pointer Events : un seul code souris ET  */
+/* écran tactile). Deux sources : une lettre du chevalet (pose sur une  */
+/* case vide) et une lettre posée ce tour-ci mais pas encore validée    */
+/* (déplacement vers une autre case, ou retour en main en la lâchant    */
+/* sur le chevalet). Les lettres des manches précédentes restent figées.*/
 /* ---------------------------------------------------------------- */
 const DRAG_START_THRESHOLD = 6; // px de mouvement avant de basculer du tap au glisser
 
@@ -460,70 +463,113 @@ function boardCellFromPoint(clientX, clientY) {
   return cell && boardEl.contains(cell) ? cell : null;
 }
 
+function isPointOverRack(clientX, clientY) {
+  const r = rackRowEl.getBoundingClientRect();
+  return clientX >= r.left && clientX <= r.right && clientY >= r.top && clientY <= r.bottom;
+}
+
 function clearDropHighlight() {
   const prev = boardEl.querySelector('.is-drop-target');
   if (prev) prev.classList.remove('is-drop-target');
+  rackRowEl.classList.remove('is-drop-target');
 }
 
-/** Démarre un glisser potentiel depuis une lettre du chevalet. Un simple tap
- * (pas de mouvement au-delà du seuil) laisse le clic habituel gérer la
- * sélection - seul un vrai déplacement du pointeur bascule en mode glisser,
- * avec un jeton fantôme qui suit le doigt/la souris jusqu'à la case visée. */
+/** Cœur du glisser : un jeton fantôme suit le pointeur ; la case vide (ou le
+ * chevalet, si `rackIsTarget`) sous le pointeur est mise en évidence ; au
+ * relâchement, `onDrop(cell, upEvent)` reçoit la .board-cell visée (ou null)
+ * pour effectuer la pose / le déplacement puis re-render(). Un simple tap
+ * (pas de mouvement au-delà du seuil) sort sans rien faire : le gestionnaire
+ * de clic de l'appelant prend le relais. */
+function beginTileDrag(event, { btn, entry, onDrop, rackIsTarget = false }) {
+  if (event.button > 0 || btn.disabled) return;
+  const startX = event.clientX;
+  const startY = event.clientY;
+  const pointerId = event.pointerId;
+  let dragging = false;
+  let ghost = null;
+
+  const onMove = (moveEvent) => {
+    if (moveEvent.pointerId !== pointerId) return;
+    const dx = moveEvent.clientX - startX;
+    const dy = moveEvent.clientY - startY;
+    if (!dragging) {
+      if (Math.hypot(dx, dy) < DRAG_START_THRESHOLD) return;
+      dragging = true;
+      btn.classList.add('is-dragging-source');
+      ghost = tileGhostFor(entry);
+    }
+    moveEvent.preventDefault();
+    const rect = ghost.getBoundingClientRect();
+    ghost.style.left = `${moveEvent.clientX - rect.width / 2}px`;
+    ghost.style.top = `${moveEvent.clientY - rect.height / 2}px`;
+    clearDropHighlight();
+    const cell = boardCellFromPoint(moveEvent.clientX, moveEvent.clientY);
+    if (cell && !cell.classList.contains('has-letter')) {
+      cell.classList.add('is-drop-target');
+    } else if (rackIsTarget && isPointOverRack(moveEvent.clientX, moveEvent.clientY)) {
+      rackRowEl.classList.add('is-drop-target');
+    }
+  };
+
+  const onUp = (upEvent) => {
+    if (upEvent.pointerId !== pointerId) return;
+    window.removeEventListener('pointermove', onMove);
+    window.removeEventListener('pointerup', onUp);
+    window.removeEventListener('pointercancel', onUp);
+    btn.classList.remove('is-dragging-source');
+    clearDropHighlight();
+    if (ghost) ghost.remove();
+    if (!dragging) return; // simple tap : le gestionnaire de clic s'en charge
+    onDrop(boardCellFromPoint(upEvent.clientX, upEvent.clientY), upEvent);
+  };
+
+  window.addEventListener('pointermove', onMove);
+  window.addEventListener('pointerup', onUp);
+  window.addEventListener('pointercancel', onUp);
+}
+
+/** Glisser une lettre du chevalet vers une case vide de la grille. Un simple
+ * tap (sous le seuil) laisse le clic gérer la sélection. */
 function attachTileDrag(btn, index, entry) {
   btn.addEventListener('pointerdown', (event) => {
-    if (event.button > 0 || btn.disabled) return;
     // Un joker pas encore assigné s'ouvre au tap (choix de la lettre) -
     // rien à glisser tant qu'il n'a pas de lettre affichée.
     if (entry.isBlank && !entry.display) return;
-
-    const startX = event.clientX;
-    const startY = event.clientY;
-    const pointerId = event.pointerId;
-    let dragging = false;
-    let ghost = null;
-
-    const onMove = (moveEvent) => {
-      if (moveEvent.pointerId !== pointerId) return;
-      const dx = moveEvent.clientX - startX;
-      const dy = moveEvent.clientY - startY;
-      if (!dragging) {
-        if (Math.hypot(dx, dy) < DRAG_START_THRESHOLD) return;
-        dragging = true;
-        btn.classList.add('is-dragging-source');
-        ghost = tileGhostFor(entry);
-      }
-      moveEvent.preventDefault();
-      const rect = ghost.getBoundingClientRect();
-      ghost.style.left = `${moveEvent.clientX - rect.width / 2}px`;
-      ghost.style.top = `${moveEvent.clientY - rect.height / 2}px`;
-      clearDropHighlight();
-      const cell = boardCellFromPoint(moveEvent.clientX, moveEvent.clientY);
-      if (cell && !cell.classList.contains('has-letter')) cell.classList.add('is-drop-target');
-    };
-
-    const onUp = (upEvent) => {
-      if (upEvent.pointerId !== pointerId) return;
-      window.removeEventListener('pointermove', onMove);
-      window.removeEventListener('pointerup', onUp);
-      window.removeEventListener('pointercancel', onUp);
-      btn.classList.remove('is-dragging-source');
-      clearDropHighlight();
-      if (ghost) ghost.remove();
-      if (!dragging) return; // simple tap : le gestionnaire de clic s'en charge
-
-      const cell = boardCellFromPoint(upEvent.clientX, upEvent.clientY);
-      if (cell && !cell.classList.contains('has-letter') && game.getState().phase === 'playing') {
-        const row = Number(cell.dataset.row);
-        const col = Number(cell.dataset.col);
-        const res = game.placeTileFromRack(index, row, col);
-        if (res.ok) selectedRackIndex = null;
+    beginTileDrag(event, {
+      btn,
+      entry,
+      onDrop: (cell) => {
+        if (cell && !cell.classList.contains('has-letter') && game.getState().phase === 'playing') {
+          const res = game.placeTileFromRack(index, Number(cell.dataset.row), Number(cell.dataset.col));
+          if (res.ok) selectedRackIndex = null;
+        }
         render();
-      }
-    };
+      },
+    });
+  });
+}
 
-    window.addEventListener('pointermove', onMove);
-    window.addEventListener('pointerup', onUp);
-    window.addEventListener('pointercancel', onUp);
+/** Glisser une lettre posée ce tour-ci (pending) : vers une autre case vide
+ * = déplacement ; lâchée sur le chevalet = retour en main ; ailleurs = elle
+ * reste où elle était. Un simple tap laisse le clic la renvoyer en main
+ * (voir renderBoard). */
+function attachPendingDrag(btn, row, col, entry) {
+  btn.addEventListener('pointerdown', (event) => {
+    beginTileDrag(event, {
+      btn,
+      entry,
+      rackIsTarget: true,
+      onDrop: (cell, upEvent) => {
+        if (game.getState().phase === 'playing') {
+          if (cell && !cell.classList.contains('has-letter')) {
+            game.movePendingTile(row, col, Number(cell.dataset.row), Number(cell.dataset.col));
+          } else if (isPointOverRack(upEvent.clientX, upEvent.clientY)) {
+            game.returnPendingAt(row, col);
+          }
+        }
+        render();
+      },
+    });
   });
 }
 
@@ -624,6 +670,7 @@ function renderBoard(state) {
             game.returnPendingAt(cell.row, cell.col);
             render();
           });
+          attachPendingDrag(btn, cell.row, cell.col, pendingEntry);
         }
       } else {
         const ghostEntry = ghostMap.get(key);
@@ -772,7 +819,7 @@ function render() {
   if (canPlay) {
     hintEl.textContent = selectedRackIndex !== null
       ? 'Touchez une case vide de la grille pour poser cette lettre.'
-      : 'Touchez une lettre du chevalet, puis une case pour la poser.';
+      : 'Touchez une lettre puis une case, ou faites-la glisser. Une lettre posée (contour or) se déplace aussi au glisser, ou revient en main si on la lâche sur le chevalet.';
   }
 
   updateTimerDisplay();

@@ -384,6 +384,19 @@ body {
   background: rgba(255, 213, 79, 0.32);
   box-shadow: inset 0 0 0 2px var(--gold);
 }
+/* Une lettre posée ce tour-ci (non validée) se saisit au glisser, comme un
+   jeton du chevalet : déplacement vers une autre case, ou retour en main. */
+.board-cell.is-pending {
+  cursor: grab;
+  touch-action: none; /* le glisser gère le geste, pas le scroll de la grille */
+}
+.board-cell.is-pending:active { cursor: grabbing; }
+/* Chevalet mis en évidence quand on y ramène une lettre au glisser. */
+.rack-row.is-drop-target {
+  border-radius: 8px;
+  background: rgba(255, 213, 79, 0.14);
+  box-shadow: inset 0 0 0 2px rgba(255, 213, 79, 0.7);
+}
 .board-cell.is-best-ghost {
   background: rgba(120, 190, 255, 0.16);
   border: 1px dashed rgba(120, 190, 255, 0.75);
@@ -431,12 +444,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  cursor: grab;
   touch-action: none; /* le glisser gère lui-même le geste, pas le scroll de la page */
   transition: transform 120ms ease, filter 150ms ease, box-shadow 150ms ease;
 }
 .tile:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4); }
-.tile:active:not(:disabled) { transform: scale(0.94); }
+.tile:active:not(:disabled) { transform: scale(0.94); cursor: grabbing; }
 .tile:disabled { filter: grayscale(0.5) brightness(0.7); cursor: not-allowed; }
 .tile:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .tile.is-selected {
@@ -445,7 +458,8 @@ body {
   box-shadow: 0 0 14px 3px rgba(255, 213, 79, 0.65);
   transform: translateY(-6px);
 }
-.tile.is-dragging-source { opacity: 0.35; }
+.tile.is-dragging-source,
+.board-cell.is-dragging-source { opacity: 0.35; }
 
 /* Jeton fantôme qui suit le pointeur/doigt pendant un glisser-déposer. */
 .tile.drag-ghost {

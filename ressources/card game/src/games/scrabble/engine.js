@@ -570,6 +570,25 @@ export class Scrabble {
     return { ok: true };
   }
 
+  /** Déplace une lettre posée ce tour-ci (pending) vers une autre case
+   * libre - mêmes contraintes que placeTileFromRack : la case visée ne doit
+   * porter ni lettre déjà sur la grille, ni autre lettre posée ce tour-ci.
+   * Un joker garde la lettre qu'on lui a attribuée. */
+  movePendingTile(fromRow, fromCol, toRow, toCol) {
+    if (this.phase !== 'playing') return { ok: false, reason: 'wrong-phase' };
+    if (toRow < 0 || toRow >= BOARD_SIZE || toCol < 0 || toCol >= BOARD_SIZE) {
+      return { ok: false, reason: 'out-of-bounds' };
+    }
+    const entry = this.pending.find((p) => p.row === fromRow && p.col === fromCol);
+    if (!entry) return { ok: false, reason: 'not-found' };
+    if (toRow === fromRow && toCol === fromCol) return { ok: true };
+    if (this.board[toRow][toCol].letter) return { ok: false, reason: 'occupied' };
+    if (this.pending.some((p) => p.row === toRow && p.col === toCol)) return { ok: false, reason: 'occupied' };
+    entry.row = toRow;
+    entry.col = toCol;
+    return { ok: true };
+  }
+
   assignBlank(rackIndex, letter) {
     if (this.phase !== 'playing') return { ok: false, reason: 'wrong-phase' };
     const tile = this.rack[rackIndex];
