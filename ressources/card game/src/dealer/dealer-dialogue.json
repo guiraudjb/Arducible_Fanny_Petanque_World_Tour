@@ -325,5 +325,63 @@
       "L'équipe adverse remporte la partie, on prend notre revanche ?",
       "Cette partie est pour l'équipe adverse, la prochaine est pour vous !"
     ]
+  },
+  "chiffres": {
+    "greeting": [
+      "Bienvenue au Compte est Bon ! Choisissez vos plaques, misez, et à vous de calculer.",
+      "Six plaques, une cible, quarante-cinq secondes. Prête à jouer les chiffres ?"
+    ],
+    "dealing": [
+      "Les plaques sont tirées, la cible est affichée. À vous de jouer !",
+      "Le chrono démarre, calculez vite !"
+    ],
+    "exact": [
+      "Le compte est bon ! Quel calcul !",
+      "Exact ! Vous avez tapé pile dans le mille !"
+    ],
+    "win_big": [
+      "Belle approche, c'était la meilleure possible !",
+      "Vous n'étiez pas loin, et c'était le mieux qu'on pouvait faire !"
+    ],
+    "lose": [
+      "Ce n'était pas la meilleure approche, dommage.",
+      "On retente un calcul ?"
+    ],
+    "bankruptcy": [
+      "Plus un jeton pour jouer les chiffres. Une revanche ?"
+    ]
+  },
+  "lettres": {
+    "greeting": [
+      "Bienvenue au Mot le Plus Long ! Misez, et je tire les lettres.",
+      "Dix lettres, quarante-cinq secondes, à vous de trouver le mot idéal."
+    ],
+    "greeting_round": [
+      "À vous de choisir : voyelle ou consonne ?",
+      "Piochons vos dix lettres !"
+    ],
+    "dealing": [
+      "Vos dix lettres sont tirées, formez votre mot !",
+      "Le chrono tourne, à vos lettres !"
+    ],
+    "win_small": [
+      "Un petit mot bien trouvé, ça compte déjà !",
+      "Correct, la bankroll vous dit merci."
+    ],
+    "win_big": [
+      "Un beau mot, bien vu !",
+      "Voilà du vocabulaire qui rapporte !"
+    ],
+    "win_jackpot": [
+      "Quel mot ! Je suis impressionnée, chapeau !",
+      "Un mot pareil, c'est du grand art !"
+    ],
+    "lose": [
+      "Pas de mot valable cette fois, dommage.",
+      "On retente sa chance sur les lettres ?"
+    ],
+    "bankruptcy": [
+      "Plus un jeton pour jouer les lettres. Une revanche ?"
+    ]
   }
 }

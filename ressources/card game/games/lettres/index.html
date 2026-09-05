@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Le Mot le Plus Long — Fanny Pétanque World Tour</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1 class="sr-only">Le Mot le Plus Long (épreuve des lettres) — Fanny Pétanque World Tour</h1>
+
+  <div class="table" id="table">
+    <header class="hud">
+      <div class="hud-money">
+        <span class="hud-label">Bankroll</span>
+        <span class="hud-value" id="bankroll">500</span>
+      </div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+      <span class="timer hidden" id="timer" aria-live="polite">45</span>
+      <button type="button" class="icon-btn" id="btn-mute" aria-pressed="false" aria-label="Couper la voix de la croupière">🔊</button>
+      <button type="button" class="btn btn-ghost" id="btn-new-game">Nouvelle&nbsp;partie</button>
+    </header>
+
+    <div class="scene">
+      <img class="scene-img" src="../../assets/table/fanny-dealer-scene.jpg" alt="Fanny vous accueille au Mot le Plus Long." />
+      <div class="dealer-bubble" id="dealer-bubble" aria-live="polite">
+        <p id="dealer-bubble-text"></p>
+      </div>
+    </div>
+
+    <section class="play-zone" aria-label="Le mot le plus long">
+      <!-- Phase : mise -->
+      <div class="panel" id="betting-panel">
+        <p class="panel-title">Misez pour tirer vos 10 lettres.</p>
+        <p class="hint" id="dict-status">Chargement du dictionnaire…</p>
+      </div>
+
+      <!-- Phase : tirage -->
+      <div class="panel hidden" id="draw-panel">
+        <p class="panel-title" id="draw-progress">Lettre 1 / 10</p>
+        <div class="letters-row" id="drawn-row" aria-label="Lettres déjà tirées"></div>
+        <div class="draw-buttons">
+          <button type="button" class="btn btn-primary" id="btn-draw-vowel">Voyelle</button>
+          <button type="button" class="btn btn-primary" id="btn-draw-consonant">Consonne</button>
+        </div>
+        <p class="hint" id="draw-hint"></p>
+      </div>
+
+      <!-- Phase : jeu -->
+      <div class="panel hidden" id="play-panel">
+        <div class="letters-row" id="letters-row" role="group" aria-label="Lettres disponibles"></div>
+        <div class="word-input-row">
+          <input type="text" id="word-input" class="word-input" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Votre mot…" />
+          <button type="button" class="btn btn-ghost" id="btn-clear-word">Effacer</button>
+        </div>
+        <button type="button" class="btn btn-primary" id="btn-validate">Valider ce mot</button>
+      </div>
+
+      <!-- Phase : résultat -->
+      <div class="panel hidden" id="result-panel">
+        <p class="result-message" id="result-message"></p>
+        <p class="result-detail" id="result-detail"></p>
+      </div>
+    </section>
+
+    <footer class="dock">
+      <div class="dock-panel" id="betting-area">
+        <div class="bet-readout">
+          <span class="bet-label">Mise</span>
+          <span class="bet-amount" id="bet-amount">0</span>
+        </div>
+        <div class="chips" role="group" aria-label="Jetons de mise">
+          <button type="button" class="chip" data-chip="10"><span>10</span></button>
+          <button type="button" class="chip" data-chip="25"><span>25</span></button>
+          <button type="button" class="chip" data-chip="50"><span>50</span></button>
+          <button type="button" class="chip" data-chip="100"><span>100</span></button>
+        </div>
+        <div class="dock-buttons">
+          <button type="button" class="btn btn-ghost" id="btn-clear-bet">Effacer mise</button>
+          <button type="button" class="btn btn-primary" id="btn-start">Miser et tirer</button>
+        </div>
+      </div>
+
+      <div class="dock-panel hidden" id="result-area">
+        <div class="dock-buttons">
+          <button type="button" class="btn btn-primary" id="btn-next-round">Manche&nbsp;suivante</button>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
